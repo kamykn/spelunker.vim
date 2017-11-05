@@ -41,7 +41,7 @@ finally
 	endif
 endtry
 
-nnoremap <silent> <Plug>(OpenCCSpellFixList) :call CCSpellCheck#OpenFixList()<CR>
+nnoremap <silent> <Plug>(OpenCCSpellFixList) :call CCSpellCheck#openFixList()<CR>
 if !hasmapto('<Plug>(OpenCCSpellFixList)')
 	silent! nmap <unique> Z= <Plug>(OpenCCSpellFixList)
 endif
