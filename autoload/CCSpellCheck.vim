@@ -298,7 +298,7 @@ function! CCSpellCheck#check()
 	let b:matchIDDict = s:deleteMatches(l:wordListForDelete, b:matchIDDict)
 endfunction
 
-function! CCSpellCheck#OpenFixList()
+function! CCSpellCheck#openFixList()
 	let l:cword = expand("<cword>")
 
 	if match(l:cword, '\v[A-Za-z]')
