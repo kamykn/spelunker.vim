@@ -195,6 +195,8 @@ function! s:cutTextWordBefore (text, word)
 	return strpart(a:text, l:foundPos + l:wordLength)
 endfunc
 
+" matchIDを先頭の1単語目の場合と２単語目の場合の大文字のケースで管理する必要が有ることに注意
+" 例：{'strlen': 4, 'Strlen': 5}
 function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, matchIDDict)
 	let l:ignoreSpellBadList = a:ignoreSpellBadList
 	let l:wordListForDelete  = a:wordListForDelete
@@ -210,6 +212,7 @@ function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, ma
 		for s in l:spellBadList
 			let l:lowercaseSpell = tolower(s)
 
+			" 新たに見つかった場合
 			if index(l:ignoreSpellBadList, l:lowercaseSpell) == -1
 				" lowercase
 				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v([A-Za-z]@<!)' . l:lowercaseSpell . '([A-Z]@=)\C')
@@ -224,7 +227,13 @@ function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, ma
 				call add(l:ignoreSpellBadList, l:lowercaseSpell)
 			endif
 
+			" 削除予定リストから単語消す
 			let l:delIndex = index(l:wordListForDelete, l:lowercaseSpell)
+			if l:delIndex != -1
+				call remove(l:wordListForDelete, l:delIndex)
+			endif
+
+			let l:delIndex = index(l:wordListForDelete, s:toFirstCharUpper(l:lowercaseSpell))
 			if l:delIndex != -1
 				call remove(l:wordListForDelete, l:delIndex)
 			endif
