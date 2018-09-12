@@ -292,7 +292,7 @@ function! CCSpellCheck#check()
 
 	let [l:wordListForDelete, b:matchIDDict] = s:addMatches(l:windowTextList, l:ignoreSpellBadList, l:wordListForDelete, b:matchIDDict)
 
-	if l:spellSetting ==? "nospell"
+	if l:spellSetting != "spell"
 		setlocal nospell
 	endif
 
