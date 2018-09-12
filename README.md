@@ -4,7 +4,7 @@ CCSpellCheck.vim is checking camelcase word spell.
 ## 1.Installation
 ### Installation with NeoBundle
 ```
-NeoBundle 'kmszk/CCSpellCheck.vim'
+NeoBundle 'kamykn/CCSpellCheck.vim'
 ```
 
 ## 2.Useage
@@ -37,7 +37,7 @@ Z=
 ```
 
 ### 2.iii. Add word as good spell list.
-Add the selected word in visual mode with the following command.
+Add the selected word in Visual-mode with the following command.
 CCSpellcheck use 'spell' commands provided by vim as default.
 
 FYI:
@@ -73,4 +73,4 @@ ZUW
 
 ## 3.Articles (in Japanese)
 Vimでキャメルケースのスペルチェックをするプラグインを作った
-https://qiita.com/kmszk/items/ce536aff00f44960e811
+https://qiita.com/kamykn/items/ce536aff00f44960e811

@@ -278,6 +278,7 @@ function! CCSpellCheck#check()
 		return
 	endif
 
+	let l:spellSetting = substitute(execute(':setlocal spell?'), '\v(\n|\s)\C', '', 'g')
 	setlocal spell
 
 	let l:windowTextList = getline(1, '$')
@@ -290,6 +291,10 @@ function! CCSpellCheck#check()
 	let l:wordListForDelete  = keys(b:matchIDDict)
 
 	let [l:wordListForDelete, b:matchIDDict] = s:addMatches(l:windowTextList, l:ignoreSpellBadList, l:wordListForDelete, b:matchIDDict)
+
+	if l:spellSetting ==? "nospell"
+		setlocal nospell
+	endif
 
 	if len(l:wordListForDelete) == 0
 		return

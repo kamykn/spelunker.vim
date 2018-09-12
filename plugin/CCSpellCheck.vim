@@ -33,7 +33,6 @@ endif
 let s:listOfCCSpellCheckHi = ""
 try
 	let s:listOfCCSpellCheckHi = execute('highlight ' . g:CCSpellCheckMatchGroupName)
-	echo s:listOfCCSpellCheckHi
 catch
 finally
 	if strlen(s:listOfCCSpellCheckHi) == 0
