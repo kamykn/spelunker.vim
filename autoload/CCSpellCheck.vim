@@ -14,7 +14,7 @@ function! s:getSpellBadList(text)
 
 	while 1
 		" キャメルケースとパスカルケースの抜き出し
-		let l:matchCamelCaseWord = matchstr(l:lineForFindCamelCase, '\v([A-Za-z]@<!)[A-Za-z]+[A-Z][A-Za-z]+\C')
+		let l:matchCamelCaseWord = matchstr(l:lineForFindCamelCase, '\v([A-Za-z]@<!)[A-Za-z]+[A-Z][A-Za-z]*\C')
 		if l:matchCamelCaseWord == ""
 			break
 		endif
@@ -211,17 +211,28 @@ function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, ma
 
 		for s in l:spellBadList
 			let l:lowercaseSpell = tolower(s)
+			let l:firstCharUpperSpell = s:toFirstCharUpper(l:lowercaseSpell)
+			let l:upperSpell = toupper(l:lowercaseSpell)
 
 			" 新たに見つかった場合
 			if index(l:ignoreSpellBadList, l:lowercaseSpell) == -1
+				" 大文字小文字無視オプションを使わない(事故るのを防止するため)
+				" ng: xxxAttr -> [atTr]iplePoint
+
 				" lowercase
-				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v([A-Za-z]@<!)' . l:lowercaseSpell . '([A-Z]@=)\C')
+				" ex: xxxStrlen -> [strlen]
+				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v([A-Za-z]@<!)' . l:lowercaseSpell . '([a-z]@!)\C')
 				execute 'let l:matchIDDict.' . l:lowercaseSpell . ' = ' . l:matchID
 
 				" first character uppercase spell
-				let l:firstCharUpperSpell = s:toFirstCharUpper(l:lowercaseSpell)
 				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v' . l:firstCharUpperSpell . '([a-z]@!)\C')
 				execute 'let l:matchIDDict.' . l:firstCharUpperSpell . ' = ' . l:matchID
+
+				" UPPERCASE spell
+				" 正しい単語の定数で引っかからないように注意
+				" ng: xxxAttr -> [ATTR]IBUTE
+				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v([A-Z]@<!)' . l:upperSpell . '([A-Z]@!)\C')
+				execute 'let l:matchIDDict.' . l:upperSpell . ' = ' . l:matchID
 
 				" Management of the spelling list in the lower case
 				call add(l:ignoreSpellBadList, l:lowercaseSpell)
@@ -233,7 +244,12 @@ function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, ma
 				call remove(l:wordListForDelete, l:delIndex)
 			endif
 
-			let l:delIndex = index(l:wordListForDelete, s:toFirstCharUpper(l:lowercaseSpell))
+			let l:delIndex = index(l:wordListForDelete, l:firstCharUpperSpell)
+			if l:delIndex != -1
+				call remove(l:wordListForDelete, l:delIndex)
+			endif
+
+			let l:delIndex = index(l:wordListForDelete, l:upperSpell)
 			if l:delIndex != -1
 				call remove(l:wordListForDelete, l:delIndex)
 			endif
