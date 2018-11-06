@@ -294,7 +294,11 @@ function! CCSpellCheck#check()
 		return
 	endif
 
-	let l:spellSetting = substitute(execute(':setlocal spell?'), '\v(\n|\s)\C', '', 'g')
+	redir => spellSettingCapture
+		silent execute "setlocal spell?"
+	redir END
+
+	let l:spellSetting = substitute(l:spellSettingCapture, '\v(\n|\s)\C', '', 'g')
 	setlocal spell
 
 	let l:windowTextList = getline(1, '$')
