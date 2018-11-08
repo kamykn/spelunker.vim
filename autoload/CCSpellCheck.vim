@@ -1,4 +1,4 @@
-" Checking camel case words spelling.
+" Vim plugin of checking words spell on the code.
 " Version 1.0.0
 " Author kmszk
 " License VIM LICENSE
@@ -9,19 +9,19 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:getSpellBadList(text)
-	let l:lineForFindCamelCase = a:text
+	let l:lineForFindTargetWord = a:text
 	let l:spellBadList         = []
 
 	while 1
 		" キャメルケースとパスカルケースの抜き出し
-		let l:matchCamelCaseWord = matchstr(l:lineForFindCamelCase, '\v([A-Za-z]@<!)[A-Za-z]+[A-Z][A-Za-z]*\C')
-		if l:matchCamelCaseWord == ""
+		let l:matchTargetWord = matchstr(l:lineForFindTargetWord, '\v([A-Za-z]@<!)[A-Za-z]+([A-Z_][A-Za-z])*\C')
+		if l:matchTargetWord == ""
 			break
 		endif
 
-		let l:lineForFindCamelCase = s:cutTextWordBefore(l:lineForFindCamelCase, l:matchCamelCaseWord)
+		let l:lineForFindTargetWord = s:cutTextWordBefore(l:lineForFindTargetWord, l:matchTargetWord)
 
-		let l:wordList = s:camelCaseToWords([l:matchCamelCaseWord])
+		let l:wordList = s:codeToWords(l:matchTargetWord)
 		let l:foundSpellBadList = s:filterSpellBadList(l:wordList)
 
 		if len(l:foundSpellBadList) == 0
@@ -38,7 +38,7 @@ function! s:getSpellBadList(text)
 	return l:spellBadList
 endfunction
 
-functio! s:filterSpellBadList(wordList)
+function! s:filterSpellBadList(wordList)
 	let l:spellBadList = []
 	let l:currentPos   = 0
 
@@ -68,39 +68,37 @@ functio! s:filterSpellBadList(wordList)
 	return l:spellBadList
 endfunction
 
-function! s:camelCaseToWords(camelCaseWordList)
+function! s:codeToWords(lineOfCode)
 	let l:splitBy   = ' '
 	let l:wordsList = []
 
-	for c in a:camelCaseWordList
-		let l:splitWord = split(substitute(c, '\v([A-Z][a-z]*)\C', l:splitBy . "\\1", "g"), l:splitBy)
+	let l:splitWord = split(substitute(a:lineOfCode, '\v([A-Z_]{0,1}[a-z]*)\C', l:splitBy . "\\1", "g"), l:splitBy)
 
-		for s in l:splitWord
-			if index(l:wordsList, s) != -1
-				continue
-			endif
+	for s in l:splitWord
+		if index(l:wordsList, s) != -1
+			continue
+		endif
 
-			call add(l:wordsList, s)
-		endfor
+		call add(l:wordsList, s)
 	endfor
 
 	return l:wordsList
 endfunction
 
-function! s:searchCurrentWordOnCamelCase(lineStr, cword, currentColPos)
+function! s:searchCurrentWord(lineStr, cword, currentColPos)
 	" 単語の末尾よりもカーソルが左だった場合、currentColPos-wordIndexが単語内の何番目にカーソルがあったかが分かる
-	let [l:wordPos, l:cwordPos] = s:getCamelCaseWordPos(a:lineStr, a:cword, a:currentColPos)
+	let [l:wordPos, l:cwordPos] = s:getTargetWordPos(a:lineStr, a:cword, a:currentColPos)
 
 	" 現在のカーソル位置がcwordの中で何文字目か
 	let l:colPosInCWord = a:currentColPos - l:wordPos
 	" その単語がcwordの中で何文字目から始まるか
 	let l:wordStartPosInCWord = l:wordPos - l:cwordPos
 
-	let l:checkWordsList = s:camelCaseToWords([a:cword])
+	let l:checkWordsList = s:codeToWords(a:cword)
 	let l:lastWordLength = 0
 	for w in l:checkWordsList
 		if l:colPosInCWord <= strlen(w) + l:lastWordLength
-			let [l:wordPos, l:tmp] = s:getCamelCaseWordPos(a:cword, w, l:colPosInCWord)
+			let [l:wordPos, l:tmp] = s::getTargetWordPos(a:cword, w, l:colPosInCWord)
 			return [w, l:colPosInCWord, l:wordPos]
 		endif
 		let l:lastWordLength += strlen(w)
@@ -109,8 +107,8 @@ function! s:searchCurrentWordOnCamelCase(lineStr, cword, currentColPos)
 	return [get(l:checkWordsList, 0, a:cword), 0, 0]
 endfunction
 
-function! s:getCamelCaseWordPos(lineStr, cword, currentColPos)
-	" 単語の末尾よりもカーソルが左だった場合、currentColPos-wordIndexが単語内の何番目にカーソルがあったかが分かる
+function! s:getTargetWordPos(lineStr, cword, currentColPos)
+	" 単語の末尾よりもカーソルが左だった場合、currentColPos - wordIndexが単語内の何番目にカーソルがあったかが分かる
 	" return [キャメルケース上のカーソルがある単語の開始位置, cword全体の開始位置]
 
 	let l:wordIndexList = s:findWordIndexList(a:lineStr, a:cword)
@@ -144,7 +142,7 @@ function! s:findWordIndexList(lineStr, cword)
 	return l:findWordIndexList
 endfunction
 
-function! s:getSpellSuggestList(spellSuggestList, currentCamelCaseWord, cword)
+function! s:getSpellSuggestList(spellSuggestList, targetWord, cword)
 	" 変換候補選択用リスト
 	let l:spellSuggestListForInputList = []
 	" 変換候補リプレイス用リスト
@@ -170,7 +168,7 @@ function! s:getSpellSuggestList(spellSuggestList, currentCamelCaseWord, cword)
 		endif
 
 		" 先頭大文字小文字
-		if match(a:currentCamelCaseWord[0], '\v[A-Z]\C') == -1
+		if match(a:targetWord[0], '\v[A-Z]\C') == -1
 			let s = tolower(s)
 		else
 			let s = s:toFirstCharUpper(s)
@@ -331,22 +329,22 @@ function! CCSpellCheck#openFixList()
 		return
 	endif
 
-	let [l:currentCamelCaseWord, l:colPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWordOnCamelCase(getline('.'), l:cword, col('.'))
-	let l:spellSuggestList = spellsuggest(l:currentCamelCaseWord, g:CCSpellCheckMaxSuggestWords)
+	let [l:targetWord, l:colPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, col('.'))
+	let l:spellSuggestList = spellsuggest(l:targetWord, g:CCSpellCheckMaxSuggestWords)
 
 	if len(l:spellSuggestList) == 0
 		echo "No suggested words."
 		return
 	endif
 
-	let [l:spellSuggestListForInputList, l:spellSuggestListForReplace] = s:getSpellSuggestList(l:spellSuggestList, l:currentCamelCaseWord, l:cword)
+	let [l:spellSuggestListForInputList, l:spellSuggestListForReplace] = s:getSpellSuggestList(l:spellSuggestList, l:targetWord, l:cword)
 
 	let l:selected     = inputlist(l:spellSuggestListForInputList)
 	let l:selectedWord = l:spellSuggestListForReplace[l:selected - 1]
 
 	let l:replace  = strpart(l:cword, 0, l:wordStartPosInCWord)
 	let l:replace .= l:selectedWord
-	let l:replace .= strpart(l:cword, l:wordStartPosInCWord + strlen(l:currentCamelCaseWord), strlen(l:cword))
+	let l:replace .= strpart(l:cword, l:wordStartPosInCWord + strlen(l:targetWord), strlen(l:cword))
 
 	" 書き換えてカーソルポジションを直す
 	execute "normal ciw" . l:replace
