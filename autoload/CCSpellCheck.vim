@@ -85,12 +85,11 @@ function! s:codeToWords(lineOfCode)
 	return l:wordsList
 endfunction
 
-function! s:searchCurrentWord(lineStr, cword, currentColPos)
-	" 単語の末尾よりもカーソルが左だった場合、currentColPos-wordIndexが単語内の何番目にカーソルがあったかが分かる
-	let [l:wordPos, l:cwordPos] = s:getTargetWordPos(a:lineStr, a:cword, a:currentColPos)
+function! s:searchCurrentWord(lineStr, cword, cursorPosition)
+	let [l:wordPos, l:cwordPos] = s:getTargetWordPos(a:lineStr, a:cword, a:cursorPosition)
 
 	" 現在のカーソル位置がcwordの中で何文字目か
-	let l:colPosInCWord = a:currentColPos - l:wordPos
+	let l:colPosInCWord = a:cursorPosition - l:wordPos
 	" その単語がcwordの中で何文字目から始まるか
 	let l:wordStartPosInCWord = l:wordPos - l:cwordPos
 
@@ -107,6 +106,7 @@ function! s:searchCurrentWord(lineStr, cword, currentColPos)
 	return [get(l:checkWordsList, 0, a:cword), 0, 0]
 endfunction
 
+" 行上でどの単語にカーソルが乗っていたかを取得する
 function! s:getTargetWordPos(lineStr, cword, currentColPos)
 	" 単語の末尾よりもカーソルが左だった場合、currentColPos - wordIndexが単語内の何番目にカーソルがあったかが分かる
 	" return [キャメルケース上のカーソルがある単語の開始位置, cword全体の開始位置]
@@ -329,7 +329,8 @@ function! CCSpellCheck#openFixList()
 		return
 	endif
 
-	let [l:targetWord, l:colPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, col('.'))
+	let cursorPosition = col('.')
+	let [l:targetWord, l:colPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, cursorPosition)
 	let l:spellSuggestList = spellsuggest(l:targetWord, g:CCSpellCheckMaxSuggestWords)
 
 	if len(l:spellSuggestList) == 0
