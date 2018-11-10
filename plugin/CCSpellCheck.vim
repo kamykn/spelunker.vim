@@ -1,6 +1,6 @@
 " Checking camel case words spelling.
 " Version 1.0.0
-" Author kmszk
+" Author kamykn
 " License VIM LICENSE
 
 scriptencoding utf-8

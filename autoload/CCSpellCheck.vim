@@ -1,6 +1,6 @@
 " Vim plugin of checking words spell on the code.
 " Version 1.0.0
-" Author kmszk
+" Author kamykn
 " License VIM LICENSE
 
 scriptencoding utf-8
@@ -13,8 +13,9 @@ function! s:getSpellBadList(text)
 	let l:spellBadList         = []
 
 	while 1
-		" キャメルケースとパスカルケースの抜き出し
-		let l:matchTargetWord = matchstr(l:lineForFindTargetWord, '\v([A-Za-z]@<!)[A-Za-z]+([A-Z_][A-Za-z])*\C')
+		" キャメルケース、パスカルケース、スネークケースの抜き出し
+		" ex) camelCase, PascalCase, snake_case, __construct
+		let l:matchTargetWord = matchstr(l:lineForFindTargetWord, '\v([_]*[A-Za-z_]+)\C')
 		if l:matchTargetWord == ""
 			break
 		endif
@@ -72,7 +73,10 @@ function! s:codeToWords(lineOfCode)
 	let l:splitBy   = ' '
 	let l:wordsList = []
 
-	let l:splitWord = split(substitute(a:lineOfCode, '\v([A-Z_]{0,1}[a-z]*)\C', l:splitBy . "\\1", "g"), l:splitBy)
+	" 単語ごとに空白で区切った後にsplitで単語だけの配列を作る
+	" ex) spellBadWord -> spell Bad Word -> ['spell', 'Bad', 'Word']
+	" ex) spell_bad_word -> spell bad word -> ['spell', 'bad', 'word']
+	let l:splitWord = split(substitute(a:lineOfCode, '\v[_]*([A-Z]{0,1}[a-z]+)\C', l:splitBy . "\\1", "g"), l:splitBy)
 
 	for s in l:splitWord
 		if index(l:wordsList, s) != -1
@@ -296,6 +300,7 @@ function! CCSpellCheck#check()
 		silent execute "setlocal spell?"
 	redir END
 
+	" ex) '      spell' -> 'spell'
 	let l:spellSetting = substitute(l:spellSettingCapture, '\v(\n|\s)\C', '', 'g')
 	setlocal spell
 
@@ -324,8 +329,8 @@ endfunction
 function! CCSpellCheck#openFixList()
 	let l:cword = expand("<cword>")
 
-	if match(l:cword, '\v[A-Za-z]')
-		echo "It does not match [A-Za-z]."
+	if match(l:cword, '\v[A-Za-z_]')
+		echo "It does not match [A-Za-z_]."
 		return
 	endif
 
