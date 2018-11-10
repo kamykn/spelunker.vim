@@ -90,19 +90,19 @@ function! s:codeToWords(lineOfCode)
 endfunction
 
 function! s:searchCurrentWord(lineStr, cword, cursorPosition)
-	let [l:wordPos, l:cwordPos] = s:getTargetWordPos(a:lineStr, a:cword, a:cursorPosition)
+	let [l:wordStartPosInCWord, l:cwordStartPos] = s:getTargetWordPos(a:lineStr, a:cword, a:cursorPosition)
 
 	" 現在のカーソル位置がcwordの中で何文字目か
-	let l:colPosInCWord = a:cursorPosition - l:wordPos
+	let l:cursorPosInCWord = a:cursorPosition - l:wordStartPosInCWord
 	" その単語がcwordの中で何文字目から始まるか
-	let l:wordStartPosInCWord = l:wordPos - l:cwordPos
+	let l:wordStartPosInCWord = l:wordStartPosInCWord - l:cwordStartPos
 
 	let l:checkWordsList = s:codeToWords(a:cword)
-	let l:lastWordLength = 0
+	let l:lastWordLength = 1
 	for w in l:checkWordsList
-		if l:colPosInCWord <= strlen(w) + l:lastWordLength
-			let [l:wordPos, l:tmp] = s::getTargetWordPos(a:cword, w, l:colPosInCWord)
-			return [w, l:colPosInCWord, l:wordPos]
+		if l:cursorPosInCWord <= strlen(w) + l:lastWordLength
+			let [l:wordStartPosInCWord, l:tmp] = s:getTargetWordPos(a:cword, w, l:cursorPosInCWord)
+			return [w, l:cursorPosInCWord, l:wordStartPosInCWord]
 		endif
 		let l:lastWordLength += strlen(w)
 	endfor
@@ -111,15 +111,15 @@ function! s:searchCurrentWord(lineStr, cword, cursorPosition)
 endfunction
 
 " 行上でどの単語にカーソルが乗っていたかを取得する
-function! s:getTargetWordPos(lineStr, cword, currentColPos)
-	" 単語の末尾よりもカーソルが左だった場合、currentColPos - wordIndexが単語内の何番目にカーソルがあったかが分かる
-	" return [キャメルケース上のカーソルがある単語の開始位置, cword全体の開始位置]
+function! s:getTargetWordPos(lineStr, cword, cursorPosInCWord)
+	" 単語の末尾よりもカーソルが左だった場合、cursorPosInCWord - wordIndexが単語内の何番目にカーソルがあったかが分かる
+	" return [カーソルがある(spellチェックされる最小単位の)単語の開始位置, cword全体の開始位置]
 
 	let l:wordIndexList = s:findWordIndexList(a:lineStr, a:cword)
 
-	for i in l:wordIndexList
-		if i <= a:currentColPos && a:currentColPos <= i + strlen(a:cword)
-			return [i, get(l:wordIndexList, 0, 0)]
+	for targetWordStartPos in l:wordIndexList
+		if targetWordStartPos <= a:cursorPosInCWord && a:cursorPosInCWord <= targetWordStartPos + strlen(a:cword)
+			return [targetWordStartPos, get(l:wordIndexList, 0, 0)]
 		endif
 	endfor
 
@@ -335,7 +335,7 @@ function! CCSpellCheck#openFixList()
 	endif
 
 	let cursorPosition = col('.')
-	let [l:targetWord, l:colPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, cursorPosition)
+	let [l:targetWord, l:cursorPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, cursorPosition)
 	let l:spellSuggestList = spellsuggest(l:targetWord, g:CCSpellCheckMaxSuggestWords)
 
 	if len(l:spellSuggestList) == 0
@@ -354,7 +354,7 @@ function! CCSpellCheck#openFixList()
 
 	" 書き換えてカーソルポジションを直す
 	execute "normal ciw" . l:replace
-	execute "normal b" . l:colPosInCWord . "l"
+	execute "normal b" . l:cursorPosInCWord . "l"
 endfunction
 
 let &cpo = s:save_cpo
