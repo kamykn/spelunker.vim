@@ -22,7 +22,7 @@ function! s:getSpellBadList(text)
 
 		let l:lineForFindTargetWord = s:cutTextWordBefore(l:lineForFindTargetWord, l:matchTargetWord)
 
-		let l:wordList = s:codeToWords(l:matchTargetWord)
+		let l:wordList = s:codeToWords(l:matchTargetWord, 1)
 		let l:foundSpellBadList = s:filterSpellBadList(l:wordList)
 
 		if len(l:foundSpellBadList) == 0
@@ -69,7 +69,7 @@ function! s:filterSpellBadList(wordList)
 	return l:spellBadList
 endfunction
 
-function! s:codeToWords(lineOfCode)
+function! s:codeToWords(lineOfCode, shouldBeLowercase)
 	let l:splitBy   = ' '
 	let l:wordsList = []
 
@@ -83,7 +83,12 @@ function! s:codeToWords(lineOfCode)
 			continue
 		endif
 
-		call add(l:wordsList, s)
+		let l:word = s
+		if a:shouldBeLowercase
+			let l:word = tolower(s)
+		endif
+
+		call add(l:wordsList, word)
 	endfor
 
 	return l:wordsList
@@ -97,7 +102,7 @@ function! s:searchCurrentWord(lineStr, cword, cursorPosition)
 	" その単語がcwordの中で何文字目から始まるか
 	let l:wordStartPosInCWord = l:wordStartPosInCWord - l:cwordStartPos
 
-	let l:checkWordsList = s:codeToWords(a:cword)
+	let l:checkWordsList = s:codeToWords(a:cword, 0)
 	let l:lastWordLength = 1
 	for w in l:checkWordsList
 		if l:cursorPosInCWord <= strlen(w) + l:lastWordLength
@@ -368,7 +373,7 @@ function! CCSpellCheck#executeWithTargetWord(command)
 	let l:cursorPosition = col('.')
 	let [l:targetWord, l:cursorPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, l:cursorPosition)
 
-	execute a:command . ' ' . l:targetWord
+	execute a:command . ' ' . tolower(l:targetWord)
 endfunction
 
 let &cpo = s:save_cpo
