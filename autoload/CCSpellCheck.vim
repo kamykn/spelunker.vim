@@ -334,8 +334,8 @@ function! CCSpellCheck#openFixList()
 		return
 	endif
 
-	let cursorPosition = col('.')
-	let [l:targetWord, l:cursorPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, cursorPosition)
+	let l:cursorPosition = col('.')
+	let [l:targetWord, l:cursorPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, l:cursorPosition)
 	let l:spellSuggestList = spellsuggest(l:targetWord, g:CCSpellCheckMaxSuggestWords)
 
 	if len(l:spellSuggestList) == 0
@@ -355,6 +355,20 @@ function! CCSpellCheck#openFixList()
 	" 書き換えてカーソルポジションを直す
 	execute "normal ciw" . l:replace
 	execute "normal b" . l:cursorPosInCWord . "l"
+endfunction
+
+function! CCSpellCheck#executeWithTargetWord(command)
+	let l:cword = expand("<cword>")
+
+	if match(l:cword, '\v[A-Za-z_]')
+		echo "It does not match [A-Za-z_]."
+		return
+	endif
+
+	let l:cursorPosition = col('.')
+	let [l:targetWord, l:cursorPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, l:cursorPosition)
+
+	execute a:command . ' ' . l:targetWord
 endfunction
 
 let &cpo = s:save_cpo
