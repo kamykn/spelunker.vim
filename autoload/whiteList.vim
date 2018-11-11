@@ -24,7 +24,7 @@ function! whiteList#initWhiteList()
 		let l:wl += ['foreach', 'enddeclare', 'insteadof', 'isset']
 
 		" Go: http://golang.jp/go_spec#Keywords
-		let l:wl += ['func', 'chan', 'fallthrough']
+		let l:wl += ['func', 'chan', 'fallthrough', 'iota', 'imag', 'println']
 
 		" Rust: https://qnighy.hatenablog.com/entry/2017/05/28/070000
 		let l:wl += ['struct', 'impl', 'pub', 'mut', 'ref', 'fn', 'extern', 'mod', 'priv', 'proc', 'sizeof']
@@ -50,9 +50,11 @@ function! whiteList#initWhiteList()
 		let l:wl += ['str', 'char', 'int', 'bool', 'dict', 'enum', 'void', 'uint', 'ulong', 'ushort']
 		" Rust: https://qnighy.hatenablog.com/entry/2017/05/28/070000
 		let l:wl += ['isize', 'usize', 'vec']
+		" Go: http://golang.jp/go_spec#Constants
+		let l:wl += ['uintptr']
 
 		" Commands
-		let l:wl += ['sudo', 'ssh', 'grep', 'awk', 'curl', 'wget', 'mkdir', 'rmdir', 'pwd']
+		let l:wl += ['sudo', 'grep', 'awk', 'curl', 'wget', 'mkdir', 'rmdir', 'pwd']
 		let l:wl += ['chmod', 'chown', 'apropos']
 
 		" Famous OSS or products
@@ -69,14 +71,18 @@ function! whiteList#initWhiteList()
 		let l:wl += ['com', 'org', 'biz', 'xxx', 'gov', 'edu', 'tel', 'arpa', 'bitnet', 'csnet']
 
 		" Acronyms and abbreviations
-		let l:wl += ['config', 'goto', 'eval', 'exec', 'init', 'calc', 'iter', 'todo']
+		let l:wl += ['config', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
 		let l:wl += ['auth', 'sync', 'err', 'env', 'del', 'wasm', 'uniq', 'ttl', 'sec']
+		let l:wl += ['tls', 'ssl']
+
+		" Comment
+		let l:wl += ['todo', 'fixme', 'fyi']
 
 		" Protocols
-		let l:wl += ['http', 'https', 'tcp', 'udp', 'ftp', 'ftps']
+		let l:wl += ['ssh', 'http', 'https', 'tcp', 'udp', 'ftp', 'ftps', 'sftp', 'imap', 'scp']
 
 		" Other
-		let l:wl += ['referer', 'localhost', 'serializer']
+		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload']
 
 		let g:CCSpellCheckWhiteList = l:wl
 	endif
