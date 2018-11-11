@@ -53,6 +53,10 @@ function! s:filterSpellBadList(wordList)
 			continue
 		endif
 
+		if index(g:CCSpellCheckWhiteList, l:spellBadWord) >= 0
+			continue
+		endif
+
 		let l:wordLength = len(l:spellBadWord)
 
 		" すでに見つかっているspellBadWordの場合スルー
@@ -300,6 +304,8 @@ function! CCSpellCheck#check()
 	if g:EnableCCSpellCheck == 0
 		return
 	endif
+
+	call whiteList#initWhiteList()
 
 	redir => spellSettingCapture
 		silent execute "setlocal spell?"
