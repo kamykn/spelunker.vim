@@ -57,6 +57,10 @@ function! s:filterSpellBadList(wordList)
 			continue
 		endif
 
+		if whiteList#isCompoundWord(l:spellBadWord)
+			continue
+		endif
+
 		let l:wordLength = len(l:spellBadWord)
 
 		" すでに見つかっているspellBadWordの場合スルー
@@ -204,7 +208,7 @@ function! s:cutTextWordBefore (text, word)
 
 	let l:wordLength = len(a:word)
 	return strpart(a:text, l:foundPos + l:wordLength)
-endfunc
+endfunction
 
 " matchIDを先頭の1単語目の場合と２単語目の場合の大文字のケースで管理する必要が有ることに注意
 " 例：{'strlen': 4, 'Strlen': 5}

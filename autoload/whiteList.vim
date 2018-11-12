@@ -15,7 +15,7 @@ function! whiteList#initWhiteList()
 		" Programming language keywords
 		" Common
 		let l:wl += ['elseif', 'elsif', 'elif', 'endif', 'endfor', 'endforeach', 'endswitch']
-		let l:wl += ['endwhile', 'endfunction', 'xor']
+		let l:wl += ['endwhile', 'endfunction', 'endtry', 'xor']
 
 		" JS: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Reserved_Words
 		let l:wl += ['let', 'const', 'var', 'typeof', 'instanceof']
@@ -35,9 +35,12 @@ function! whiteList#initWhiteList()
 		" Clang: https://ja.wikipedia.org/wiki/キーワード_(C言語)
 		let l:wl += ['typedef', 'noreturn']
 
+		" Vim
+		let l:wl += ['cword']
+
 		" C++: https://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%BC%E3%83%AF%E3%83%BC%E3%83%89_(C%2B%2B)
 		let l:wl += ['nullptr', 'wchar', 'constexpr', 'alignof', 'decltype', 'typeid']
-		let l:wl +=	['noexcept', 'typename', 'alignas', 'asm', 'bitand', 'bitor', 'compl']
+		let l:wl += ['noexcept', 'typename', 'alignas', 'asm', 'bitand', 'bitor', 'compl']
 
 		" C#: https://docs.microsoft.com/ja-jp/dotnet/csharp/language-reference/keywords/
 		let l:wl += ['readonly', 'sbyte', 'stackalloc', 'ascending']
@@ -70,10 +73,13 @@ function! whiteList#initWhiteList()
 		" Top level domain: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3
 		let l:wl += ['com', 'org', 'biz', 'xxx', 'gov', 'edu', 'tel', 'arpa', 'bitnet', 'csnet']
 
+		" Environment
+		let l:wl += ['env', 'dev', 'prod', 'stg'] " 'qa', 'rc'
+
 		" Acronyms and abbreviations
 		let l:wl += ['config', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
-		let l:wl += ['auth', 'sync', 'err', 'env', 'del', 'wasm', 'uniq', 'ttl', 'sec']
-		let l:wl += ['tls', 'ssl']
+		let l:wl += ['auth', 'sync', 'del', 'wasm', 'uniq', 'ttl', 'sec']
+		let l:wl += ['tls', 'ssl', 'bin', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
@@ -86,6 +92,25 @@ function! whiteList#initWhiteList()
 
 		let g:CCSpellCheckWhiteList = l:wl
 	endif
+endfunction
+
+" 複合語だと思われるものを除外する
+" よくある接頭辞でチェックしてみる
+" 間違ったスペルだと思わしきものに対して使用する
+" ex) strlen -> OK
+"     string -> 予め除外しておく
+"
+" TODO: reとかdisとかもチェックしても良い気がする
+function! whiteList#isCompoundWord(wrongWord)
+	let l:commonProgrammingWordPrefix = ['str', 'print', 'get', 'set', 'calc', 'sub', 'match', 'byte', 'is', 'to']
+
+	for prefix in l:commonProgrammingWordPrefix 
+		if stridx(a:wrongWord, prefix) == 0
+			return 1
+		endif
+	endfor
+
+	return 0
 endfunction
 
 let &cpo = s:save_cpo
