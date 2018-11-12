@@ -57,10 +57,6 @@ function! s:filterSpellBadList(wordList)
 			continue
 		endif
 
-		if whiteList#isCompoundWord(l:spellBadWord)
-			continue
-		endif
-
 		let l:wordLength = len(l:spellBadWord)
 
 		" すでに見つかっているspellBadWordの場合スルー
@@ -234,19 +230,24 @@ function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, ma
 				" 大文字小文字無視オプションを使わない(事故るのを防止するため)
 				" ng: xxxAttr -> [atTr]iplePoint
 
+				let l:highlightGroup = g:SpellunkerSpellBadGroup
+				if whiteList#isCompoundWord(l:lowercaseSpell)
+					let l:highlightGroup = g:SpellunkerCompoundWordGroup
+				endif
+
 				" lowercase
 				" ex: xxxStrlen -> [strlen]
-				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v([A-Za-z]@<!)' . l:lowercaseSpell . '([a-z]@!)\C')
+				let l:matchID = matchadd(l:highlightGroup, '\v([A-Za-z]@<!)' . l:lowercaseSpell . '([a-z]@!)\C')
 				execute 'let l:matchIDDict.' . l:lowercaseSpell . ' = ' . l:matchID
 
 				" first character uppercase spell
-				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v' . l:firstCharUpperSpell . '([a-z]@!)\C')
+				let l:matchID = matchadd(l:highlightGroup, '\v' . l:firstCharUpperSpell . '([a-z]@!)\C')
 				execute 'let l:matchIDDict.' . l:firstCharUpperSpell . ' = ' . l:matchID
 
 				" UPPERCASE spell
 				" 正しい単語の定数で引っかからないように注意
 				" ng: xxxAttr -> [ATTR]IBUTE
-				let l:matchID = matchadd(g:CCSpellCheckMatchGroupName, '\v([A-Z]@<!)' . l:upperSpell . '([A-Z]@!)\C')
+				let l:matchID = matchadd(l:highlightGroup, '\v([A-Z]@<!)' . l:upperSpell . '([A-Z]@!)\C')
 				execute 'let l:matchIDDict.' . l:upperSpell . ' = ' . l:matchID
 
 				" Management of the spelling list in the lower case

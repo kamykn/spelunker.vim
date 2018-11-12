@@ -68,7 +68,7 @@ function! whiteList#initWhiteList()
 		" Programming language name: https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7
 		let l:wl += ['php', 'kotlin', 'clojure', 'ecma', 'lisp', 'erlang', 'clang', 'golang']
 		let l:wl += ['fortran', 'haskell', 'jsx', 'lua', 'matlab', 'scala', 'html', 'css']
-		let l:wl += ['less', 'sass', 'scss']
+		let l:wl += ['less', 'sass', 'scss', 'csharp', 'dotnet']
 
 		" Top level domain: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3
 		let l:wl += ['com', 'org', 'biz', 'xxx', 'gov', 'edu', 'tel', 'arpa', 'bitnet', 'csnet']
@@ -77,10 +77,10 @@ function! whiteList#initWhiteList()
 		let l:wl += ['env', 'dev', 'prod', 'stg'] " 'qa', 'rc'
 
 		" Acronyms and abbreviations
-		let l:wl += ['config', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
-		let l:wl += ['auth', 'sync', 'del', 'wasm', 'uniq', 'ttl', 'sec']
-		let l:wl += ['tls', 'ssl', 'bin', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err']
-
+		let l:wl += ['config', 'conf', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
+		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'uniq', 'ttl', 'sec']
+		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
+		let l:wl += ['lang', 'param', 'ajax', 'attr', 'elem', 'ctrl', 'alt', 'cmd']
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
 
@@ -88,24 +88,31 @@ function! whiteList#initWhiteList()
 		let l:wl += ['ssh', 'http', 'https', 'tcp', 'udp', 'ftp', 'ftps', 'sftp', 'imap', 'scp']
 
 		" Other
-		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload']
+		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup']
 
 		let g:CCSpellCheckWhiteList = l:wl
 	endif
 endfunction
 
-" 複合語だと思われるものを除外する
+" 複合語だと思われるものを検出するため、
 " よくある接頭辞でチェックしてみる
-" 間違ったスペルだと思わしきものに対して使用する
+" 間違ったスペルとして検出したワードに対して使用する
 " ex) strlen -> OK
 "     string -> 予め除外しておく
-"
-" TODO: reとかdisとかもチェックしても良い気がする
 function! whiteList#isCompoundWord(wrongWord)
-	let l:commonProgrammingWordPrefix = ['str', 'print', 'get', 'set', 'calc', 'sub', 'match', 'byte', 'is', 'to']
+	let l:commonWordPrefix  = ['re', 'dis', 'pre', 'co']
+	let l:commonWordPrefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub', 'match', 'byte', 'is', 'has', 'to']
 
-	for prefix in l:commonProgrammingWordPrefix 
+	for prefix in l:commonWordPrefix
 		if stridx(a:wrongWord, prefix) == 0
+			return 1
+		endif
+	endfor
+
+	let l:commonWordSuffix = ['able', 'pos', 'list', 'map', 'cmd', 'bg', 'fg']
+
+	for suffix in l:commonWordSuffix
+		if stridx(a:wrongWord, suffix) + strlen(suffix) == strlen(a:wrongWord)
 			return 1
 		endif
 	endfor

@@ -26,17 +26,24 @@ if !exists('g:CCSpellCheckMaxSuggestWords')
 	let g:CCSpellCheckMaxSuggestWords = 50
 endif
 
-if !exists('g:CCSpellCheckMatchGroupName')
-	let g:CCSpellCheckMatchGroupName = 'CCSpellBad'
+if !exists('g:SpellunkerCompoundWordGroup')
+	let g:SpellunkerCompoundWordGroup = 'SpellunkerCompoundWord'
 endif
 
-let s:listOfCCSpellCheckHi = ""
+if !exists('g:SpellunkerSpellBadGroup')
+	let g:SpellunkerSpellBadGroup = 'SpellunkerSpellBad'
+endif
+
+let s:spellunkerSpellBadHiList = ""
+let s:spellunkerCompoundWordHiList = ""
 try
-	let s:listOfCCSpellCheckHi = execute('highlight ' . g:CCSpellCheckMatchGroupName)
+	let s:spellunkerSpellBadHiList = execute('highlight ' . g:SpellunkerSpellBadGroup)
+	let s:spellunkerCompoundWordHiList = execute('highlight ' . g:SpellunkerCompoundWord)
 catch
 finally
-	if strlen(s:listOfCCSpellCheckHi) == 0
-		execute ('highlight ' . g:CCSpellCheckMatchGroupName . ' cterm=reverse ctermfg=yellow gui=reverse guifg=yellow')
+	if strlen(s:spellunkerSpellBadHiList) == 0 && strlen(s:spellunkerCompoundWordHiList) == 0
+		execute ('highlight ' . g:SpellunkerSpellBadGroup . ' cterm=NONE ctermfg=yellow gui=NONE guifg=yellow')
+		execute ('highlight ' . g:SpellunkerCompoundWordGroup . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
 	endif
 endtry
 
