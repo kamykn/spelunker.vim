@@ -58,10 +58,10 @@ function! whiteList#initWhiteList()
 
 		" Commands
 		let l:wl += ['sudo', 'grep', 'awk', 'curl', 'wget', 'mkdir', 'rmdir', 'pwd']
-		let l:wl += ['chmod', 'chown', 'apropos']
+		let l:wl += ['chmod', 'chown', 'rsync', 'uniq', 'git', 'svn']
 
 		" Famous OSS or products
-		let l:wl += ['apache', 'nginx', 'github', 'wikipedia', 'linux', 'unix']
+		let l:wl += ['apache', 'nginx', 'github', 'wikipedia', 'linux', 'unix', 'dos']
 		let l:wl += ['mysql', 'postgresql', 'postgre', 'vim', 'gvim', 'emacs', 'vscode']
 		let l:wl += ['csh', 'bash', 'zsh', 'ksh', 'iphone', 'redis', 'memcached', 'aws', 'gcp']
 
@@ -78,9 +78,11 @@ function! whiteList#initWhiteList()
 
 		" Acronyms and abbreviations
 		let l:wl += ['config', 'conf', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
-		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'uniq', 'ttl', 'sec']
+		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
-		let l:wl += ['lang', 'param', 'ajax', 'attr', 'elem', 'ctrl', 'alt', 'cmd']
+		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
+		let l:wl += ['asc', 'desc', 'cnt']
+
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
 
@@ -89,6 +91,9 @@ function! whiteList#initWhiteList()
 
 		" Other
 		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup']
+
+		" Don't you think it is terrible?
+		let l:wl += ['don', 'doesn', 'didn', 'ain', 'isn', 'wasn', 'aren', 'weren']
 
 		let g:CCSpellCheckWhiteList = l:wl
 	endif
@@ -100,8 +105,9 @@ endfunction
 " ex) strlen -> OK
 "     string -> 予め除外しておく
 function! whiteList#isCompoundWord(wrongWord)
-	let l:commonWordPrefix  = ['re', 'dis', 'pre', 'co']
-	let l:commonWordPrefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub', 'match', 'byte', 'is', 'has', 'to']
+	let l:commonWordPrefix  = ['re', 'dis', 'pre', 'co', 'un']
+	let l:commonWordPrefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
+	let l:commonWordPrefix += ['match', 'byte', 'is', 'has', 'to']
 
 	for prefix in l:commonWordPrefix
 		if stridx(a:wrongWord, prefix) == 0
@@ -109,7 +115,7 @@ function! whiteList#isCompoundWord(wrongWord)
 		endif
 	endfor
 
-	let l:commonWordSuffix = ['able', 'pos', 'list', 'map', 'cmd', 'bg', 'fg']
+	let l:commonWordSuffix = ['able', 'pos', 'list', 'map', 'cmd', 'bg', 'fg', 'id', 'log', 'num']
 
 	for suffix in l:commonWordSuffix
 		if stridx(a:wrongWord, suffix) + strlen(suffix) == strlen(a:wrongWord)

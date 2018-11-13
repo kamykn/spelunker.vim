@@ -43,7 +43,7 @@ catch
 finally
 	if strlen(s:spellunkerSpellBadHiList) == 0 && strlen(s:spellunkerCompoundWordHiList) == 0
 		execute ('highlight ' . g:SpellunkerSpellBadGroup . ' cterm=NONE ctermfg=yellow gui=NONE guifg=yellow')
-		execute ('highlight ' . g:SpellunkerCompoundWordGroup . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
+		execute ('highlight ' . g:SpellunkerCompoundWordGroup . ' cterm=underline ctermfg=cyan gui=underline guifg=cyan')
 	endif
 endtry
 
