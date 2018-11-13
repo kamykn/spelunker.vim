@@ -8,7 +8,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! whiteList#initWhiteList()
+function! white_list#init_white_list()
 	if !exists('g:spellunker_white_list')
 		let l:wl = []
 
@@ -104,21 +104,21 @@ endfunction
 " 間違ったスペルとして検出したワードに対して使用する
 " ex) strlen -> OK
 "     string -> 予め除外しておく
-function! whiteList#isCompoundWord(wrongWord)
-	let l:commonWordPrefix  = ['re', 'dis', 'pre', 'co', 'un']
-	let l:commonWordPrefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
-	let l:commonWordPrefix += ['match', 'byte', 'is', 'has', 'to']
+function! white_list#is_compound_word(wrong_word)
+	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un']
+	let l:common_word_prefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
+	let l:common_word_prefix += ['match', 'byte', 'is', 'has', 'to']
 
-	for prefix in l:commonWordPrefix
-		if stridx(a:wrongWord, prefix) == 0
+	for prefix in l:common_word_prefix
+		if stridx(a:wrong_word, prefix) == 0
 			return 1
 		endif
 	endfor
 
-	let l:commonWordSuffix = ['able', 'pos', 'list', 'map', 'cmd', 'bg', 'fg', 'id', 'log', 'num']
+	let l:common_word_suffix = ['able', 'pos', 'list', 'map', 'cmd', 'bg', 'fg', 'id', 'log', 'num']
 
-	for suffix in l:commonWordSuffix
-		if stridx(a:wrongWord, suffix) + strlen(suffix) == strlen(a:wrongWord)
+	for suffix in l:common_word_suffix
+		if stridx(a:wrong_word, suffix) + strlen(suffix) == strlen(a:wrong_word)
 			return 1
 		endif
 	endfor

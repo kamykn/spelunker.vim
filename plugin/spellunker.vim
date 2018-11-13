@@ -42,7 +42,7 @@ try
 catch
 finally
 	if strlen(s:spellunker_spell_bad_hi_list) == 0 && strlen(s:spellunker_compound_word_hi_list) == 0
-		execute ('highlight ' . g:spellunker_spell_bad_group . ' cterm=NONE ctermfg=yellow gui=NONE guifg=yellow')
+		execute ('highlight ' . g:spellunker_spell_bad_group . ' cterm=underline ctermfg=yellow gui=underline guifg=yellow')
 		execute ('highlight ' . g:spellunker_compound_word_group . ' cterm=underline ctermfg=59 gui=underline guifg=#5C6370')
 	endif
 endtry
@@ -54,7 +54,7 @@ endif
 
 " vnoremapは古い方法の後方互換です
 
-" [spellgood] ==============================================================
+" [spell good] ==============================================================
 vnoremap <silent> <Plug>(add-spellunker-good) zg :call spellunker#check()<CR>
 if !hasmapto('<Plug>(add-spellunker-good)')
 	silent! vmap <unique> Zg <Plug>(add-spellunker-good)
@@ -66,7 +66,7 @@ if !hasmapto('<Plug>(add-spellunker-good-nmap)')
 	silent! nmap <unique> Zg <Plug>(add-spellunker-good-nmap)
 endif
 
-" [undo spellgood] ==============================================================
+" [undo spell good] ==============================================================
 vnoremap <silent> <Plug>(undo-spellunker-good) zug :call spellunker#check()<CR>
 if !hasmapto('<Plug>(undo-spellunker-good)')
 	silent! vmap <unique> Zug <Plug>(undo-spellunker-good)
@@ -78,7 +78,7 @@ if !hasmapto('<Plug>(undo-spellunker-good-nmap)')
 	silent! nmap <unique> Zug <Plug>(undo-spellunker-good-nmap)
 endif
 
-" [temporary spellgood] ==============================================================
+" [temporary spell good] ==============================================================
 vnoremap <silent> <Plug>(add-temporary-spellunker-good) zG :call spellunker#check()<CR>
 if !hasmapto('<Plug>(add-temporary-spellunker-good)')
 	silent! vmap <unique> ZG <Plug>(add-temporary-spellunker-good)
@@ -90,19 +90,19 @@ if !hasmapto('<Plug>(add-temporary-spellunker-good-nmap)')
 	silent! nmap <unique> ZG <Plug>(add-temporary-spellunker-good-nmap)
 endif
 
-" [undo temporary spellgood] ==============================================================
+" [undo temporary spell good] ==============================================================
 vnoremap <silent> <Plug>(undo-temporary-spellunker-good) zuG :call spellunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spellunker-good)')
 	silent! vmap <unique> ZUG <Plug>(undo-temporary-spellunker-good)
 endif
 
-nnoremap <silent> <Plug>(undo-temporary-spelluker-good-nmap)
+nnoremap <silent> <Plug>(undo-temporary-spellunker-good-nmap)
 		\	:call spellunker#execute_with_target_word('spellundo!')<CR> :call spellunker#check()<CR>
-if !hasmapto('<Plug>(undo-temporary-spelluker-good-nmap)')
-	silent! nmap <unique> ZUG <Plug>(undo-temporary-spelluker-good-nmap)
+if !hasmapto('<Plug>(undo-temporary-spellunker-good-nmap)')
+	silent! nmap <unique> ZUG <Plug>(undo-temporary-spellunker-good-nmap)
 endif
 
-" [spellbad] ==============================================================
+" [spell bad] ==============================================================
 vnoremap <silent> <Plug>(add-spellunker-bad) zw :call spellunker#check()<CR>
 if !hasmapto('<Plug>(add-spellunker-bad)')
 	silent! vmap <unique> Zw <Plug>(add-spellunker-bad)
@@ -114,7 +114,7 @@ if !hasmapto('<Plug>(add-spell-bad-nmap)')
 	silent! nmap <unique> Zw <Plug>(add-spell-bad-nmap)
 endif
 
-" [undo spellbad] ==============================================================
+" [undo spell bad] ==============================================================
 vnoremap <silent> <Plug>(undo-spellunker-bad) zuw :call spellunker#check()<CR>
 if !hasmapto('<Plug>(undo-spellunker-bad)')
 	silent! vmap <unique> Zuw <Plug>(undo-spellunker-bad)
@@ -126,7 +126,7 @@ if !hasmapto('<Plug>(undo-spellunker-bad-nmap)')
 	silent! nmap <unique> Zuw <Plug>(undo-spellunker-bad-nmap)
 endif
 
-" [temporary spellbad] ==============================================================
+" [temporary spell bad] ==============================================================
 vnoremap <silent> <Plug>(add-temporary-spellunker-bad) zW :call spellunker#check()<CR>
 if !hasmapto('<Plug>(add-temporary-spellunker-bad)')
 	silent! vmap <unique> ZW <Plug>(add-temporary-spellunker-bad)
@@ -138,7 +138,7 @@ if !hasmapto('<Plug>(add-temporary-spell-bad-nmap)')
 	silent! nmap <unique> ZW <Plug>(add-temporary-spell-bad-nmap)
 endif
 
-" [temporary spellbad] ==============================================================
+" [temporary spell bad] ==============================================================
 vnoremap <silent> <Plug>(undo-temporary-spell-bad) zuW :call spellunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spellunker-bad)')
 	silent! vmap <unique> ZUW <Plug>(undo-temporary-spellunker-bad)
@@ -151,7 +151,7 @@ if !hasmapto('<Plug>(undo-temporary-spellunker-bad-nmap)')
 endif
 
 
-augroup CCSpellCheck
+augroup spellunker
 	autocmd!
 	autocmd BufWinEnter,BufWritePost * call spellunker#check()
 augroup END
