@@ -9,7 +9,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! whiteList#initWhiteList()
-	if !exists('g:CCSpellCheckWhiteList')
+	if !exists('g:spellunker_white_list')
 		let l:wl = []
 
 		" Programming language keywords
@@ -95,7 +95,7 @@ function! whiteList#initWhiteList()
 		" Don't you think it is terrible?
 		let l:wl += ['don', 'doesn', 'didn', 'ain', 'isn', 'wasn', 'aren', 'weren']
 
-		let g:CCSpellCheckWhiteList = l:wl
+		let g:spellunker_white_list = l:wl
 	endif
 endfunction
 

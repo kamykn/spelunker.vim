@@ -53,7 +53,7 @@ function! s:filterSpellBadList(wordList)
 			continue
 		endif
 
-		if index(g:CCSpellCheckWhiteList, l:spellBadWord) >= 0
+		if index(g:spellunker_white_list, l:spellBadWord) >= 0
 			continue
 		endif
 
@@ -65,7 +65,7 @@ function! s:filterSpellBadList(wordList)
 		endif
 
 		" 特定文字数以上のみ検出
-		if l:wordLength >= g:CCSpellCheckMinCharacterLength
+		if l:wordLength >= g:spellunker_min_char_len
 			call add(l:spellBadList, l:spellBadWord)
 		endif
 	endfor
@@ -230,9 +230,9 @@ function! s:addMatches(windowTextList, ignoreSpellBadList, wordListForDelete, ma
 				" 大文字小文字無視オプションを使わない(事故るのを防止するため)
 				" ng: xxxAttr -> [atTr]iplePoint
 
-				let l:highlightGroup = g:SpellunkerSpellBadGroup
+				let l:highlightGroup = g:spellunker_spell_bad_group
 				if whiteList#isCompoundWord(l:lowercaseSpell)
-					let l:highlightGroup = g:SpellunkerCompoundWordGroup
+					let l:highlightGroup = g:spellunker_compound_word_group
 				endif
 
 				" lowercase
@@ -301,12 +301,12 @@ function! s:deleteMatches(wordListForDelete, matchIDDict)
 	return l:matchIDDict
 endfunction
 
-function! CCSpellCheck#check()
+function! spellunker#check()
 	if &readonly
 		return
 	endif
 
-	if g:EnableCCSpellCheck == 0
+	if g:enable_spellunker == 0
 		return
 	endif
 
@@ -342,7 +342,7 @@ function! CCSpellCheck#check()
 	let b:matchIDDict = s:deleteMatches(l:wordListForDelete, b:matchIDDict)
 endfunction
 
-function! CCSpellCheck#openFixList()
+function! spellunker#open_fix_list()
 	let l:cword = expand("<cword>")
 
 	if match(l:cword, '\v[A-Za-z_]')
@@ -352,7 +352,7 @@ function! CCSpellCheck#openFixList()
 
 	let l:cursorPosition = col('.')
 	let [l:targetWord, l:cursorPosInCWord, l:wordStartPosInCWord] = s:searchCurrentWord(getline('.'), l:cword, l:cursorPosition)
-	let l:spellSuggestList = spellsuggest(l:targetWord, g:CCSpellCheckMaxSuggestWords)
+	let l:spellSuggestList = spellsuggest(l:targetWord, g:spellunker_max_suggest_words)
 
 	if len(l:spellSuggestList) == 0
 		echo "No suggested words."
@@ -373,7 +373,7 @@ function! CCSpellCheck#openFixList()
 	execute "normal b" . l:cursorPosInCWord . "l"
 endfunction
 
-function! CCSpellCheck#executeWithTargetWord(command)
+function! spellunker#execute_with_target_word(command)
 	let l:cword = expand("<cword>")
 
 	if match(l:cword, '\v[A-Za-z_]')
