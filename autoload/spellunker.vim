@@ -10,6 +10,9 @@ set cpo&vim
 
 function! s:get_spell_bad_list(text)
 	let l:line_for_find_target_word = a:text
+
+	" goodは重複チェック判定用
+	let l:spell_good_list           = []
 	let l:spell_bad_list            = []
 
 	while 1
@@ -23,53 +26,41 @@ function! s:get_spell_bad_list(text)
 		let l:line_for_find_target_word = s:cut_text_word_before(l:line_for_find_target_word, l:match_target_word)
 
 		let l:word_list = s:code_to_words(l:match_target_word, 1)
-		let l:found_spell_bad_list = s:filter_spell_bad_list(l:word_list)
-
-		if len(l:found_spell_bad_list) == 0
-			continue
-		endif
-
-		for s in l:found_spell_bad_list
-			if index(l:spell_bad_list, s) == -1
-				call add(l:spell_bad_list, s)
-			endif
-		endfor
+		let [l:spell_good_list, l:spell_bad_list] = s:filter_spell_good_bad_list(l:word_list, l:spell_good_list, l:spell_bad_list)
 	endwhile
 
 	return l:spell_bad_list
 endfunction
 
-function! s:filter_spell_bad_list(word_list)
-	let l:spell_bad_list = []
+function! s:filter_spell_good_bad_list(word_list, spell_good_list, spell_bad_list)
+	let l:spell_good_list = a:spell_good_list
+	let l:spell_bad_list  = a:spell_bad_list
 
-	for w in a:word_list
-		if strlen(w) <= 1
+	for word in a:word_list
+		" 特定文字数以上のみ検出
+		if strlen(word) < g:spellunker_min_char_len
 			continue
 		endif
 
-		let [l:spell_bad_word, l:error_type] = spellbadword(w)
-		if empty(l:spell_bad_word)
+		if index(g:spellunker_white_list, word) >= 0
 			continue
 		endif
-
-		if index(g:spellunker_white_list, l:spell_bad_word) >= 0
-			continue
-		endif
-
-		let l:word_length = len(l:spell_bad_word)
 
 		" すでに見つかっているspell_bad_wordの場合スルー
-		if index(l:spell_bad_list, l:spell_bad_word) != -1
+		if (index(l:spell_bad_list, word) != -1 || index(l:spell_good_list, word) != -1)
 			continue
 		endif
 
-		" 特定文字数以上のみ検出
-		if l:word_length >= g:spellunker_min_char_len
-			call add(l:spell_bad_list, l:spell_bad_word)
+		let [l:spell_bad_word, l:error_type] = spellbadword(word)
+		if empty(l:spell_bad_word)
+			call add(l:spell_good_list, word)
+			continue
 		endif
+
+		call add(l:spell_bad_list, l:spell_bad_word)
 	endfor
 
-	return l:spell_bad_list
+	return [l:spell_good_list, l:spell_bad_list]
 endfunction
 
 function! s:code_to_words(line_of_code, should_be_lowercase)
