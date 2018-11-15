@@ -42,8 +42,8 @@ try
 catch
 finally
 	if strlen(s:spellunker_spell_bad_hi_list) == 0 && strlen(s:spellunker_compound_word_hi_list) == 0
-		execute ('highlight ' . g:spellunker_spell_bad_group . ' cterm=underline ctermfg=yellow gui=underline guifg=yellow')
-		execute ('highlight ' . g:spellunker_compound_word_group . ' cterm=underline ctermfg=59 gui=underline guifg=#5C6370')
+		execute ('highlight ' . g:spellunker_spell_bad_group . ' cterm=underline ctermfg=59 gui=underline guifg=#5C6370')
+		execute ('highlight ' . g:spellunker_compound_word_group . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
 	endif
 endtry
 
