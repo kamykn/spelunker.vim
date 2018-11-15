@@ -81,7 +81,7 @@ function! white_list#init_white_list()
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
-		let l:wl += ['asc', 'desc', 'cnt']
+		let l:wl += ['asc', 'desc', 'cnt', 'api', 'wifi']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
@@ -100,10 +100,10 @@ function! white_list#init_white_list()
 endfunction
 
 " 複合語だと思われるものを検出するため、
-" よくある接頭辞でチェックしてみる
+" よくある接頭辞、接尾辞でチェックしてみる
 " 間違ったスペルとして検出したワードに対して使用する
-" ex) strlen -> OK
-"     string -> 予め除外しておく
+" ex) wrong_word = strlen -> OK
+"     wrong_word = string -> NG: 予め除外しておく
 function! white_list#is_compound_word(wrong_word)
 	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un']
 	let l:common_word_prefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub']

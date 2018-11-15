@@ -193,72 +193,56 @@ endfunction
 " match_idを先頭の1単語目の場合と２単語目の場合の大文字のケースで管理する必要が有ることに注意
 " 例：{'strlen': 4, 'Strlen': 5}
 function! s:add_matches(window_text_list, match_id_dict)
-	let l:ignore_spell_bad_list = keys(a:match_id_dict)
-	let l:word_list_for_delete  = l:ignore_spell_bad_list
-	let l:match_id_dict         = a:match_id_dict
+	let l:current_matched_list         = keys(a:match_id_dict)
+	let l:word_list_for_delete_match   = l:current_matched_list " spellbadとして今回検知されなければ削除するリスト
+	let l:match_id_dict                = a:match_id_dict
 
 	let l:word_list = s:get_word_list(a:window_text_list)
-
-	" 関数化
-	for w in l:word_list
-		let l:del_index = index(l:ignore_spell_bad_list, w)
-		if l:del_index != -1
-			remove(l:word_list, l:del_index)
-		endif
-	endfor
-
 	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
 
-	for s in l:spell_bad_list
-		let l:lowercase_spell = tolower(s)
+	for word in l:spell_bad_list
+		" wordはlowercaseで渡される
+		let l:first_char_upper_spell = s:to_first_char_upper(word)
+		let l:uppercase_spell = toupper(word)
 
-		let l:first_char_upper_spell = s:to_first_char_upper(l:lowercase_spell)
-		let l:uppercase_spell = toupper(l:lowercase_spell)
+		if index(l:current_matched_list, word) == -1
+			" 新しく見つかった場合highlightを設定する
+			let l:highlight_group = g:spellunker_spell_bad_group
+			if white_list#is_compound_word(word)
+				let l:highlight_group = g:spellunker_compound_word_group
+			endif
 
-		" 大文字小文字無視オプションを使わない(事故るのを防止するため)
-		" ng: xxxAttr -> [atTr]iplePoint
+			" 大文字小文字無視オプションを使わない(事故るのを防止するため)
+			" ng: xxxAttr -> [atTr]iplePoint
 
-		let l:highlight_group = g:spellunker_spell_bad_group
-		if white_list#is_compound_word(l:lowercase_spell)
-			let l:highlight_group = g:spellunker_compound_word_group
-		endif
+			" lowercase
+			" ex: xxxStrlen -> [strlen]
+			let l:match_id = matchadd(l:highlight_group, '\v([A-Za-z]@<!)' . word . '([a-z]@!)\C')
+			execute 'let l:match_id_dict.' . word . ' = ' . l:match_id
 
-		" lowercase
-		" ex: xxxStrlen -> [strlen]
-		let l:match_id = matchadd(l:highlight_group, '\v([A-Za-z]@<!)' . l:lowercase_spell . '([a-z]@!)\C')
-		execute 'let l:match_id_dict.' . l:lowercase_spell . ' = ' . l:match_id
+			" first character uppercase spell
+			let l:match_id = matchadd(l:highlight_group, '\v' . l:first_char_upper_spell . '([a-z]@!)\C')
+			execute 'let l:match_id_dict.' . l:first_char_upper_spell . ' = ' . l:match_id
 
-		" first character uppercase spell
-		let l:match_id = matchadd(l:highlight_group, '\v' . l:first_char_upper_spell . '([a-z]@!)\C')
-		execute 'let l:match_id_dict.' . l:first_char_upper_spell . ' = ' . l:match_id
+			" UPPERCASE spell
+			" 正しい単語の定数で引っかからないように注意
+			" ng: xxxAttr -> [ATTR]IBUTE
+			let l:match_id = matchadd(l:highlight_group, '\v([A-Z]@<!)' . l:uppercase_spell . '([A-Z]@!)\C')
+			execute 'let l:match_id_dict.' . l:uppercase_spell . ' = ' . l:match_id
+		else
+			" すでにある場合には削除予定リストから単語消す
+			let l:del_index = index(l:word_list_for_delete_match, word)
+			call remove(l:word_list_for_delete_match, l:del_index)
 
-		" UPPERCASE spell
-		" 正しい単語の定数で引っかからないように注意
-		" ng: xxxAttr -> [ATTR]IBUTE
-		let l:match_id = matchadd(l:highlight_group, '\v([A-Z]@<!)' . l:uppercase_spell . '([A-Z]@!)\C')
-		execute 'let l:match_id_dict.' . l:uppercase_spell . ' = ' . l:match_id
+			let l:del_index = index(l:word_list_for_delete_match, l:first_char_upper_spell)
+			call remove(l:word_list_for_delete_match, l:del_index)
 
-		" Management of the spelling list in the lower case
-		call add(l:ignore_spell_bad_list, l:lowercase_spell)
-
-		" 削除予定リストから単語消す
-		let l:del_index = index(l:word_list_for_delete, l:lowercase_spell)
-		if l:del_index != -1
-			call remove(l:word_list_for_delete, l:del_index)
-		endif
-
-		let l:del_index = index(l:word_list_for_delete, l:first_char_upper_spell)
-		if l:del_index != -1
-			call remove(l:word_list_for_delete, l:del_index)
-		endif
-
-		let l:del_index = index(l:word_list_for_delete, l:uppercase_spell)
-		if l:del_index != -1
-			call remove(l:word_list_for_delete, l:del_index)
+			let l:del_index = index(l:word_list_for_delete_match, l:uppercase_spell)
+			call remove(l:word_list_for_delete_match, l:del_index)
 		endif
 	endfor
 
-	return [l:word_list_for_delete, l:match_id_dict]
+	return [l:word_list_for_delete_match, l:match_id_dict]
 endfunction
 
 function! s:to_first_char_upper(lowercase_spell)
@@ -312,17 +296,17 @@ function! spellunker#check()
 		let b:match_id_dict = {}
 	endif
 
-	let [l:word_list_for_delete, b:match_id_dict] = s:add_matches(l:window_text_list, b:match_id_dict)
+	let [l:word_list_for_delete_match, b:match_id_dict] = s:add_matches(l:window_text_list, b:match_id_dict)
 
 	if l:spell_setting != "spell"
 		setlocal nospell
 	endif
 
-	if len(l:word_list_for_delete) == 0
+	if len(l:word_list_for_delete_match) == 0
 		return
 	endif
 
-	let b:match_id_dict = s:delete_matches(l:word_list_for_delete, b:match_id_dict)
+	let b:match_id_dict = s:delete_matches(l:word_list_for_delete_match, b:match_id_dict)
 endfunction
 
 function! spellunker#open_fix_list()
