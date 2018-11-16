@@ -38,6 +38,15 @@ endfunction
 function! s:filter_spell_bad_list(word_list)
 	let l:spell_bad_list  = []
 
+	" 言語別ホワイトリストの取得
+	let l:white_list_for_lang = []
+	try
+		let l:filetype = &filetype
+		execute 'let l:white_list_for_lang = white_list_' . l:filetype . '#init_white_list()'
+	catch
+		" 読み捨て
+	endtry
+
 	for word in a:word_list
 		" 特定文字数以上のみ検出
 		if strlen(word) < g:spellunker_min_char_len
@@ -45,6 +54,10 @@ function! s:filter_spell_bad_list(word_list)
 		endif
 
 		if index(g:spellunker_white_list, word) >= 0
+			continue
+		endif
+
+		if index(l:white_list_for_lang, word) >= 0
 			continue
 		endif
 
@@ -197,8 +210,16 @@ function! s:add_matches(window_text_list, match_id_dict)
 	let l:word_list_for_delete_match   = l:current_matched_list " spellbadとして今回検知されなければ削除するリスト
 	let l:match_id_dict                = a:match_id_dict
 
+	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
+	" TODO: spellgood系操作でmatch_id_dictから消してあげてもいいかも?
+	"       ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(a:window_text_list)
 	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
+
+	" " ホワイトリスト作るとき用
+	" redir => spell_bad_list_str
+	" 	echo l:spell_bad_list
+	" redir END
 
 	for word in l:spell_bad_list
 		" wordはlowercaseで渡される

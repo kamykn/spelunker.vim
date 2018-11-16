@@ -74,14 +74,14 @@ function! white_list#init_white_list()
 		let l:wl += ['com', 'org', 'biz', 'xxx', 'gov', 'edu', 'tel', 'arpa', 'bitnet', 'csnet']
 
 		" Environment
-		let l:wl += ['env', 'dev', 'prod', 'stg'] " 'qa', 'rc'
+		let l:wl += ['env', 'dev', 'prod', 'stg', 'qa', 'rc']
 
 		" Acronyms and abbreviations
 		let l:wl += ['config', 'conf', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
-		let l:wl += ['asc', 'desc', 'cnt', 'api', 'wifi']
+		let l:wl += ['asc', 'desc', 'cnt', 'api', 'wifi', 'url', 'ascii', 'utf', 'ansi']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
@@ -90,7 +90,7 @@ function! white_list#init_white_list()
 		let l:wl += ['ssh', 'http', 'https', 'tcp', 'udp', 'ftp', 'ftps', 'sftp', 'imap', 'scp']
 
 		" Other
-		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup']
+		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup', 'header']
 
 		" Don't you think it is terrible?
 		let l:wl += ['don', 'doesn', 'didn', 'ain', 'isn', 'wasn', 'aren', 'weren']
