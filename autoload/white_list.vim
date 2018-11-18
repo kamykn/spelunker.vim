@@ -15,7 +15,7 @@ function! white_list#init_white_list()
 		" Programming language keywords
 		" Common
 		let l:wl += ['elseif', 'elsif', 'elif', 'endif', 'endfor', 'endforeach', 'endswitch']
-		let l:wl += ['endwhile', 'endfunction', 'endtry', 'xor']
+		let l:wl += ['endwhile', 'endfunction', 'endtry', 'xor', 'trait']
 
 		" JS: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Reserved_Words
 		let l:wl += ['let', 'const', 'var', 'typeof', 'instanceof']
@@ -81,7 +81,7 @@ function! white_list#init_white_list()
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
-		let l:wl += ['asc', 'desc', 'cnt', 'api', 'wifi', 'url', 'ascii', 'utf', 'ansi']
+		let l:wl += ['asc', 'desc', 'cnt', 'api', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']

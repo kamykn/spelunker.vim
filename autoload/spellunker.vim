@@ -77,7 +77,7 @@ function! s:code_to_words(line_of_code, should_be_lowercase)
 	" 単語ごとに空白で区切った後にsplitで単語だけの配列を作る
 	" ex) spell_bad_word -> spell Bad Word -> ['spell', 'Bad', 'Word']
 	" ex) spell_bad_word -> spell bad word -> ['spell', 'bad', 'word']
-	let l:splitWord = split(substitute(a:line_of_code, '\v[_]*([A-Z]{0,1}[a-z]+)\C', l:split_by . "\\1", "g"), l:split_by)
+	let l:splitWord = split(substitute(a:line_of_code, '\v[_]*([A-Za-z]+)\C', l:split_by . "\\1", "g"), l:split_by)
 
 	for s in l:splitWord
 		if index(l:words_list, s) != -1
@@ -205,23 +205,12 @@ endfunction
 
 " match_idを先頭の1単語目の場合と２単語目の場合の大文字のケースで管理する必要が有ることに注意
 " 例：{'strlen': 4, 'Strlen': 5}
-function! s:add_matches(window_text_list, match_id_dict)
+function! s:add_matches(spell_bad_list, match_id_dict)
 	let l:current_matched_list         = keys(a:match_id_dict)
 	let l:word_list_for_delete_match   = l:current_matched_list " spellbadとして今回検知されなければ削除するリスト
 	let l:match_id_dict                = a:match_id_dict
 
-	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
-	" TODO: spellgood系操作でmatch_id_dictから消してあげてもいいかも?
-	"       ただし、match_id_dictをglobalにする必要あり
-	let l:word_list = s:get_word_list(a:window_text_list)
-	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
-
-	" " ホワイトリスト作るとき用
-	" redir => spell_bad_list_str
-	" 	echo l:spell_bad_list
-	" redir END
-
-	for word in l:spell_bad_list
+	for word in a:spell_bad_list
 		" wordはlowercaseで渡される
 		let l:first_char_upper_spell = s:to_first_char_upper(word)
 		let l:uppercase_spell = toupper(word)
@@ -292,10 +281,10 @@ function! s:delete_matches(word_list_for_delete, match_id_dict)
 	return l:match_id_dict
 endfunction
 
-function! spellunker#check()
-	if &readonly
-		return
-	endif
+function! s:check(withEchoList)
+	" if &readonly
+	" 	return
+	" endif
 
 	if g:enable_spellunker == 0
 		return
@@ -317,7 +306,18 @@ function! spellunker#check()
 		let b:match_id_dict = {}
 	endif
 
-	let [l:word_list_for_delete_match, b:match_id_dict] = s:add_matches(l:window_text_list, b:match_id_dict)
+	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
+	" TODO: spellgood系操作でmatch_id_dictから消してあげてもいいかも?
+	"       ただし、match_id_dictをglobalにする必要あり
+	let l:word_list = s:get_word_list(l:window_text_list)
+	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
+
+	if a:withEchoList
+		" ホワイトリスト作るとき用
+		echo l:spell_bad_list
+	endif
+
+	let [l:word_list_for_delete_match, b:match_id_dict] = s:add_matches(l:spell_bad_list, b:match_id_dict)
 
 	if l:spell_setting != "spell"
 		setlocal nospell
@@ -328,6 +328,15 @@ function! spellunker#check()
 	endif
 
 	let b:match_id_dict = s:delete_matches(l:word_list_for_delete_match, b:match_id_dict)
+
+endfunction
+
+function! spellunker#check()
+	call s:check(0)
+endfunction
+
+function! spellunker#checkAndEchoList()
+	call s:check(1)
 endfunction
 
 function! spellunker#open_fix_list()
