@@ -43,39 +43,51 @@ function! s:filter_spell_bad_list(word_list)
 	let l:white_list_for_lang = []
 	try
 		let l:filetype = &filetype
-		execute 'let l:white_list_for_lang = white_list_' . l:filetype . '#init_white_list()'
+		execute 'let l:white_list_for_lang = s:filter_list_char_length(white_list_' . l:filetype . '#init_white_list())'
 	catch
 		" 読み捨て
 	endtry
 
-	for origWord in a:word_list
-		" 特定文字数以上のみ検出
-		if strlen(origWord) < g:spellunker_min_char_len
+	let l:spellunker_white_list = s:filter_list_char_length(g:spellunker_white_list)
+
+	for orig_word in s:filter_list_char_length(a:word_list)
+		let l:lowercase_word = tolower(orig_word)
+
+		if index(l:spellunker_white_list, l:lowercase_word) >= 0
 			continue
 		endif
 
-		let l:lowercaseWord = tolower(origWord)
-
-		if index(g:spellunker_white_list, l:lowercaseWord) >= 0
+		if index(l:white_list_for_lang, l:lowercase_word) >= 0
 			continue
 		endif
 
-		if index(l:white_list_for_lang, l:lowercaseWord) >= 0
-			continue
-		endif
-
-		let [l:spell_bad_word, l:error_type] = spellbadword(l:lowercaseWord)
+		let [l:spell_bad_word, l:error_type] = spellbadword(l:lowercase_word)
 
 		" 登録は元のケースで行う。辞書登録とそのチェックにかけるときのみlowerケースになる。
 		" 元々ここでlowercaseだけ管理し、lower,UPPER,UpperCamelCaseをmatchadd()していたが、
 		" 最少のマッチだけを登録させる為、ここで実際に引っかかるものを登録させ、
 		" これらをmatchaddさせる。
-		if l:spell_bad_word != '' && index(l:spell_bad_list, origWord) == -1
-			call add(l:spell_bad_list, origWord)
+		if l:spell_bad_word != '' && index(l:spell_bad_list, orig_word) == -1
+			call add(l:spell_bad_list, orig_word)
 		endif
 	endfor
 
 	return l:spell_bad_list
+endfunction
+
+" 特定の文字数以上のみ返す
+function! s:filter_list_char_length(word_list)
+	let l:filtered_word_list = []
+
+	for word in a:word_list
+		if strlen(word) < g:spellunker_target_min_char_len
+			continue
+		endif
+
+		call add(l:filtered_word_list, word)
+	endfor
+
+	return l:filtered_word_list
 endfunction
 
 function! s:code_to_words(line_of_code)
@@ -83,7 +95,7 @@ function! s:code_to_words(line_of_code)
 	let l:words_list = []
 
 	" 単語ごとに空白で区切った後にsplitで単語だけの配列を作る
-	" ex) spell_bad_word -> spell Bad Word -> ['spell', 'Bad', 'Word']
+	" ex) spellBadWord -> spell Bad Word -> ['spell', 'Bad', 'Word']
 	" ex) spell_bad_word -> spell bad word -> ['spell', 'bad', 'word']
 
 	" ABC_DEF -> ABC DEF
@@ -91,18 +103,12 @@ function! s:code_to_words(line_of_code)
 
 	" ABCdef -> AB Cdef
 	" abcAPI -> abc API
-	let l:code_for_split = substitute(l:code_for_split, '\v([A-Z]@<![A-Z]|[A-Z][a-z])\C', l:split_by . "\\1", "g")
+	let l:code_for_split = substitute(l:code_for_split, '\v([A-Z\s]@<![A-Z]|[A-Z][a-z])\C', l:split_by . "\\1", "g")
 
-	let l:splited_word = split(l:code_for_split, l:split_by)
+	" AA__BB -> AA  BB -> AA BB
+	let l:code_for_split = substitute(l:code_for_split, '\v\s+', l:split_by, "g")
 
-	for s in l:splited_word
-
-		if s != '' && index(l:words_list, s) == -1
-			call add(l:words_list, s)
-		endif
-	endfor
-
-	return l:words_list
+	return split(l:code_for_split, l:split_by)
 endfunction
 
 function! s:search_current_word(line_str, cword, cursor_position)
@@ -304,6 +310,18 @@ function! s:check(withEchoList)
 	" ホワイトリスト作るとき用のオプション
 	if a:withEchoList
 		echo l:spell_bad_list
+	endif
+
+	" matchadd()の対象が多すぎるとスクロール時に毎回チェックが走るっぽく、重くなるため
+	if len(l:spell_bad_list) > g:spellunker_max_hi_words_each_buf
+		if !exists('b:is_too_much_words_notified')
+			echom 'Too many spell bad words. (' . len(l:spell_bad_list) . ' words found.)'
+		endif
+
+		let l:spell_bad_list = l:spell_bad_list[0:g:spellunker_max_hi_words_each_buf]
+
+		" 2回目は通知しない
+		let b:is_too_much_words_notified = 1
 	endif
 
 	let [l:word_list_for_delete_match, b:match_id_dict] = s:add_matches(l:spell_bad_list, b:match_id_dict)

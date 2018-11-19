@@ -18,12 +18,16 @@ if !exists('g:enable_spellunker')
 	let g:enable_spellunker = 1
 endif
 
-if !exists('g:spellunker_min_char_len')
-	let g:spellunker_min_char_len = 4
+if !exists('g:spellunker_target_min_char_len')
+	let g:spellunker_target_min_char_len = 4
 endif
 
 if !exists('g:spellunker_max_suggest_words')
-	let g:spellunker_max_suggest_words = 20
+	let g:spellunker_max_suggest_words = 15
+endif
+
+if !exists('g:spellunker_max_hi_words_each_buf')
+	let g:spellunker_max_hi_words_each_buf = 100
 endif
 
 if !exists('g:spellunker_compound_word_group')

@@ -64,6 +64,7 @@ function! white_list#init_white_list()
 		let l:wl += ['apache', 'nginx', 'github', 'wikipedia', 'linux', 'unix', 'dos']
 		let l:wl += ['mysql', 'postgresql', 'postgre', 'vim', 'gvim', 'emacs', 'vscode']
 		let l:wl += ['csh', 'bash', 'zsh', 'ksh', 'iphone', 'redis', 'memcached', 'aws', 'gcp']
+		let l:wl += ['google', 'nvim', 'neovim']
 
 		" Programming language name: https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7
 		let l:wl += ['php', 'kotlin', 'clojure', 'ecma', 'lisp', 'erlang', 'clang', 'golang']
@@ -81,7 +82,8 @@ function! white_list#init_white_list()
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
-		let l:wl += ['asc', 'desc', 'cnt', 'api', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
+		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
+		let l:wl += ['cnt', 'api', 'href', 'src']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
