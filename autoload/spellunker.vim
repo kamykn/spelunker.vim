@@ -8,21 +8,22 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+" 大文字小文字を区別して単語リストを取得
 function! s:get_word_list(window_text_list)
 	let l:word_list = []
 
 	for line in a:window_text_list
 		while 1
 			" キャメルケース、パスカルケース、スネークケースの抜き出し
-			" ex) camelCase, PascalCase, snake_case, __construct
-			let l:match_target_word = matchstr(line, '\v([_]*[A-Za-z_]+)\C')
+			" ex) camelCase, PascalCase, snake_case, lowercase
+			let l:match_target_word = matchstr(line, '\v([A-Za-z_]+)\C')
 
 			if l:match_target_word == ""
 				break
 			endif
 
 			let line = s:cut_text_word_before(line, l:match_target_word)
-			let l:find_word_list = s:code_to_words(l:match_target_word, 1)
+			let l:find_word_list = s:code_to_words(l:match_target_word)
 
 			for word in l:find_word_list
 				if index(l:word_list, word) == -1
@@ -47,49 +48,58 @@ function! s:filter_spell_bad_list(word_list)
 		" 読み捨て
 	endtry
 
-	for word in a:word_list
+	for origWord in a:word_list
 		" 特定文字数以上のみ検出
-		if strlen(word) < g:spellunker_min_char_len
+		if strlen(origWord) < g:spellunker_min_char_len
 			continue
 		endif
 
-		if index(g:spellunker_white_list, word) >= 0
+		let l:lowercaseWord = tolower(origWord)
+
+		if index(g:spellunker_white_list, l:lowercaseWord) >= 0
 			continue
 		endif
 
-		if index(l:white_list_for_lang, word) >= 0
+		if index(l:white_list_for_lang, l:lowercaseWord) >= 0
 			continue
 		endif
 
-		let [l:spell_bad_word, l:error_type] = spellbadword(word)
-		if l:spell_bad_word != ''
-			call add(l:spell_bad_list, l:spell_bad_word)
+		let [l:spell_bad_word, l:error_type] = spellbadword(l:lowercaseWord)
+
+		" 登録は元のケースで行う。辞書登録とそのチェックにかけるときのみlowerケースになる。
+		" 元々ここでlowercaseだけ管理し、lower,UPPER,UpperCamelCaseをmatchadd()していたが、
+		" 最少のマッチだけを登録させる為、ここで実際に引っかかるものを登録させ、
+		" これらをmatchaddさせる。
+		if l:spell_bad_word != '' && index(l:spell_bad_list, origWord) == -1
+			call add(l:spell_bad_list, origWord)
 		endif
 	endfor
 
 	return l:spell_bad_list
 endfunction
 
-function! s:code_to_words(line_of_code, should_be_lowercase)
+function! s:code_to_words(line_of_code)
 	let l:split_by   = ' '
 	let l:words_list = []
 
 	" 単語ごとに空白で区切った後にsplitで単語だけの配列を作る
 	" ex) spell_bad_word -> spell Bad Word -> ['spell', 'Bad', 'Word']
 	" ex) spell_bad_word -> spell bad word -> ['spell', 'bad', 'word']
-	let l:splitWord = split(substitute(a:line_of_code, '\v[_]*([A-Za-z]+)\C', l:split_by . "\\1", "g"), l:split_by)
 
-	for s in l:splitWord
-		if index(l:words_list, s) != -1
-			continue
+	" ABC_DEF -> ABC DEF
+	let l:code_for_split = substitute(a:line_of_code, '_', l:split_by, "g")
+
+	" ABCdef -> AB Cdef
+	" abcAPI -> abc API
+	let l:code_for_split = substitute(l:code_for_split, '\v([A-Z]@<![A-Z]|[A-Z][a-z])\C', l:split_by . "\\1", "g")
+
+	let l:splited_word = split(l:code_for_split, l:split_by)
+
+	for s in l:splited_word
+
+		if s != '' && index(l:words_list, s) == -1
+			call add(l:words_list, s)
 		endif
-
-		let l:word = s
-		if a:should_be_lowercase
-			let l:word = tolower(s)
-		endif
-
-		call add(l:words_list, word)
 	endfor
 
 	return l:words_list
@@ -103,7 +113,7 @@ function! s:search_current_word(line_str, cword, cursor_position)
 	" その単語がcwordの中で何文字目から始まるか
 	let l:word_start_pos_in_cword = l:word_start_pos_in_cword - l:cword_start_pos
 
-	let l:check_words_list = s:code_to_words(a:cword, 0)
+	let l:check_words_list = s:code_to_words(a:cword)
 	let l:last_word_length = 1
 	for w in l:check_words_list
 		if l:cursor_pos_in_cword <= strlen(w) + l:last_word_length
@@ -211,10 +221,6 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 	let l:match_id_dict                = a:match_id_dict
 
 	for word in a:spell_bad_list
-		" wordはlowercaseで渡される
-		let l:first_char_upper_spell = s:to_first_char_upper(word)
-		let l:uppercase_spell = toupper(word)
-
 		if index(l:current_matched_list, word) == -1
 			" 新しく見つかった場合highlightを設定する
 			let l:highlight_group = g:spellunker_spell_bad_group
@@ -224,30 +230,11 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 
 			" 大文字小文字無視オプションを使わない(事故るのを防止するため)
 			" ng: xxxAttr -> [atTr]iplePoint
-
-			" lowercase
-			" ex: xxxStrlen -> [strlen]
 			let l:match_id = matchadd(l:highlight_group, '\v([A-Za-z]@<!)' . word . '([a-z]@!)\C')
 			execute 'let l:match_id_dict.' . word . ' = ' . l:match_id
-
-			" first character uppercase spell
-			let l:match_id = matchadd(l:highlight_group, '\v' . l:first_char_upper_spell . '([a-z]@!)\C')
-			execute 'let l:match_id_dict.' . l:first_char_upper_spell . ' = ' . l:match_id
-
-			" UPPERCASE spell
-			" 正しい単語の定数で引っかからないように注意
-			" ng: xxxAttr -> [ATTR]IBUTE
-			let l:match_id = matchadd(l:highlight_group, '\v([A-Z]@<!)' . l:uppercase_spell . '([A-Z]@!)\C')
-			execute 'let l:match_id_dict.' . l:uppercase_spell . ' = ' . l:match_id
 		else
 			" すでにある場合には削除予定リストから単語消す
 			let l:del_index = index(l:word_list_for_delete_match, word)
-			call remove(l:word_list_for_delete_match, l:del_index)
-
-			let l:del_index = index(l:word_list_for_delete_match, l:first_char_upper_spell)
-			call remove(l:word_list_for_delete_match, l:del_index)
-
-			let l:del_index = index(l:word_list_for_delete_match, l:uppercase_spell)
 			call remove(l:word_list_for_delete_match, l:del_index)
 		endif
 	endfor
@@ -282,9 +269,11 @@ function! s:delete_matches(word_list_for_delete, match_id_dict)
 endfunction
 
 function! s:check(withEchoList)
-	" if &readonly
-	" 	return
-	" endif
+	" 大文字小文字は区別してリスト登録している
+
+	if &readonly
+		return
+	endif
 
 	if g:enable_spellunker == 0
 		return
@@ -307,13 +296,13 @@ function! s:check(withEchoList)
 	endif
 
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
-	" TODO: spellgood系操作でmatch_id_dictから消してあげてもいいかも?
+	" TODO: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
 	"       ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(l:window_text_list)
 	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
 
+	" ホワイトリスト作るとき用のオプション
 	if a:withEchoList
-		" ホワイトリスト作るとき用
 		echo l:spell_bad_list
 	endif
 
