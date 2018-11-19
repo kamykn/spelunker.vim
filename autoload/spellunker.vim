@@ -124,12 +124,12 @@ function! s:search_current_word(line_str, cword, cursor_position)
 	for w in l:check_words_list
 		if l:cursor_pos_in_cword <= strlen(w) + l:last_word_length
 			let [l:word_start_pos_in_cword, l:tmp] = s:get_target_word_pos(a:cword, w, l:cursor_pos_in_cword)
-			return [w, l:cursor_pos_in_cword, l:word_start_pos_in_cword]
+			return [w, l:word_start_pos_in_cword]
 		endif
 		let l:last_word_length += strlen(w)
 	endfor
 
-	return [get(l:check_words_list, 0, a:cword), 0, 0]
+	return [get(l:check_words_list, 0, a:cword), 0]
 endfunction
 
 " 行上でどの単語にカーソルが乗っていたかを取得する
@@ -176,9 +176,9 @@ function! s:get_spell_suggest_list(spell_suggest_list, target_word, cword)
 
 	let l:select_index_strlen = strlen(len(a:spell_suggest_list))
 
-	let i = 1
+	let l:i = 1
 	for s in a:spell_suggest_list
-		let l:index_str = printf("%" . l:select_index_strlen . "d", i) . ': '
+		let l:index_str = printf("%" . l:select_index_strlen . "d", l:i) . ': '
 
 		" 記号削除
 		let s = substitute(s, '\.', " ", "g")
@@ -202,7 +202,7 @@ function! s:get_spell_suggest_list(spell_suggest_list, target_word, cword)
 
 		call add(l:spell_suggest_list_for_replace, s)
 		call add(l:spell_suggest_list_for_input_list, l:index_str . '"' . s . '"')
-		let i += 1
+		let l:i += 1
 	endfor
 
 	return [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace]
@@ -339,8 +339,7 @@ function! spellunker#checkAndEchoList()
 	call s:check(1)
 endfunction
 
-function! spellunker#open_fix_list()
-
+function! s:correct(is_correct_all)
 	let l:cword = expand("<cword>")
 
 	if match(l:cword, '\v[A-Za-z_]')
@@ -348,9 +347,57 @@ function! spellunker#open_fix_list()
 		return
 	endif
 
+	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, col('.'))
 
-	let l:cursor_position = col('.')
-	let [l:target_word, l:cursor_pos_in_cword, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, l:cursor_position)
+	let l:current_spell_setting = spellunker#get_current_spell_setting()
+	setlocal spell
+
+	let l:spell_suggest_list = spellsuggest(l:target_word, g:spellunker_max_suggest_words)
+
+	call spellunker#reduce_spell_setting(l:current_spell_setting)
+
+	if len(l:spell_suggest_list) == 0
+		echo "No suggested words."
+		return
+	endif
+
+	let l:prompt = 'spellunker:'
+	if a:is_correct_all
+		let l:prompt = 'spellunker(correct-all):'
+	endif
+	let l:inputWord = input(l:prompt)
+
+	let l:replace  = strpart(l:cword, 0, l:word_start_pos_in_cword)
+	let l:replace .= l:inputWord
+	let l:replace .= strpart(l:cword, l:word_start_pos_in_cword + strlen(l:target_word), strlen(l:cword))
+
+	if a:is_correct_all
+		" 書き換えてカーソルポジションを直す
+		let l:pos = getpos(".")
+		execute "1,$s/\\v([A-Za-z]@<!)" . l:target_word . "([a-z]@!)\\C/". l:replace . "/g"
+		call setpos('.', l:pos)
+	else
+		execute "normal ciw" . l:replace
+	endif
+endfunction
+
+function! spellunker#correct_word()
+	call s:correct(0)
+endfunction
+
+function! spellunker#correct_word_all()
+	call s:correct(1)
+endfunction
+
+function! spellunker#open_fix_list()
+	let l:cword = expand("<cword>")
+
+	if match(l:cword, '\v[A-Za-z_]')
+		echo "It does not match [A-Za-z_]."
+		return
+	endif
+
+	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, col('.'))
 
 	let l:current_spell_setting = spellunker#get_current_spell_setting()
 	setlocal spell
@@ -373,9 +420,10 @@ function! spellunker#open_fix_list()
 	let l:replace .= l:selectedWord
 	let l:replace .= strpart(l:cword, l:word_start_pos_in_cword + strlen(l:target_word), strlen(l:cword))
 
+	let l:pos = getpos(".")
 	" 書き換えてカーソルポジションを直す
-	execute "normal ciw" . l:replace
-	execute "normal b" . l:cursor_pos_in_cword . "l"
+	execute "1,$s/\\v([A-Za-z]@<!)" . l:target_word . "([a-z]@!)\\C/". l:replace . "/g"
+	call setpos('.', l:pos)
 endfunction
 
 function! spellunker#execute_with_target_word(command)
@@ -386,8 +434,7 @@ function! spellunker#execute_with_target_word(command)
 		return
 	endif
 
-	let l:cursor_position = col('.')
-	let [l:target_word, l:cursor_pos_in_cword, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, l:cursor_position)
+	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, col('.'))
 
 	execute a:command . ' ' . tolower(l:target_word)
 endfunction
