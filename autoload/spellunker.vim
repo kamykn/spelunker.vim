@@ -287,25 +287,18 @@ function! s:check(withEchoList)
 
 	call white_list#init_white_list()
 
-	redir => spell_setting_capture
-		silent execute "setlocal spell?"
-	redir END
-
-	" ex) '      spell' -> 'spell'
-	let l:spell_setting = substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
-	setlocal spell
-
 	let l:window_text_list = getline(1, '$')
-
-	if !exists('b:match_id_dict')
-		let b:match_id_dict = {}
-	endif
-
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
 	" TODO: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
 	"       ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(l:window_text_list)
+
+	let l:current_spell_setting = spellunker#get_current_spell_setting()
+	setlocal spell
+
 	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
+
+	call spellunker#reduce_spell_setting(l:current_spell_setting)
 
 	" ホワイトリスト作るとき用のオプション
 	if a:withEchoList
@@ -324,11 +317,11 @@ function! s:check(withEchoList)
 		let b:is_too_much_words_notified = 1
 	endif
 
-	let [l:word_list_for_delete_match, b:match_id_dict] = s:add_matches(l:spell_bad_list, b:match_id_dict)
-
-	if l:spell_setting != "spell"
-		setlocal nospell
+	if !exists('b:match_id_dict')
+		let b:match_id_dict = {}
 	endif
+
+	let [l:word_list_for_delete_match, b:match_id_dict] = s:add_matches(l:spell_bad_list, b:match_id_dict)
 
 	if len(l:word_list_for_delete_match) == 0
 		return
@@ -347,6 +340,7 @@ function! spellunker#checkAndEchoList()
 endfunction
 
 function! spellunker#open_fix_list()
+
 	let l:cword = expand("<cword>")
 
 	if match(l:cword, '\v[A-Za-z_]')
@@ -354,9 +348,16 @@ function! spellunker#open_fix_list()
 		return
 	endif
 
+
 	let l:cursor_position = col('.')
 	let [l:target_word, l:cursor_pos_in_cword, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, l:cursor_position)
+
+	let l:current_spell_setting = spellunker#get_current_spell_setting()
+	setlocal spell
+
 	let l:spell_suggest_list = spellsuggest(l:target_word, g:spellunker_max_suggest_words)
+
+	call spellunker#reduce_spell_setting(l:current_spell_setting)
 
 	if len(l:spell_suggest_list) == 0
 		echo "No suggested words."
@@ -389,6 +390,23 @@ function! spellunker#execute_with_target_word(command)
 	let [l:target_word, l:cursor_pos_in_cword, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, l:cursor_position)
 
 	execute a:command . ' ' . tolower(l:target_word)
+endfunction
+
+" 処理前のspell設定を取得
+function! spellunker#get_current_spell_setting()
+	redir => spell_setting_capture
+		silent execute "setlocal spell?"
+	redir END
+
+	" ex) '      spell' -> 'spell'
+	return  substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
+endfunction
+
+" spell設定を戻す
+function! spellunker#reduce_spell_setting(spell_setting)
+	if a:spell_setting != "spell"
+		setlocal nospell
+	endif
 endfunction
 
 let &cpo = s:save_cpo
