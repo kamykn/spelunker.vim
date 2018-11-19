@@ -111,7 +111,7 @@ function! s:code_to_words(line_of_code)
 	return split(l:code_for_split, l:split_by)
 endfunction
 
-function! s:search_current_word(line_str, cword, cursor_position)
+function! s:search_current_word(line_str, cursor_position, cword)
 	let [l:word_start_pos_in_cword, l:cword_start_pos] = s:get_target_word_pos(a:line_str, a:cword, a:cursor_position)
 
 	" 現在のカーソル位置がcwordの中で何文字目か
@@ -168,7 +168,7 @@ function! s:find_word_index_list(line_str, cword)
 	return l:find_word_index_list
 endfunction
 
-function! s:get_spell_suggest_list(spell_suggest_list, target_word, cword)
+function! s:format_spell_suggest_list(spell_suggest_list, cword, target_word)
 	" 変換候補選択用リスト
 	let l:spell_suggest_list_for_input_list = []
 	" 変換候補リプレイス用リスト
@@ -274,6 +274,85 @@ function! s:delete_matches(word_list_for_delete, match_id_dict)
 	return l:match_id_dict
 endfunction
 
+function! s:get_cword_for_correct()
+	let l:cword = expand("<cword>")
+
+	if match(l:cword, '\v[A-Za-z_]+')
+		" cwordとして修正可能なもの
+		return ['', 'It does not match [A-Za-z_].']
+	endif
+
+	return [l:cword, '']
+endfunction
+
+"cwordの特定位置の文字を置き換えてreplace用文字列を作成
+function! s:get_replace_word(cword, target_word, word_start_pos_in_cword, correct_word)
+	let l:replace  = strpart(a:cword, 0, a:word_start_pos_in_cword)
+	let l:replace .= a:correct_word
+	let l:replace .= strpart(a:cword, a:word_start_pos_in_cword + strlen(a:target_word), strlen(a:cword))
+	return l:replace
+endfunction
+
+" 書き換えてカーソルポジションを直す
+function! s:replace_word(target_word, replace_word, is_correct_all)
+	let l:pos = getpos(".")
+	if a:is_correct_all
+		execute "1,$s/\\v([A-Za-z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+	else
+		execute "normal ciw" . a:replace_word
+	endif
+	call setpos('.', l:pos)
+endfunction
+
+function! s:get_spell_from_correct_list(cword, target_word)
+	let l:current_spell_setting = spellunker#get_current_spell_setting()
+	setlocal spell
+
+	let l:spell_suggest_list = spellsuggest(a:target_word, g:spellunker_max_suggest_words)
+
+	call spellunker#reduce_spell_setting(l:current_spell_setting)
+
+	if len(l:spell_suggest_list) == 0
+		echo "No suggested words."
+		return ''
+	endif
+
+	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:format_spell_suggest_list(l:spell_suggest_list, a:cword, a:target_word)
+
+	let l:selected = inputlist(l:spell_suggest_list_for_input_list)
+	return  l:spell_suggest_list_for_replace[l:selected - 1]
+endfunction
+
+function! spellunker#execute_with_target_word(command)
+	let l:cword = expand("<cword>")
+
+	if match(l:cword, '\v[A-Za-z_]')
+		echo "It does not match [A-Za-z_]."
+		return
+	endif
+
+	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), col('.'), l:cword)
+
+	execute a:command . ' ' . tolower(l:target_word)
+endfunction
+
+" 処理前のspell設定を取得
+function! spellunker#get_current_spell_setting()
+	redir => spell_setting_capture
+		silent execute "setlocal spell?"
+	redir END
+
+	" ex) '      spell' -> 'spell'
+	return  substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
+endfunction
+
+" spell設定を戻す
+function! spellunker#reduce_spell_setting(spell_setting)
+	if a:spell_setting != "spell"
+		setlocal nospell
+	endif
+endfunction
+
 function! s:check(withEchoList)
 	" 大文字小文字は区別してリスト登録している
 
@@ -328,132 +407,66 @@ function! s:check(withEchoList)
 	endif
 
 	let b:match_id_dict = s:delete_matches(l:word_list_for_delete_match, b:match_id_dict)
+endfunction
 
+function! s:correct(is_correct_all)
+	let [l:cword, l:err] = s:get_cword_for_correct()
+
+	if l:err != ''
+		echo l:err
+		return
+	endif
+
+	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), col('.'), l:cword)
+
+	let l:prompt = 'spellunker(' . l:target_word . '->):'
+	if a:is_correct_all
+		let l:prompt = 'correct-all(' . l:target_word . '->):'
+	endif
+	let l:input_word = input(l:prompt)
+
+	let l:replace_word = s:get_replace_word(l:cword, l:target_word, l:word_start_pos_in_cword, l:input_word)
+	call s:replace_word(l:target_word, l:replace_word, a:is_correct_all)
+endfunction
+
+function! s:correct_from_list(is_correct_all)
+	let [l:cword, l:err] = s:get_cword_for_correct()
+
+	if l:err != ''
+		echo l:err
+		return
+	endif
+
+	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), col('.'), l:cword)
+
+	let l:selected_word = s:get_spell_from_correct_list(l:cword, l:target_word)
+
+	let l:replace_word = s:get_replace_word(l:cword, l:target_word, l:word_start_pos_in_cword, l:selected_word)
+	call s:replace_word(l:target_word, l:replace_word, a:is_correct_all)
 endfunction
 
 function! spellunker#check()
 	call s:check(0)
 endfunction
 
-function! spellunker#checkAndEchoList()
+function! spellunker#check_and_echo_list()
 	call s:check(1)
 endfunction
 
-function! s:correct(is_correct_all)
-	let l:cword = expand("<cword>")
-
-	if match(l:cword, '\v[A-Za-z_]')
-		echo "It does not match [A-Za-z_]."
-		return
-	endif
-
-	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, col('.'))
-
-	let l:current_spell_setting = spellunker#get_current_spell_setting()
-	setlocal spell
-
-	let l:spell_suggest_list = spellsuggest(l:target_word, g:spellunker_max_suggest_words)
-
-	call spellunker#reduce_spell_setting(l:current_spell_setting)
-
-	if len(l:spell_suggest_list) == 0
-		echo "No suggested words."
-		return
-	endif
-
-	let l:prompt = 'spellunker:'
-	if a:is_correct_all
-		let l:prompt = 'spellunker(correct-all):'
-	endif
-	let l:inputWord = input(l:prompt)
-
-	let l:replace  = strpart(l:cword, 0, l:word_start_pos_in_cword)
-	let l:replace .= l:inputWord
-	let l:replace .= strpart(l:cword, l:word_start_pos_in_cword + strlen(l:target_word), strlen(l:cword))
-
-	if a:is_correct_all
-		" 書き換えてカーソルポジションを直す
-		let l:pos = getpos(".")
-		execute "1,$s/\\v([A-Za-z]@<!)" . l:target_word . "([a-z]@!)\\C/". l:replace . "/g"
-		call setpos('.', l:pos)
-	else
-		execute "normal ciw" . l:replace
-	endif
-endfunction
-
-function! spellunker#correct_word()
+function! spellunker#correct()
 	call s:correct(0)
 endfunction
 
-function! spellunker#correct_word_all()
+function! spellunker#correct_all()
 	call s:correct(1)
 endfunction
 
-function! spellunker#open_fix_list()
-	let l:cword = expand("<cword>")
-
-	if match(l:cword, '\v[A-Za-z_]')
-		echo "It does not match [A-Za-z_]."
-		return
-	endif
-
-	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, col('.'))
-
-	let l:current_spell_setting = spellunker#get_current_spell_setting()
-	setlocal spell
-
-	let l:spell_suggest_list = spellsuggest(l:target_word, g:spellunker_max_suggest_words)
-
-	call spellunker#reduce_spell_setting(l:current_spell_setting)
-
-	if len(l:spell_suggest_list) == 0
-		echo "No suggested words."
-		return
-	endif
-
-	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:get_spell_suggest_list(l:spell_suggest_list, l:target_word, l:cword)
-
-	let l:selected     = inputlist(l:spell_suggest_list_for_input_list)
-	let l:selectedWord = l:spell_suggest_list_for_replace[l:selected - 1]
-
-	let l:replace  = strpart(l:cword, 0, l:word_start_pos_in_cword)
-	let l:replace .= l:selectedWord
-	let l:replace .= strpart(l:cword, l:word_start_pos_in_cword + strlen(l:target_word), strlen(l:cword))
-
-	let l:pos = getpos(".")
-	" 書き換えてカーソルポジションを直す
-	execute "1,$s/\\v([A-Za-z]@<!)" . l:target_word . "([a-z]@!)\\C/". l:replace . "/g"
-	call setpos('.', l:pos)
+function! spellunker#correct_from_list()
+	call s:correct_from_list(0)
 endfunction
 
-function! spellunker#execute_with_target_word(command)
-	let l:cword = expand("<cword>")
-
-	if match(l:cword, '\v[A-Za-z_]')
-		echo "It does not match [A-Za-z_]."
-		return
-	endif
-
-	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), l:cword, col('.'))
-
-	execute a:command . ' ' . tolower(l:target_word)
-endfunction
-
-" 処理前のspell設定を取得
-function! spellunker#get_current_spell_setting()
-	redir => spell_setting_capture
-		silent execute "setlocal spell?"
-	redir END
-
-	" ex) '      spell' -> 'spell'
-	return  substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
-endfunction
-
-" spell設定を戻す
-function! spellunker#reduce_spell_setting(spell_setting)
-	if a:spell_setting != "spell"
-		setlocal nospell
-	endif
+function! spellunker#correct_all_from_list()
+	call s:correct_from_list(1)
 endfunction
 
 let &cpo = s:save_cpo

@@ -65,20 +65,25 @@ finally
 endtry
 
 " [open fix list] ========================================================================
-nnoremap <silent> <Plug>(open-spellunker-fix-list) :call spellunker#open_fix_list()<CR>
-if !hasmapto('<Plug>(open-spellunker-fix-list)')
-	silent! nmap <unique> Z= <Plug>(open-spellunker-fix-list)
+nnoremap <silent> <Plug>(spellunker-correct-from-list) :call spellunker#correct_from_list()<CR>
+if !hasmapto('<Plug>(spellunker-correct-from-list)')
+	silent! nmap <unique> Zl <Plug>(spellunker-correct-from-list)
+endif
+
+nnoremap <silent> <Plug>(spellunker-correct-all-from-list) :call spellunker#correct_all_from_list()<CR>
+if !hasmapto('<Plug>(spellunker-correct-all-from-list)')
+	silent! nmap <unique> ZL <Plug>(spellunker-correct-all-from-list)
 endif
 
 " [correct word] =========================================================================
-nnoremap <silent> <Plug>(correct-spellunker-word) :call spellunker#correct_word()<CR>
-if !hasmapto('<Plug>(correct-spellunker-word)')
-	silent! nmap <unique> Zc <Plug>(correct-spellunker-word)
+nnoremap <silent> <Plug>(spellunker-correct) :call spellunker#correct()<CR>
+if !hasmapto('<Plug>(spellunker-correct)')
+	silent! nmap <unique> Zc <Plug>(spellunker-correct)
 endif
 
-nnoremap <silent> <Plug>(correct-spellunker-word-all) :call spellunker#correct_word_all()<CR>
-if !hasmapto('<Plug>(correct-spellunker-word-all)')
-	silent! nmap <unique> ZC <Plug>(correct-spellunker-word-all)
+nnoremap <silent> <Plug>(spellunker-correct-all) :call spellunker#correct_all()<CR>
+if !hasmapto('<Plug>(spellunker-correct-all)')
+	silent! nmap <unique> ZC <Plug>(spellunker-correct-all)
 endif
 
 " [spell good] ===========================================================================
@@ -160,14 +165,14 @@ if !hasmapto('<Plug>(add-temporary-spellunker-bad)')
 	silent! vmap <unique> ZW <Plug>(add-temporary-spellunker-bad)
 endif
 
-nnoremap <silent> <Plug>(add-temporary-spell-bad-nmap)
+nnoremap <silent> <Plug>(add-temporary-spellunker-bad-nmap)
 		\	:call spellunker#execute_with_target_word('spellwrong!')<CR> :call spellunker#check()<CR>
-if !hasmapto('<Plug>(add-temporary-spell-bad-nmap)')
-	silent! nmap <unique> ZW <Plug>(add-temporary-spell-bad-nmap)
+if !hasmapto('<Plug>(add-temporary-spellunker-bad-nmap)')
+	silent! nmap <unique> ZW <Plug>(add-temporary-spellunker-bad-nmap)
 endif
 
 " [temporary spell bad] ==================================================================
-vnoremap <silent> <Plug>(undo-temporary-spell-bad) zuW :call spellunker#check()<CR>
+vnoremap <silent> <Plug>(undo-temporary-spellunker-bad) zuW :call spellunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spellunker-bad)')
 	silent! vmap <unique> ZUW <Plug>(undo-temporary-spellunker-bad)
 endif
