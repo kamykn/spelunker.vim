@@ -83,7 +83,7 @@ function! white_list#init_white_list()
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
 		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
-		let l:wl += ['cnt', 'api', 'href', 'src']
+		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
@@ -107,7 +107,9 @@ endfunction
 " ex) wrong_word = strlen -> OK
 "     wrong_word = string -> NG: 予め除外しておく
 function! white_list#is_compound_word(wrong_word)
-	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un']
+	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un', 'no']
+
+	" function prefix
 	let l:common_word_prefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
 	let l:common_word_prefix += ['match', 'byte', 'is', 'has', 'to']
 

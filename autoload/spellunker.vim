@@ -13,25 +13,34 @@ function! s:get_word_list(window_text_list)
 	let l:word_list = []
 
 	for line in a:window_text_list
-		while 1
-			" キャメルケース、パスカルケース、スネークケースの抜き出し
-			" ex) camelCase, PascalCase, snake_case, lowercase
-			let l:match_target_word = matchstr(line, '\v([A-Za-z_]+)\C')
-
-			if l:match_target_word == ""
-				break
-			endif
-
-			let line = s:cut_text_word_before(line, l:match_target_word)
-			let l:find_word_list = s:code_to_words(l:match_target_word)
-
-			for word in l:find_word_list
-				if index(l:word_list, word) == -1
-					call add(l:word_list, word)
-				endif
-			endfor
-		endwhile
+		let l:word_list = s:get_word_list_in_line(line, l:word_list)
 	endfor
+
+	return l:word_list
+endfunction
+
+function! s:get_word_list_in_line(line, word_list)
+	let l:word_list = a:word_list
+	let l:line = s:convert_controll_charactor_to_space(a:line)
+
+	while 1
+		" キャメルケース、パスカルケース、スネークケースの抜き出し
+		" ex) camelCase, PascalCase, snake_case, lowercase
+		let l:match_target_word = matchstr(l:line, '\v([A-Za-z_]+)\C')
+
+		if l:match_target_word == ""
+			break
+		endif
+
+		let l:line = s:cut_text_word_before(l:line, l:match_target_word)
+		let l:find_word_list = s:code_to_words(l:match_target_word)
+
+		for word in l:find_word_list
+			if index(l:word_list, word) == -1
+				call add(l:word_list, word)
+			endif
+		endfor
+	endwhile
 
 	return l:word_list
 endfunction
@@ -111,52 +120,37 @@ function! s:code_to_words(line_of_code)
 	return split(l:code_for_split, l:split_by)
 endfunction
 
-function! s:search_current_word(line_str, cursor_position, cword)
-	let [l:word_start_pos_in_cword, l:cword_start_pos] = s:get_target_word_pos(a:line_str, a:cword, a:cursor_position)
+function! s:search_target_word()
+	let l:cursor_position = col('.')
+	let l:line = getline('.')
 
-	" 現在のカーソル位置がcwordの中で何文字目か
-	let l:cursor_pos_in_cword = a:cursor_position - l:word_start_pos_in_cword
-	" その単語がcwordの中で何文字目から始まるか
-	let l:word_start_pos_in_cword = l:word_start_pos_in_cword - l:cword_start_pos
+	" get_word_list_in_lineの中で制御文字を取り除いたりしている
+	let l:word_list = s:get_word_list_in_line(l:line, [])
 
-	let l:check_words_list = s:code_to_words(a:cword)
-	let l:last_word_length = 1
-	for w in l:check_words_list
-		if l:cursor_pos_in_cword <= strlen(w) + l:last_word_length
-			let [l:word_start_pos_in_cword, l:tmp] = s:get_target_word_pos(a:cword, w, l:cursor_pos_in_cword)
-			return [w, l:word_start_pos_in_cword]
-		endif
-		let l:last_word_length += strlen(w)
+	" 単語のポジションリストを返して、ポジションスタート + 単語長の中にcurposがあればそこが現在位置
+	for word in l:word_list
+		let l:word_index_list = s:find_word_index_list(l:line, word)
+		for target_word_start_pos in l:word_index_list
+			if target_word_start_pos <= l:cursor_position && l:cursor_position <= target_word_start_pos + strlen(word)
+				return word
+			endif
+		endfor
 	endfor
 
-	return [get(l:check_words_list, 0, a:cword), 0]
+	echo "There is no word under the cursor."
+	return ''
 endfunction
 
-" 行上でどの単語にカーソルが乗っていたかを取得する
-function! s:get_target_word_pos(line_str, cword, cursor_pos_in_cword)
-	" 単語の末尾よりもカーソルが左だった場合、cursor_pos_in_cword - wordIndexが単語内の何番目にカーソルがあったかが分かる
-	" return [カーソルがある(spellチェックされる最小単位の)単語の開始位置, cword全体の開始位置]
 
-	let l:word_index_list = s:find_word_index_list(a:line_str, a:cword)
-
-	for target_word_start_pos in l:word_index_list
-		if target_word_start_pos <= a:cursor_pos_in_cword && a:cursor_pos_in_cword <= target_word_start_pos + strlen(a:cword)
-			return [target_word_start_pos, get(l:word_index_list, 0, 0)]
-		endif
-	endfor
-
-	return [0, 0]
-endfunction
-
-function! s:find_word_index_list(line_str, cword)
+function! s:find_word_index_list(line_str, search_word)
 	" 単語のポジションリストを返して、ポジションスタート + 単語長の中にcurposがあればそこが現在位置
 
-	let l:cword_length         = strlen(a:cword)
+	let l:cword_length         = strlen(a:search_word)
 	let l:find_word_index_list = []
 	let l:line_str             = a:line_str
 
 	while 1
-		let l:tmp_cword_pos = stridx(l:line_str, a:cword)
+		let l:tmp_cword_pos = stridx(l:line_str, a:search_word)
 		if l:tmp_cword_pos < 0
 			break
 		endif
@@ -168,7 +162,7 @@ function! s:find_word_index_list(line_str, cword)
 	return l:find_word_index_list
 endfunction
 
-function! s:format_spell_suggest_list(spell_suggest_list, cword, target_word)
+function! s:format_spell_suggest_list(spell_suggest_list, target_word)
 	" 変換候補選択用リスト
 	let l:spell_suggest_list_for_input_list = []
 	" 変換候補リプレイス用リスト
@@ -236,7 +230,7 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 
 			" 大文字小文字無視オプションを使わない(事故るのを防止するため)
 			" ng: xxxAttr -> [atTr]iplePoint
-			let l:match_id = matchadd(l:highlight_group, '\v([A-Za-z]@<!)' . word . '([a-z]@!)\C')
+			let l:match_id = matchadd(l:highlight_group, '\v([A-Z]@<!)' . word . '([a-z]@!)\C')
 			execute 'let l:match_id_dict.' . word . ' = ' . l:match_id
 		else
 			" すでにある場合には削除予定リストから単語消す
@@ -274,17 +268,6 @@ function! s:delete_matches(word_list_for_delete, match_id_dict)
 	return l:match_id_dict
 endfunction
 
-function! s:get_cword_for_correct()
-	let l:cword = expand("<cword>")
-
-	if match(l:cword, '\v[A-Za-z_]+')
-		" cwordとして修正可能なもの
-		return ['', 'It does not match [A-Za-z_].']
-	endif
-
-	return [l:cword, '']
-endfunction
-
 "cwordの特定位置の文字を置き換えてreplace用文字列を作成
 function! s:get_replace_word(cword, target_word, word_start_pos_in_cword, correct_word)
 	let l:replace  = strpart(a:cword, 0, a:word_start_pos_in_cword)
@@ -297,14 +280,15 @@ endfunction
 function! s:replace_word(target_word, replace_word, is_correct_all)
 	let l:pos = getpos(".")
 	if a:is_correct_all
-		execute "1,$s/\\v([A-Za-z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		execute "silent! %s/\\v([A-Z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
 	else
-		execute "normal ciw" . a:replace_word
+		let l:right_move = strlen(a:target_word) - 1
+		execute "silent! normal b/" . a:target_word . "\<CR>v" . l:right_move . "lc" . a:replace_word
 	endif
 	call setpos('.', l:pos)
 endfunction
 
-function! s:get_spell_from_correct_list(cword, target_word)
+function! s:get_spell_from_correct_list(target_word)
 	let l:current_spell_setting = spellunker#get_current_spell_setting()
 	setlocal spell
 
@@ -313,27 +297,20 @@ function! s:get_spell_from_correct_list(cword, target_word)
 	call spellunker#reduce_spell_setting(l:current_spell_setting)
 
 	if len(l:spell_suggest_list) == 0
-		echo "No suggested words."
+		echon "No suggested words."
 		return ''
 	endif
 
-	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:format_spell_suggest_list(l:spell_suggest_list, a:cword, a:target_word)
+	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:format_spell_suggest_list(l:spell_suggest_list, a:target_word)
 
 	let l:selected = inputlist(l:spell_suggest_list_for_input_list)
 	return  l:spell_suggest_list_for_replace[l:selected - 1]
 endfunction
 
-function! spellunker#execute_with_target_word(command)
-	let l:cword = expand("<cword>")
-
-	if match(l:cword, '\v[A-Za-z_]')
-		echo "It does not match [A-Za-z_]."
-		return
-	endif
-
-	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), col('.'), l:cword)
-
-	execute a:command . ' ' . tolower(l:target_word)
+" \n \r \t (制御文字)をスペースに置き換え
+function! s:convert_controll_charactor_to_space(line)
+	" ex) \nabcd -> \n abcd
+	return substitute(a:line, '\v\\(n|r|t)', '  ', "g")
 endfunction
 
 " 処理前のspell設定を取得
@@ -387,7 +364,7 @@ function! s:check(withEchoList)
 	" matchadd()の対象が多すぎるとスクロール時に毎回チェックが走るっぽく、重くなるため
 	if len(l:spell_bad_list) > g:spellunker_max_hi_words_each_buf
 		if !exists('b:is_too_much_words_notified')
-			echom 'Too many spell bad words. (' . len(l:spell_bad_list) . ' words found.)'
+			echon 'Too many spell bad words. (' . len(l:spell_bad_list) . ' words found.)'
 		endif
 
 		let l:spell_bad_list = l:spell_bad_list[0:g:spellunker_max_hi_words_each_buf]
@@ -410,14 +387,10 @@ function! s:check(withEchoList)
 endfunction
 
 function! s:correct(is_correct_all)
-	let [l:cword, l:err] = s:get_cword_for_correct()
-
-	if l:err != ''
-		echo l:err
+	let l:target_word = s:search_target_word()
+	if l:target_word == ''
 		return
 	endif
-
-	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), col('.'), l:cword)
 
 	let l:prompt = 'spellunker(' . l:target_word . '->):'
 	if a:is_correct_all
@@ -425,24 +398,26 @@ function! s:correct(is_correct_all)
 	endif
 	let l:input_word = input(l:prompt)
 
-	let l:replace_word = s:get_replace_word(l:cword, l:target_word, l:word_start_pos_in_cword, l:input_word)
-	call s:replace_word(l:target_word, l:replace_word, a:is_correct_all)
+	call s:replace_word(l:target_word, l:input_word, a:is_correct_all)
 endfunction
 
 function! s:correct_from_list(is_correct_all)
-	let [l:cword, l:err] = s:get_cword_for_correct()
-
-	if l:err != ''
-		echo l:err
+	let l:target_word = s:search_target_word()
+	if l:target_word == ''
 		return
 	endif
 
-	let [l:target_word, l:word_start_pos_in_cword] = s:search_current_word(getline('.'), col('.'), l:cword)
+	let l:selected_word = s:get_spell_from_correct_list(l:target_word)
+	call s:replace_word(l:target_word, l:selected_word, a:is_correct_all)
+endfunction
 
-	let l:selected_word = s:get_spell_from_correct_list(l:cword, l:target_word)
+function! spellunker#execute_with_target_word(command)
+	let l:target_word = s:search_target_word()
+	if l:target_word == ''
+		return
+	endif
 
-	let l:replace_word = s:get_replace_word(l:cword, l:target_word, l:word_start_pos_in_cword, l:selected_word)
-	call s:replace_word(l:target_word, l:replace_word, a:is_correct_all)
+	execute a:command . ' ' . tolower(l:target_word)
 endfunction
 
 function! spellunker#check()
