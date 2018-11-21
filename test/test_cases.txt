@@ -1,0 +1,68 @@
+# 動作チェックリスト
+## キャメルケース
+### 検知しない
+appleBananaOrange
+
+### 検知する
+applBananOran
+appleBananOran
+applBananaOran
+applBananOrange
+appleBananaOran
+applBananaOrange
+appleBananOrange
+
+## スネークケース
+### 検知しない
+apple_banana_orange
+
+### 検知する
+appl_banan_oran
+apple_banan_oran
+appl_banana_oran
+appl_banan_orange
+apple_banana_oran
+appl_banana_orange
+apple_banan_orange
+
+## 制御文字
+### 検知しない
+apple\nBanana\rOrange\tPeach
+
+### 検知する
+apple\nBanan\rOage\tPach
+
+## 文字数(デフォルト4文字以上)
+p_pu_pur_purp_purpl_purple
+
+appleBananaOranP
+appleBananaOranPe
+appleBananaOranPeac
+appleBananaOranPeach
+
+## 機能を使って修正
+### Zl: 1文字をリストから選択
+apple_banan_orange
+
+### ZL: リストから選択してバッファ内すべて修正
+apple_banan_orange
+banan_apple_orange
+apple_orange_banan
+
+### 2語に分かれるとき
+spellfile
+
+### Zc: cコマンドのように修正
+apple_banan_orange
+
+### ZC: cコマンドのように修正
+apple_banan_orange
+banan_apple_orange
+apple_orange_banan
+
+## spellfile追加
+### Zg ZG
+### Zug ZUG
+### Zw ZW
+### Zuw ZUW
+

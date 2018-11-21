@@ -101,12 +101,21 @@ function! white_list#init_white_list()
 	endif
 endfunction
 
-" 複合語だと思われるものを検出するため、
+" 複成語(complex)/複合語(compound)だと思われるものを検出するため、
 " よくある接頭辞、接尾辞でチェックしてみる
 " 間違ったスペルとして検出したワードに対して使用する
 " ex) wrong_word = strlen -> OK
 "     wrong_word = string -> NG: 予め除外しておく
-function! white_list#is_compound_word(wrong_word)
+"
+" ex ) simple word -> gentle, man
+" ex ) prefix -> re, un / suffix -> able, ly
+" prefix + suffix = affix -> affix + simple word = complex word (ungentle)
+" simple word + simple word = compound word (gentleman)
+"
+" FYI:https://www.cieej.or.jp/toefl/webmagazine/interview-lifelong/1508/
+"
+function! white_list#is_complex_or_compound_word(wrong_word)
+	let l:wrong_word = tolower(a:wrong_word)
 	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un', 'no']
 
 	" function prefix
@@ -114,15 +123,15 @@ function! white_list#is_compound_word(wrong_word)
 	let l:common_word_prefix += ['match', 'byte', 'is', 'has', 'to']
 
 	for prefix in l:common_word_prefix
-		if stridx(a:wrong_word, prefix) == 0
+		if stridx(l:wrong_word, prefix) == 0
 			return 1
 		endif
 	endfor
 
-	let l:common_word_suffix = ['able', 'pos', 'list', 'map', 'cmd', 'bg', 'fg', 'id', 'log', 'num']
+	let l:common_word_suffix = ['able', 'ly', 'ness', 'pos', 'list', 'map', 'cmd', 'bg', 'fg', 'id', 'log', 'num']
 
 	for suffix in l:common_word_suffix
-		if stridx(a:wrong_word, suffix) + strlen(suffix) == strlen(a:wrong_word)
+		if stridx(l:wrong_word, suffix) + strlen(suffix) == strlen(l:wrong_word)
 			return 1
 		endif
 	endfor

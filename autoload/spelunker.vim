@@ -274,8 +274,8 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 		if index(l:current_matched_list, word) == -1
 			" 新しく見つかった場合highlightを設定する
 			let l:highlight_group = g:spelunker_spell_bad_group
-			if white_list#is_compound_word(word)
-				let l:highlight_group = g:spelunker_compound_word_group
+			if white_list#is_complex_or_compound_word(word)
+				let l:highlight_group = g:spelunker_complex_or_compound_word_group
 			endif
 
 			" 大文字小文字無視オプションを使わない(事故るのを防止するため)

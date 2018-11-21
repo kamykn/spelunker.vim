@@ -46,19 +46,19 @@ finally
 	endif
 endtry
 
-" [spelunker_compound_word_group] =======================================================
+" [spelunker_complex_or_compound_word_group] =======================================================
 
-if !exists('g:spelunker_compound_word_group')
-	let g:spelunker_compound_word_group = 'SpelunkerCompoundWord'
+if !exists('g:spelunker_complex_or_compound_word_group')
+	let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
 endif
 
-let s:spelunker_compound_word_hi_list = ""
+let s:spelunker_complex_or_compund_word_hi_list = ""
 try
-	let s:spelunker_compound_word_hi_list = execute('highlight ' . g:spelunker_compound_word_group)
+	let s:spelunker_complex_or_compund_word_hi_list = execute('highlight ' . g:spelunker_complex_or_compound_word_group)
 catch
 finally
-	if strlen(s:spelunker_compound_word_hi_list) == 0
-		execute ('highlight ' . g:spelunker_compound_word_group . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
+	if strlen(s:spelunker_complex_or_compund_word_hi_list) == 0
+		execute ('highlight ' . g:spelunker_complex_or_compound_word_group . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
 	endif
 endtry
 

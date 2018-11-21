@@ -40,12 +40,12 @@ let g:spelunker_max_hi_words_each_buf = 100
 " Override highlight group name of wrong spell words. (default 'SpelunkerSpellBad')
 let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
 
-" Override highlight group name of compound spell words. (default 'SpelunkerCompoundWord')
-let g:spelunker_compound_word_group = 'SpelunkerCompoundWord'
+" Override highlight group name of complex or compound words. (default 'SpelunkerComplexOrCompoundWord')
+let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
 
 " Override highlight setting.
 highlight SpelunkerSpellBad cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
-highlight SpelunkerCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
 ```
 
 ### 2.iii. Correct wrong spell
