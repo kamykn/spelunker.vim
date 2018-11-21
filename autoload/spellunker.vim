@@ -45,18 +45,18 @@ endfunction
 
 " キャメルケース、パスカルケース、スネークケースの抜き出し
 " ex) camelCase, PascalCase, snake_case, lowercase
-function s:get_first_word_in_line(line)
+function! s:get_first_word_in_line(line)
 	" 1文字は対象としない
 	return matchstr(a:line, '\v([A-Za-z_]{2,})\C')
 endfunction
 
-function s:reset_case_counter()
+function! s:reset_case_counter()
 	let b:camel_case_count = 0
 	let b:snake_case_count = 0
 endfunction
 
 " ファイル全体でスネークかキャメルケースかを判断してincrement
-function s:case_counter(word)
+function! s:case_counter(word)
 	if a:word =~# '\v[a-z]_\C'
 		" x_ にマッチしたらスネークケース
 		let b:snake_case_count += 1
@@ -66,9 +66,7 @@ function s:case_counter(word)
 	endif
 endfunction
 
-function s:is_snake_case_file()
-	echom b:snake_case_count
-	echom b:camel_case_count
+function! s:is_snake_case_file()
 	return (b:snake_case_count >= b:camel_case_count)
 endfunction
 
@@ -199,33 +197,32 @@ function! s:format_spell_suggest_list(spell_suggest_list, target_word)
 
 	let l:i = 1
 	for s in a:spell_suggest_list
+		" アクセント付き文字の入った単語は除外
+		if s =~# '\v[À-ú]\C'
+			continue
+		endif
+
 		let l:index_str = printf("%" . l:select_index_strlen . "d", l:i) . ': '
 
-		" 記号削除
-		let l:spell = substitute(s, '\.', " ", "g")
+		" 小文字前提で処理をする
+		" 記号(ドット)を削除する
+		" TODO: 全大文字の場合の考慮
+		let l:spell = tolower(substitute(s, '\.', ' ', 'g'))
 
 		" 2単語の場合連結
 		if stridx(l:spell, ' ') > 0
 			let l:spell = substitute(l:spell, '\s', ' ', 'g')
 			let l:suggest_words = split(l:spell, ' ')
 
-			echom s:is_snake_case_file()
 			if s:is_snake_case_file()
 				let l:spell = join(l:suggest_words, '_')
 			else
-				let l:spell = ""
-				let l:index = 1
-				for w in l:suggest_words
-					" 先頭大文字小文字
-					if l:index == 1 && match(a:target_word[0], '\v[A-Z]\C') == -1
-						let l:spell = tolower(l:spell)
-					else
-						let l:spell = s:to_first_char_upper(l:spell)
-					endif
-
-					let l:spell = l:spell . s:to_first_char_upper(w)
-				endfor
+				let l:spell = s:words_to_camel_case(l:suggest_words)
 			endif
+		endif
+
+		if a:target_word[0] =~# '\v[A-Z]\C'
+			let l:spell = s:to_first_char_upper(l:spell)
 		endif
 
 		call add(l:spell_suggest_list_for_replace, l:spell)
@@ -234,6 +231,25 @@ function! s:format_spell_suggest_list(spell_suggest_list, target_word)
 	endfor
 
 	return [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace]
+endfunction
+
+function! s:words_to_camel_case(word_list)
+	let l:spell = ""
+	let l:is_first_word = 1
+
+	for w in a:word_list
+		" 先頭大文字小文字
+		if l:is_first_word == 1
+			let w = tolower(w)
+		else
+			let w = s:to_first_char_upper(w)
+		endif
+
+		let l:spell = l:spell . w
+		let l:is_first_word = 0
+	endfor
+
+	return l:spell
 endfunction
 
 function! s:cut_text_word_before (text, word)
@@ -277,7 +293,7 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 endfunction
 
 function! s:to_first_char_upper(lowercase_spell)
-	return toupper(a:lowercase_spell[0]) . a:lowercase_spell[1:-1]
+	return toupper(a:lowercase_spell[0]) . tolower(a:lowercase_spell[1:-1])
 endfunction
 
 function! s:delete_matches(word_list_for_delete, match_id_dict)
@@ -380,7 +396,7 @@ function! s:check(withEchoList)
 
 	let l:window_text_list = getline(1, '$')
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
-	" TODO: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
+	" NOTE: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
 	"       ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(l:window_text_list)
 

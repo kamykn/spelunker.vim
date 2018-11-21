@@ -83,7 +83,7 @@ function! white_list#init_white_list()
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
 		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
-		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui']
+		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
