@@ -1,4 +1,4 @@
-" Vim plugin of checking words spell on the code.
+" Plugin that improved vim spelling.
 " Version 1.0.0
 " Author kamykn
 " License VIM LICENSE
@@ -82,12 +82,12 @@ function! s:filter_spell_bad_list(word_list)
 		" 読み捨て
 	endtry
 
-	let l:spellunker_white_list = s:filter_list_char_length(g:spellunker_white_list)
+	let l:spelunker_white_list = s:filter_list_char_length(g:spelunker_white_list)
 
 	for orig_word in s:filter_list_char_length(a:word_list)
 		let l:lowercase_word = tolower(orig_word)
 
-		if index(l:spellunker_white_list, l:lowercase_word) >= 0
+		if index(l:spelunker_white_list, l:lowercase_word) >= 0
 			continue
 		endif
 
@@ -114,7 +114,7 @@ function! s:filter_list_char_length(word_list)
 	let l:filtered_word_list = []
 
 	for word in a:word_list
-		if strlen(word) < g:spellunker_target_min_char_len
+		if strlen(word) < g:spelunker_target_min_char_len
 			continue
 		endif
 
@@ -273,9 +273,9 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 	for word in a:spell_bad_list
 		if index(l:current_matched_list, word) == -1
 			" 新しく見つかった場合highlightを設定する
-			let l:highlight_group = g:spellunker_spell_bad_group
+			let l:highlight_group = g:spelunker_spell_bad_group
 			if white_list#is_compound_word(word)
-				let l:highlight_group = g:spellunker_compound_word_group
+				let l:highlight_group = g:spelunker_compound_word_group
 			endif
 
 			" 大文字小文字無視オプションを使わない(事故るのを防止するため)
@@ -339,12 +339,12 @@ function! s:replace_word(target_word, replace_word, is_correct_all)
 endfunction
 
 function! s:get_spell_from_correct_list(target_word)
-	let l:current_spell_setting = spellunker#get_current_spell_setting()
+	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell
 
-	let l:spell_suggest_list = spellsuggest(a:target_word, g:spellunker_max_suggest_words)
+	let l:spell_suggest_list = spellsuggest(a:target_word, g:spelunker_max_suggest_words)
 
-	call spellunker#reduce_spell_setting(l:current_spell_setting)
+	call spelunker#reduce_spell_setting(l:current_spell_setting)
 
 	if len(l:spell_suggest_list) == 0
 		echon "No suggested words."
@@ -364,7 +364,7 @@ function! s:convert_control_character_to_space(line)
 endfunction
 
 " 処理前のspell設定を取得
-function! spellunker#get_current_spell_setting()
+function! spelunker#get_current_spell_setting()
 	redir => spell_setting_capture
 		silent execute "setlocal spell?"
 	redir END
@@ -374,7 +374,7 @@ function! spellunker#get_current_spell_setting()
 endfunction
 
 " spell設定を戻す
-function! spellunker#reduce_spell_setting(spell_setting)
+function! spelunker#reduce_spell_setting(spell_setting)
 	if a:spell_setting != "spell"
 		setlocal nospell
 	endif
@@ -387,7 +387,7 @@ function! s:check(withEchoList)
 		return
 	endif
 
-	if g:enable_spellunker == 0
+	if g:enable_spelunker_vim == 0
 		return
 	endif
 
@@ -400,12 +400,12 @@ function! s:check(withEchoList)
 	"       ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(l:window_text_list)
 
-	let l:current_spell_setting = spellunker#get_current_spell_setting()
+	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell
 
 	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
 
-	call spellunker#reduce_spell_setting(l:current_spell_setting)
+	call spelunker#reduce_spell_setting(l:current_spell_setting)
 
 	" ホワイトリスト作るとき用のオプション
 	if a:withEchoList
@@ -413,12 +413,12 @@ function! s:check(withEchoList)
 	endif
 
 	" matchadd()の対象が多すぎるとスクロール時に毎回チェックが走るっぽく、重くなるため
-	if len(l:spell_bad_list) > g:spellunker_max_hi_words_each_buf
+	if len(l:spell_bad_list) > g:spelunker_max_hi_words_each_buf
 		if !exists('b:is_too_much_words_notified')
 			echon 'Too many spell bad words. (' . len(l:spell_bad_list) . ' words found.)'
 		endif
 
-		let l:spell_bad_list = l:spell_bad_list[0:g:spellunker_max_hi_words_each_buf]
+		let l:spell_bad_list = l:spell_bad_list[0:g:spelunker_max_hi_words_each_buf]
 
 		" 2回目は通知しない
 		let b:is_too_much_words_notified = 1
@@ -443,7 +443,7 @@ function! s:correct(is_correct_all)
 		return
 	endif
 
-	let l:prompt = 'spellunker(' . l:target_word . '->):'
+	let l:prompt = 'spelunker(' . l:target_word . '->):'
 	if a:is_correct_all
 		let l:prompt = 'correct-all(' . l:target_word . '->):'
 	endif
@@ -462,7 +462,7 @@ function! s:correct_from_list(is_correct_all)
 	call s:replace_word(l:target_word, l:selected_word, a:is_correct_all)
 endfunction
 
-function! spellunker#execute_with_target_word(command)
+function! spelunker#execute_with_target_word(command)
 	let l:target_word = s:search_target_word()
 	if l:target_word == ''
 		return
@@ -471,27 +471,27 @@ function! spellunker#execute_with_target_word(command)
 	execute a:command . ' ' . tolower(l:target_word)
 endfunction
 
-function! spellunker#check()
+function! spelunker#check()
 	call s:check(0)
 endfunction
 
-function! spellunker#check_and_echo_list()
+function! spelunker#check_and_echo_list()
 	call s:check(1)
 endfunction
 
-function! spellunker#correct()
+function! spelunker#correct()
 	call s:correct(0)
 endfunction
 
-function! spellunker#correct_all()
+function! spelunker#correct_all()
 	call s:correct(1)
 endfunction
 
-function! spellunker#correct_from_list()
+function! spelunker#correct_from_list()
 	call s:correct_from_list(0)
 endfunction
 
-function! spellunker#correct_all_from_list()
+function! spelunker#correct_all_from_list()
 	call s:correct_from_list(1)
 endfunction
 
