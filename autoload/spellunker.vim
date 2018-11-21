@@ -21,17 +21,15 @@ endfunction
 
 function! s:get_word_list_in_line(line, word_list)
 	let l:word_list = a:word_list
-	let l:line = s:convert_controll_charactor_to_space(a:line)
+	let l:line = s:convert_control_character_to_space(a:line)
 
 	while 1
-		" キャメルケース、パスカルケース、スネークケースの抜き出し
-		" ex) camelCase, PascalCase, snake_case, lowercase
-		let l:match_target_word = matchstr(l:line, '\v([A-Za-z_]+)\C')
-
+		let l:match_target_word = s:get_first_word_in_line(l:line)
 		if l:match_target_word == ""
 			break
 		endif
 
+		call s:case_counter(l:match_target_word)
 		let l:line = s:cut_text_word_before(l:line, l:match_target_word)
 		let l:find_word_list = s:code_to_words(l:match_target_word)
 
@@ -43,6 +41,35 @@ function! s:get_word_list_in_line(line, word_list)
 	endwhile
 
 	return l:word_list
+endfunction
+
+" キャメルケース、パスカルケース、スネークケースの抜き出し
+" ex) camelCase, PascalCase, snake_case, lowercase
+function s:get_first_word_in_line(line)
+	" 1文字は対象としない
+	return matchstr(a:line, '\v([A-Za-z_]{2,})\C')
+endfunction
+
+function s:reset_case_counter()
+	let b:camel_case_count = 0
+	let b:snake_case_count = 0
+endfunction
+
+" ファイル全体でスネークかキャメルケースかを判断してincrement
+function s:case_counter(word)
+	if a:word =~# '\v[a-z]_\C'
+		" x_ にマッチしたらスネークケース
+		let b:snake_case_count += 1
+	elseif a:word =~# '\v[a-z][A-Z]\C'
+		" xX にマッチしたらキャメルケース
+		let b:camel_case_count += 1
+	endif
+endfunction
+
+function s:is_snake_case_file()
+	echom b:snake_case_count
+	echom b:camel_case_count
+	return (b:snake_case_count >= b:camel_case_count)
 endfunction
 
 function! s:filter_spell_bad_list(word_list)
@@ -151,7 +178,7 @@ function! s:find_word_index_list(line_str, search_word)
 
 	while 1
 		let l:tmp_cword_pos = stridx(l:line_str, a:search_word)
-		if l:tmp_cword_pos < 0
+		if l:tmp_cword_pos == -1
 			break
 		endif
 
@@ -175,27 +202,34 @@ function! s:format_spell_suggest_list(spell_suggest_list, target_word)
 		let l:index_str = printf("%" . l:select_index_strlen . "d", l:i) . ': '
 
 		" 記号削除
-		let s = substitute(s, '\.', " ", "g")
+		let l:spell = substitute(s, '\.', " ", "g")
 
 		" 2単語の場合連結
-		if stridx(s, ' ') > 0
-			let s = substitute(s, '\s', ' ', 'g')
-			let l:suggest_words = split(s, ' ')
-			let s = ''
-			for w in l:suggest_words
-				let s = s . s:to_first_char_upper(w)
-			endfor
+		if stridx(l:spell, ' ') > 0
+			let l:spell = substitute(l:spell, '\s', ' ', 'g')
+			let l:suggest_words = split(l:spell, ' ')
+
+			echom s:is_snake_case_file()
+			if s:is_snake_case_file()
+				let l:spell = join(l:suggest_words, '_')
+			else
+				let l:spell = ""
+				let l:index = 1
+				for w in l:suggest_words
+					" 先頭大文字小文字
+					if l:index == 1 && match(a:target_word[0], '\v[A-Z]\C') == -1
+						let l:spell = tolower(l:spell)
+					else
+						let l:spell = s:to_first_char_upper(l:spell)
+					endif
+
+					let l:spell = l:spell . s:to_first_char_upper(w)
+				endfor
+			endif
 		endif
 
-		" 先頭大文字小文字
-		if match(a:target_word[0], '\v[A-Z]\C') == -1
-			let s = tolower(s)
-		else
-			let s = s:to_first_char_upper(s)
-		endif
-
-		call add(l:spell_suggest_list_for_replace, s)
-		call add(l:spell_suggest_list_for_input_list, l:index_str . '"' . s . '"')
+		call add(l:spell_suggest_list_for_replace, l:spell)
+		call add(l:spell_suggest_list_for_input_list, l:index_str . '"' . l:spell . '"')
 		let l:i += 1
 	endfor
 
@@ -308,9 +342,9 @@ function! s:get_spell_from_correct_list(target_word)
 endfunction
 
 " \n \r \t (制御文字)をスペースに置き換え
-function! s:convert_controll_charactor_to_space(line)
+function! s:convert_control_character_to_space(line)
 	" ex) \nabcd -> \n abcd
-	return substitute(a:line, '\v\\(n|r|t)', '  ', "g")
+	return substitute(a:line, '\v(\\n|\\r|\\t)\C', '  ', "g")
 endfunction
 
 " 処理前のspell設定を取得
@@ -342,6 +376,7 @@ function! s:check(withEchoList)
 	endif
 
 	call white_list#init_white_list()
+	call s:reset_case_counter()
 
 	let l:window_text_list = getline(1, '$')
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
