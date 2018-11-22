@@ -26,7 +26,7 @@ Spelunker.vim offers the following options.
 
 ```
 " Enable spelunker.vim. (1 / 0) (default 1)
-let g:enable_spelunker = 1
+let g:enable_spelunker_vim = 1
 
 " Setting for start checking min length of character. (default 4)
 let g:spelunker_target_min_char_len = 4

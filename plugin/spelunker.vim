@@ -42,7 +42,7 @@ try
 catch
 finally
 	if strlen(s:spelunker_spell_bad_hi_list) == 0
-		execute ('highlight ' . g:spelunker_spell_bad_group . ' cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e')
+		execute ('highlight ' . g:spelunker_spell_bad_group . ' cterm=underline ctermfg=247 gui=underline guifg=#9E9E9E')
 	endif
 endtry
 
@@ -52,12 +52,12 @@ if !exists('g:spelunker_complex_or_compound_word_group')
 	let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
 endif
 
-let s:spelunker_complex_or_compund_word_hi_list = ""
+let s:spelunker_complex_or_compound_word_hi_list = ""
 try
-	let s:spelunker_complex_or_compund_word_hi_list = execute('highlight ' . g:spelunker_complex_or_compound_word_group)
+	let s:spelunker_complex_or_compound_word_hi_list = execute('highlight ' . g:spelunker_complex_or_compound_word_group)
 catch
 finally
-	if strlen(s:spelunker_complex_or_compund_word_hi_list) == 0
+	if strlen(s:spelunker_complex_or_compound_word_hi_list) == 0
 		execute ('highlight ' . g:spelunker_complex_or_compound_word_group . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
 	endif
 endtry
