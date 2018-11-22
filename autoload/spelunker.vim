@@ -152,7 +152,7 @@ function! s:search_target_word()
 	" get_word_list_in_lineの中で制御文字を取り除いたりしている
 	let l:word_list = s:get_word_list_in_line(l:line, [])
 
-	" 単語のポジションリストを返して、ポジションスタート + 単語長の中にcurposがあればそこが現在位置
+	" 単語のポジションリストを返して、ポジションスタート + 単語長の中にcursor_positionがあればそこが現在位置
 	for word in l:word_list
 		let l:word_index_list = s:find_word_index_list(l:line, word)
 		for target_word_start_pos in l:word_index_list
@@ -168,8 +168,6 @@ endfunction
 
 
 function! s:find_word_index_list(line_str, search_word)
-	" 単語のポジションリストを返して、ポジションスタート + 単語長の中にcurposがあればそこが現在位置
-
 	let l:cword_length         = strlen(a:search_word)
 	let l:find_word_index_list = []
 	let l:line_str             = a:line_str
