@@ -441,9 +441,9 @@ function! s:correct(is_correct_all)
 		return
 	endif
 
-	let l:prompt = 'spelunker(' . l:target_word . '->):'
+	let l:prompt = 'spelunker (' . l:target_word . '->):'
 	if a:is_correct_all
-		let l:prompt = 'correct-all(' . l:target_word . '->):'
+		let l:prompt = 'correct-all (' . l:target_word . '->):'
 	endif
 	let l:input_word = input(l:prompt)
 
