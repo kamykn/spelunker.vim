@@ -1,6 +1,7 @@
 # spelunker.vim
 Spelunker.vim is a plugin that improved [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell').  
 It supports both Camel Case and Snake Case and provides a smart way to correct spelling.
+This plugin have a whitelist for each programming language (currently only PHP and Vim).
 
 ## 1.Installation
 ### vim-plug
@@ -50,7 +51,8 @@ highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underl
 
 ![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
 
-### 2.iii. Correct wrong spell
+## 3.Commands
+### 3.i. Correct wrong spell
 
 **ZL / Zl**  
 In a buffer with many camel cases, it will suggest same case words. (And snake case also too.)  
@@ -84,7 +86,7 @@ Zc
 
 **These functions work on not only wrong spelling, but also correct spelling!**
 
-### 2.iv. Add words to good spell list
+### 3.ii. Add words to good spell list
 Spelunker.vim use `spell` commands provided by Vim as default.  
 You can add under cursor word to `spellfile` with following commands (like a Vim commands):
 
@@ -119,3 +121,17 @@ ZUW
 FYI:
 http://vim-jp.org/vimdoc-en/spell.html#zg
 
+## 4.Whitelist
+### 4.i. Whitelist applied to all programming languages.
+Commonly used words are set to be excluded.  
+Compound words and complex words may be highlighted incorrectly, but another highlight group (SpelunkerComplexOrCompoundWord) is being adapted.
+
+Please see the code for details.  
+https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list.vim
+
+### 4.ii. Whitelist adapted according to programming language.
+Currently only PHP and Vim are supported.  
+Other programming languages will be added in the future.  
+
+Vim: https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_vim.vim  
+PHP: https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_php.vim  
