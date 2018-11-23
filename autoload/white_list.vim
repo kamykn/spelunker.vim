@@ -32,7 +32,7 @@ function! white_list#init_white_list()
 		" Ruby: http://secret-garden.hatenablog.com/entry/2015/06/30/000000
 		let l:wl += ['nil', 'def', 'undef']
 
-		" Clang: https://ja.wikipedia.org/wiki/キーワード_(C言語)
+		" C: https://ja.wikipedia.org/wiki/キーワード_(C言語)
 		let l:wl += ['typedef', 'noreturn']
 
 		" Vim
