@@ -371,6 +371,17 @@ function! spelunker#get_current_spell_setting()
 	return  substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
 endfunction
 
+function! s:echo_for_white_list(spell_bad_list)
+	let l:for_echo_list = []
+	for word in a:spell_bad_list
+		let word = tolower(word)
+		if index(l:for_echo_list, word) == -1
+			call add(l:for_echo_list, word)
+		endif
+	endfor
+	echo l:for_echo_list
+endfunction
+
 " spell設定を戻す
 function! spelunker#reduce_spell_setting(spell_setting)
 	if a:spell_setting != "spell"
@@ -378,7 +389,7 @@ function! spelunker#reduce_spell_setting(spell_setting)
 	endif
 endfunction
 
-function! s:check(withEchoList)
+function! s:check(with_echo_list)
 	" 大文字小文字は区別してリスト登録している
 
 	if &readonly
@@ -406,8 +417,9 @@ function! s:check(withEchoList)
 	call spelunker#reduce_spell_setting(l:current_spell_setting)
 
 	" ホワイトリスト作るとき用のオプション
-	if a:withEchoList
-		echo l:spell_bad_list
+	if a:with_echo_list
+		call s:echo_for_white_list(l:spell_bad_list)
+		return
 	endif
 
 	" matchadd()の対象が多すぎるとスクロール時に毎回チェックが走るっぽく、重くなるため
