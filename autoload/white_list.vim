@@ -69,9 +69,10 @@ function! white_list#init_white_list()
 		" Programming language name: https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7
 		let l:wl += ['php', 'kotlin', 'clojure', 'ecma', 'lisp', 'erlang', 'clang', 'golang']
 		let l:wl += ['fortran', 'haskell', 'jsx', 'lua', 'matlab', 'scala', 'html', 'css']
-		let l:wl += ['less', 'sass', 'scss', 'csharp', 'dotnet']
+		let l:wl += ['javascript', 'less', 'sass', 'scss', 'csharp', 'dotnet']
 
 		" Top level domain: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3
+		" 最近増えたものに関しては一旦保留
 		let l:wl += ['com', 'org', 'biz', 'xxx', 'gov', 'edu', 'tel', 'arpa', 'bitnet', 'csnet']
 
 		" Environment
@@ -83,7 +84,8 @@ function! white_list#init_white_list()
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
 		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
-		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook']
+		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook', 'iframe']
+		let l:wl += ['charset']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']

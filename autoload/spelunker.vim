@@ -77,7 +77,7 @@ function! s:filter_spell_bad_list(word_list)
 	let l:white_list_for_lang = []
 	try
 		let l:filetype = &filetype
-		execute 'let l:white_list_for_lang = s:filter_list_char_length(white_list_' . l:filetype . '#init_white_list())'
+		execute 'let l:white_list_for_lang = s:filter_list_char_length(white_list_' . l:filetype . '#get_white_list())'
 	catch
 		" 読み捨て
 	endtry
@@ -412,12 +412,19 @@ function! s:check(with_echo_list)
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell
 
+	" ホワイトリスト作るとき用のオプション
+	if a:with_echo_list
+		let l:orig_spelunker_target_min_char_len = g:spelunker_target_min_char_len
+		let g:spelunker_target_min_char_len = 1
+	endif
+
 	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
 
 	call spelunker#reduce_spell_setting(l:current_spell_setting)
 
 	" ホワイトリスト作るとき用のオプション
 	if a:with_echo_list
+		let g:spelunker_target_min_char_len = l:orig_spelunker_target_min_char_len
 		call s:echo_for_white_list(l:spell_bad_list)
 		return
 	endif
