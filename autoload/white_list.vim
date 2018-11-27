@@ -35,9 +35,6 @@ function! white_list#init_white_list()
 		" C: https://ja.wikipedia.org/wiki/キーワード_(C言語)
 		let l:wl += ['typedef', 'noreturn']
 
-		" Vim
-		let l:wl += ['cword']
-
 		" C++: https://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%BC%E3%83%AF%E3%83%BC%E3%83%89_(C%2B%2B)
 		let l:wl += ['nullptr', 'wchar', 'constexpr', 'alignof', 'decltype', 'typeid']
 		let l:wl += ['noexcept', 'typename', 'alignas', 'asm', 'bitand', 'bitor', 'compl']
@@ -95,6 +92,7 @@ function! white_list#init_white_list()
 
 		" Other
 		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup', 'header']
+		let l:wl += ['neo', 'fazzy']
 
 		" Don't you think it is terrible?
 		let l:wl += ['don', 'doesn', 'didn', 'ain', 'isn', 'wasn', 'aren', 'weren']

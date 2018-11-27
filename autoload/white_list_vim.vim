@@ -24,7 +24,7 @@ function! white_list_vim#get_white_list()
 	let l:wl += ['filereadable', 'filewritable', 'finddir', 'findfile', 'fnamemodify', 'foldclosed', 'getcwd', 'getfperm', 'getfsize', 'getftype', 'globpath', 'haslocaldir', 'hostname', 'isdirectory', 'pathshorten', 'readfile', 'tempname', 'writefile', 'changedtick', 'lnum', 'cmdarg', 'cmdbang', 'ctype', 'errmsg', 'fname', 'folddashes', 'foldend', 'foldstart', 'lc', 'prevcount', 'progname', 'scrollstart', 'searchforward', 'servername', 'statusmsg', 'swapchoice', 'swapcommand', 'termresponse', 'throwpoint', 'warningmsg', 'sid', 'lcd', 'tcl', 'wq', 'xit', 'buf', 'wipeout', 'cmdwin', 'stdin', 'bslash', 'cr', 'csi', 'esc', 'nl', 'nul', 'lt']
 
 	" special keywords
-	let l:wl += ['cjk', 'netrw', 'cterm', 'ctermfg', 'guifg']
+	let l:wl += ['cjk', 'netrw', 'cterm', 'ctermfg', 'guifg', 'cword']
 
 	return l:wl
 endfunction
