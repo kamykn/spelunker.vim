@@ -1,7 +1,7 @@
 # spelunker.vim
 Spelunker.vim is a plugin that improved [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell').  
 It supports both Camel Case and Snake Case and provides a smart way to correct spelling.
-This plugin have a whitelist for each programming language (currently only PHP and Vim).
+This plugin have a whitelist for each programming language (currently only JS, PHP and Vim).
 
 ## 1.Installation
 ### vim-plug
@@ -130,8 +130,9 @@ Please see the code for details.
 https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list.vim
 
 ### 4.ii. Whitelist adapted according to programming language.
-Currently only PHP and Vim are supported.  
+Currently only JS (TypeScript), PHP and Vim are supported.  
 Other programming languages will be added in the future.  
 
 Vim: https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_vim.vim  
 PHP: https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_php.vim  
+JS (TypeScript): https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_javascript.vim  
