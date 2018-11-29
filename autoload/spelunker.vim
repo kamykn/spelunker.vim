@@ -278,7 +278,8 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 
 			" 大文字小文字無視オプションを使わない(事故るのを防止するため)
 			" ng: xxxAttr -> [atTr]iplePoint
-			let l:match_id = matchadd(l:highlight_group, '\v([A-Z]@<!)' . word . '([a-z]@!)\C')
+			" priorityはhlsearchと同じ0で指定して、検索時は検索が優先されるようにする
+			let l:match_id = matchadd(l:highlight_group, '\v([A-Z]@<!)' . word . '([a-z]@!)\C', 0)
 			execute 'let l:match_id_dict.' . word . ' = ' . l:match_id
 		else
 			" すでにある場合には削除予定リストから単語消す
