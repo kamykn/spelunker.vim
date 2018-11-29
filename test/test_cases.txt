@@ -66,3 +66,7 @@ apple_orange_banan
 ### Zw ZW
 ### Zuw ZUW
 
+## ハイライト優先度
+`/spel`と検索して正しくどちらもハイライトされる
+goodSpel
+goodSpell
