@@ -181,6 +181,10 @@ if !hasmapto('<Plug>(undo-temporary-spelunker-bad-nmap)')
 	silent! nmap <unique> ZUW <Plug>(undo-temporary-spelunker-bad-nmap)
 endif
 
+" [add all spell bad to dict] ==================================================================
+:command! SpelunkerAddAll call spelunker#add_all_spellgood()
+
+" [augroup] ==================================================================
 augroup spelunker
 	autocmd!
 	autocmd BufWinEnter,BufWritePost * call spelunker#check()
