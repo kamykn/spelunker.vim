@@ -497,9 +497,15 @@ endfunction
 function! spelunker#add_all_spellgood()
 	let l:spell_bad_list = s:get_spell_bad_list()
 
+	if len(l:spell_bad_list) == 0
+		return
+	endif
+
 	for word in l:spell_bad_list
-		execute 'spellgood ' . word
+		execute 'silent! spellgood ' . tolower(word)
 	endfor
+
+	echon len(l:spell_bad_list) . ' word(s) added to the dictionary.'
 endfunction
 
 function! spelunker#check()
