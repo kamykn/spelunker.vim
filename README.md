@@ -52,7 +52,7 @@ highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underl
 ![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
 
 ## 3.Commands
-### 3.i. Correct wrong spell
+### 3.i. Correct wrong spell.
 
 **ZL / Zl**  
 In a buffer with many camel cases, it will suggest same case words. (And snake case also too.)  
@@ -86,7 +86,7 @@ Zc
 
 **These functions work on not only wrong spelling, but also correct spelling!**
 
-### 3.ii. Add words to good spell list
+### 3.ii. Add words to spellfile.
 Spelunker.vim use `spell` commands provided by Vim as default.  
 You can add under cursor word to `spellfile` with following commands (like a Vim commands):
 
@@ -120,6 +120,13 @@ ZUW
 
 FYI:
 http://vim-jp.org/vimdoc-en/spell.html#zg
+
+### 3.iii. Add all misspelled words in buffer to spellfile.
+When there are many misspelled words, it is possible to add them all to the `spellfile`.
+
+```
+:SpelunkerAddAll
+```
 
 ## 4.Whitelist
 ### 4.i. Whitelist applied to all programming languages.

@@ -182,7 +182,7 @@ if !hasmapto('<Plug>(undo-temporary-spelunker-bad-nmap)')
 endif
 
 " [add all spell bad to dict] ==================================================================
-:command! SpelunkerAddAll call spelunker#add_all_spellgood()
+:command! SpelunkerAddAll call spelunker#add_all_spellgood() | call spelunker#check()
 
 " [augroup] ==================================================================
 augroup spelunker

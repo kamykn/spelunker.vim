@@ -505,7 +505,7 @@ function! spelunker#add_all_spellgood()
 		execute 'silent! spellgood ' . tolower(word)
 	endfor
 
-	echon len(l:spell_bad_list) . ' word(s) added to the dictionary.'
+	echon len(l:spell_bad_list) . ' word(s) added to the spellfile.'
 endfunction
 
 function! spelunker#check()
