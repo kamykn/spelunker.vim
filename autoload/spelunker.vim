@@ -390,9 +390,8 @@ function! spelunker#reduce_spell_setting(spell_setting)
 	endif
 endfunction
 
+" 大文字小文字は区別してリスト登録している
 function! s:check(with_echo_list)
-	" 大文字小文字は区別してリスト登録している
-
 	if &readonly
 		return
 	endif
@@ -401,27 +400,14 @@ function! s:check(with_echo_list)
 		return
 	endif
 
-	call white_list#init_white_list()
 	call s:reset_case_counter()
-
-	let l:window_text_list = getline(1, '$')
-	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
-	" NOTE: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
-	"       ただし、match_id_dictをglobalにする必要あり
-	let l:word_list = s:get_word_list(l:window_text_list)
-
-	let l:current_spell_setting = spelunker#get_current_spell_setting()
-	setlocal spell
-
 	" ホワイトリスト作るとき用のオプション
 	if a:with_echo_list
 		let l:orig_spelunker_target_min_char_len = g:spelunker_target_min_char_len
 		let g:spelunker_target_min_char_len = 1
 	endif
 
-	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
-
-	call spelunker#reduce_spell_setting(l:current_spell_setting)
+	let l:spell_bad_list = s:get_spell_bad_list()
 
 	" ホワイトリスト作るとき用のオプション
 	if a:with_echo_list
@@ -487,6 +473,39 @@ function! spelunker#execute_with_target_word(command)
 	endif
 
 	execute a:command . ' ' . tolower(l:target_word)
+endfunction
+
+function! s:get_spell_bad_list()
+	call white_list#init_white_list()
+
+	let l:window_text_list = getline(1, '$')
+	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
+	" NOTE: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
+	"       ただし、match_id_dictをglobalにする必要あり
+	let l:word_list = s:get_word_list(l:window_text_list)
+
+	let l:current_spell_setting = spelunker#get_current_spell_setting()
+	setlocal spell
+
+	let l:spell_bad_list = s:filter_spell_bad_list(l:word_list)
+
+	call spelunker#reduce_spell_setting(l:current_spell_setting)
+
+	return l:spell_bad_list
+endfunction
+
+function! spelunker#add_all_spellgood()
+	let l:spell_bad_list = s:get_spell_bad_list()
+
+	if len(l:spell_bad_list) == 0
+		return
+	endif
+
+	for word in l:spell_bad_list
+		execute 'silent! spellgood ' . tolower(word)
+	endfor
+
+	echon len(l:spell_bad_list) . ' word(s) added to the spellfile.'
 endfunction
 
 function! spelunker#check()
