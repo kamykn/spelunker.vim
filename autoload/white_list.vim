@@ -83,9 +83,9 @@ function! white_list#init_white_list()
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
-		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
+		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'ansi', 'unicode']
 		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook', 'iframe']
-		let l:wl += ['charset', 'os']
+		let l:wl += ['charset', 'os', 'num', 'expr', 'msg', 'std']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
@@ -97,7 +97,10 @@ function! white_list#init_white_list()
 		let l:wl += ['printf', 'println', 'sprint', 'sprintf', 'sprintln', 'fprint', 'fprintf', 'fprintln']
 
 		" timezone
-		let l:wl += ['gmt']
+		let l:wl += ['gmt', 'utc']
+
+		" text encoding
+		let l:wl += ['utf', 'euc', 'jis']
 
 		" Other
 		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup', 'header']
