@@ -71,6 +71,9 @@ function! white_list#init_white_list()
 		" Setting files
 		let l:wl += ['ini', 'toml', 'yml', 'xml', 'json']
 
+		" Image file type
+		let l:wl += ['jpeg', 'jpg', 'gif', 'png', 'svg']
+
 		" Top level domain: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3
 		" 最近増えたものに関しては一旦保留
 		let l:wl += ['com', 'org', 'biz', 'xxx', 'gov', 'edu', 'tel', 'arpa', 'bitnet', 'csnet']
@@ -85,7 +88,7 @@ function! white_list#init_white_list()
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
 		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'ansi', 'unicode']
 		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook', 'iframe']
-		let l:wl += ['charset', 'os', 'num', 'expr', 'msg', 'std']
+		let l:wl += ['charset', 'os', 'num', 'expr', 'msg', 'std', 'ime', 'nav', 'img']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
