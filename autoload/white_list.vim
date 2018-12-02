@@ -55,18 +55,24 @@ function! white_list#init_white_list()
 
 		" Commands
 		let l:wl += ['sudo', 'grep', 'awk', 'curl', 'wget', 'mkdir', 'rmdir', 'pwd']
-		let l:wl += ['chmod', 'chown', 'rsync', 'uniq', 'git', 'svn']
+		let l:wl += ['chmod', 'chown', 'rsync', 'uniq', 'git', 'svn', 'nohup']
 
 		" Famous OSS or products
 		let l:wl += ['apache', 'nginx', 'github', 'wikipedia', 'linux', 'unix', 'dos']
-		let l:wl += ['mysql', 'postgresql', 'postgre', 'vim', 'gvim', 'emacs', 'vscode']
+		let l:wl += ['sql', 'mysql', 'postgresql', 'postgre', 'vim', 'gvim', 'emacs', 'vscode']
 		let l:wl += ['csh', 'bash', 'zsh', 'ksh', 'iphone', 'redis', 'memcached', 'aws', 'gcp']
 		let l:wl += ['google', 'nvim', 'neovim', 'webkit']
 
 		" Programming language name: https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E%E4%B8%80%E8%A6%A7
 		let l:wl += ['php', 'kotlin', 'clojure', 'ecma', 'lisp', 'erlang', 'clang', 'golang']
 		let l:wl += ['fortran', 'haskell', 'jsx', 'lua', 'matlab', 'scala', 'html', 'css']
-		let l:wl += ['javascript', 'less', 'sass', 'scss', 'csharp', 'dotnet']
+		let l:wl += ['javascript', 'less', 'sass', 'scss', 'csharp', 'dotnet', 'perl']
+
+		" Setting files
+		let l:wl += ['ini', 'toml', 'yml', 'xml', 'json']
+
+		" Image file type
+		let l:wl += ['jpeg', 'jpg', 'gif', 'png', 'svg']
 
 		" Top level domain: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3
 		" 最近増えたものに関しては一旦保留
@@ -80,15 +86,24 @@ function! white_list#init_white_list()
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
 		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
-		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'utf', 'ansi', 'unicode']
+		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'ansi', 'unicode']
 		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook', 'iframe']
-		let l:wl += ['charset']
+		let l:wl += ['charset', 'os', 'num', 'expr', 'msg', 'std', 'ime', 'nav', 'img']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
 
 		" Protocols
 		let l:wl += ['ssh', 'http', 'https', 'tcp', 'udp', 'ftp', 'ftps', 'sftp', 'imap', 'scp']
+
+		" print
+		let l:wl += ['printf', 'println', 'sprint', 'sprintf', 'sprintln', 'fprint', 'fprintf', 'fprintln']
+
+		" timezone
+		let l:wl += ['gmt', 'utc']
+
+		" text encoding
+		let l:wl += ['utf', 'euc', 'jis']
 
 		" Other
 		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup', 'header']
@@ -119,7 +134,7 @@ function! white_list#is_complex_or_compound_word(wrong_word)
 	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un', 'no']
 
 	" function prefix
-	let l:common_word_prefix += ['str', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
+	let l:common_word_prefix += ['str', 'fprint', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
 	let l:common_word_prefix += ['match', 'byte', 'is', 'has', 'to']
 
 	for prefix in l:common_word_prefix
