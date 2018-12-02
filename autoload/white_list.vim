@@ -69,7 +69,7 @@ function! white_list#init_white_list()
 		let l:wl += ['javascript', 'less', 'sass', 'scss', 'csharp', 'dotnet', 'perl']
 
 		" Setting files
-		let l:wl += ['ini', 'toml', 'yml', 'xml'] " 'json'
+		let l:wl += ['ini', 'toml', 'yml', 'xml', 'json']
 
 		" Top level domain: https://ja.wikipedia.org/wiki/%E3%83%88%E3%83%83%E3%83%97%E3%83%AC%E3%83%99%E3%83%AB%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3
 		" 最近増えたものに関しては一旦保留
@@ -95,6 +95,9 @@ function! white_list#init_white_list()
 
 		" print
 		let l:wl += ['printf', 'println', 'sprint', 'sprintf', 'sprintln', 'fprint', 'fprintf', 'fprintln']
+
+		" timezone
+		let l:wl += ['gmt']
 
 		" Other
 		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup', 'header']
