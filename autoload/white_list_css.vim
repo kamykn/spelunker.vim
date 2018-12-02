@@ -8,7 +8,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! white_list_css#get_white_list()
-	let l:wl = ['accesskey', 'backface', 'bezier', 'cmyk', 'dir', 'dpcm', 'dppx', 'focusring', 'asian', 'fullscreen', 'gd', 'horiz', 'hsl', 'hsla', 'hz', 'rect', 'keyframes', 'lwtheme', 'darktext', 'maemo', 'blockquote', 'columnline', 'firstcolumn', 'firstrow', 'lastcolumn', 'rowline', 'lastrow', 'minmax', 'mso', 'navbutton', 'nbsp', 'oeb', 'bottomleft', 'bottomright', 'topleft', 'topright', 'pagebreak', 'pagecontent', 'panose', 'px', 'rgb', 'rgba', 'rounddown', 'rtl', 'dlight', 'darkshadow', 'dasharray', 'dashoffset', 'linecap', 'linejoin', 'miterlimit', 'autospace', 'kashida', 'callout', 'progressmeter', 'ui', 'bidi', 'vh', 'vmax', 'vmin', 'vw', 'xul']
+	let l:wl = ['accesskey', 'backface', 'bezier', 'cmyk', 'dir', 'dpcm', 'dppx', 'focusring', 'asian', 'fullscreen', 'gd', 'horiz', 'hsl', 'hsla', 'hz', 'rect', 'keyframes', 'lwtheme', 'darktext', 'maemo', 'blockquote', 'columnline', 'firstcolumn', 'firstrow', 'lastcolumn', 'rowline', 'lastrow', 'minmax', 'mso', 'navbutton', 'nbsp', 'oeb', 'bottomleft', 'bottomright', 'topleft', 'topright', 'pagebreak', 'pagecontent', 'panose', 'px', 'rgb', 'rgba', 'rounddown', 'rtl', 'dlight', 'darkshadow', 'dasharray', 'dashoffset', 'linecap', 'linejoin', 'miterlimit', 'autospace', 'kashida', 'callout', 'progressmeter', 'ui', 'bidi', 'vh', 'vmax', 'vmin', 'vw', 'xul', 'nowrap', 'overline', 'moz']
 	return l:wl
 endfunction
 
