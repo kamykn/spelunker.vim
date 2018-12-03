@@ -140,11 +140,11 @@ https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list.vim
 Currently only JS (TypeScript), PHP and Vim are supported.  
 Other programming languages will be added in the future.  
 
-| Programming language | white_list |
+| Programming language | White list |
 | --- | --- |
 | Vim Script | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_vim.vim|
 | PHP | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_php.vim |
 | JS (TypeScript) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_javascript.vim |
 | Ruby | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_ruby.vim |
 | HTML | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_html.vim |
-| CSS | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_css.vim |
+| CSS, LESS, SCSS(Sass) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_css.vim |
