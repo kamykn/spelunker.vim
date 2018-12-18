@@ -347,7 +347,7 @@ function! s:replace_word(target_word, replace_word, is_correct_all)
 	call setpos('.', l:pos)
 endfunction
 
-function! s:get_spell_from_correct_list(target_word)
+function! s:get_spell_from_correct_list(target_word, feeling_lucky)
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell
 
@@ -361,6 +361,10 @@ function! s:get_spell_from_correct_list(target_word)
 	endif
 
 	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:format_spell_suggest_list(l:spell_suggest_list, a:target_word)
+
+	if a:feeling_lucky
+		return l:spell_suggest_list_for_replace[0]
+	endif
 
 	let l:selected = inputlist(l:spell_suggest_list_for_input_list)
 	return  l:spell_suggest_list_for_replace[l:selected - 1]
@@ -466,13 +470,13 @@ function! s:correct(is_correct_all)
 	call s:replace_word(l:target_word, l:input_word, a:is_correct_all)
 endfunction
 
-function! s:correct_from_list(is_correct_all)
+function! s:correct_from_list(is_correct_all, is_feeling_lucky)
 	let l:target_word = s:search_target_word()
 	if l:target_word == ''
 		return
 	endif
 
-	let l:selected_word = s:get_spell_from_correct_list(l:target_word)
+	let l:selected_word = s:get_spell_from_correct_list(l:target_word, a:is_feeling_lucky)
 	call s:replace_word(l:target_word, l:selected_word, a:is_correct_all)
 endfunction
 
@@ -535,11 +539,27 @@ function! spelunker#correct_all()
 endfunction
 
 function! spelunker#correct_from_list()
-	call s:correct_from_list(0)
+	let l:is_correct_all = 0
+	let l:is_feeling_lucky = 0
+	call s:correct_from_list(l:is_correct_all, l:is_feeling_lucky)
 endfunction
 
 function! spelunker#correct_all_from_list()
-	call s:correct_from_list(1)
+	let l:is_correct_all = 1
+	let l:is_feeling_lucky = 0
+	call s:correct_from_list(l:is_correct_all, l:is_feeling_lucky)
+endfunction
+
+function! spelunker#correct_feeling_lucky()
+	let l:is_correct_all = 0
+	let l:is_feeling_lucky = 1
+	call s:correct_from_list(l:is_correct_all, l:is_feeling_lucky)
+endfunction
+
+function! spelunker#correct_all_feeling_lucky()
+	let l:is_correct_all = 1
+	let l:is_feeling_lucky = 1
+	call s:correct_from_list(l:is_correct_all, l:is_feeling_lucky)
 endfunction
 
 let &cpo = s:save_cpo

@@ -84,6 +84,17 @@ if !hasmapto('<Plug>(spelunker-correct-all)')
 	silent! nmap <unique> ZC <Plug>(spelunker-correct-all)
 endif
 
+" [open fix list] ========================================================================
+nnoremap <silent> <Plug>(spelunker-correct-feeling-lucky) :call spelunker#correct_feeling_lucky()<CR>
+if !hasmapto('<Plug>(spelunker-correct-feeling-lucky)')
+	silent! nmap <unique> Zf <Plug>(spelunker-correct-feeling-lucky)
+endif
+
+nnoremap <silent> <Plug>(spelunker-correct-all-feeling-lucky) :call spelunker#correct_all_feeling_lucky()<CR>
+if !hasmapto('<Plug>(spelunker-correct-all-feeling-lucky)')
+	silent! nmap <unique> ZF <Plug>(spelunker-correct-all-feeling-lucky)
+endif
+
 " [spell good] ===========================================================================
 " vnoremapは古い方法の後方互換です
 vnoremap <silent> <Plug>(add-spelunker-good) zg :call spelunker#check()<CR>
