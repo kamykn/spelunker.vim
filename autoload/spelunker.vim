@@ -97,6 +97,11 @@ function! s:filter_spell_bad_list(word_list)
 
 		let [l:spell_bad_word, l:error_type] = spellbadword(l:lowercase_word)
 
+		if l:spell_bad_word != ''
+			" Wednesdayなど、先頭大文字しかない単語があるためもう一回チェック
+			let [l:spell_bad_word, l:error_type] = spellbadword(s:to_first_char_upper(l:lowercase_word))
+		endif
+
 		" 登録は元のケースで行う。辞書登録とそのチェックにかけるときのみlowerケースになる。
 		" 元々ここでlowercaseだけ管理し、lower,UPPER,UpperCamelCaseをmatchadd()していたが、
 		" 最少のマッチだけを登録させる為、ここで実際に引っかかるものを登録させ、
@@ -197,6 +202,11 @@ function! s:format_spell_suggest_list(spell_suggest_list, target_word)
 	for s in a:spell_suggest_list
 		" アクセント付き文字の入った単語は除外
 		if s =~# '\v[À-ú]\C'
+			continue
+		endif
+
+		" シングルクオートは除外
+		if stridx(s, "'") > 0
 			continue
 		endif
 

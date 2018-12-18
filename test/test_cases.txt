@@ -71,3 +71,9 @@ apple_orange_banan
 `/spel`と検索して正しくどちらもハイライトされる
 goodSpel
 goodSpell
+
+## 先頭大文字しかない単語
+Wednesday
+
+## 修正候補リストにシングルクオートが入ってこないように
+Wednesday <- ZL
