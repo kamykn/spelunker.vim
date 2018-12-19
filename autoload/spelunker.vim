@@ -82,16 +82,21 @@ function! s:filter_spell_bad_list(word_list)
 		" 読み捨て
 	endtry
 
+	let l:white_list_for_user = []
+	try
+		execute 'let l:white_list_for_user = g:white_list_for_user'
+	catch
+		" 読み捨て
+	endtry
+
 	let l:spelunker_white_list = s:filter_list_char_length(g:spelunker_white_list)
 
 	for orig_word in s:filter_list_char_length(a:word_list)
 		let l:lowercase_word = tolower(orig_word)
 
-		if index(l:spelunker_white_list, l:lowercase_word) >= 0
-			continue
-		endif
-
-		if index(l:white_list_for_lang, l:lowercase_word) >= 0
+		if index(l:spelunker_white_list, l:lowercase_word) >= 0 ||
+			\ index(l:white_list_for_lang, l:lowercase_word) >= 0 ||
+			\ index(l:white_list_for_user, l:lowercase_word) >= 0
 			continue
 		endif
 
