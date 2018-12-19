@@ -84,6 +84,19 @@ Zc
 `ZC` command works like this.  
 ![spelunker_zc](https://user-images.githubusercontent.com/7608231/48882594-7c077480-ee5e-11e8-83fe-68691bb13823.gif)
 
+** ZF / Zf**
+ZF command is correcting word to automatically selected words. (This is like a "I'm feeling lucky"!)
+
+```
+" Correct all words in buffer.
+ZF
+
+" For under cursor word only.
+Zf
+```
+
+![spelunker_zf](https://user-images.githubusercontent.com/7608231/50171177-16ab8400-0335-11e9-8eae-6ce1b249babd.gif)
+
 **These functions work on not only wrong spelling, but also correct spelling!**
 
 ### 3.ii. Add words to spellfile.
