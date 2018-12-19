@@ -84,7 +84,7 @@ Zc
 `ZC` command works like this.  
 ![spelunker_zc](https://user-images.githubusercontent.com/7608231/48882594-7c077480-ee5e-11e8-83fe-68691bb13823.gif)
 
-** ZF / Zf**
+**ZF / Zf**  
 ZF command is correcting word to automatically selected words. (This is like a "I'm feeling lucky"!)
 
 ```
