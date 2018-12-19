@@ -85,10 +85,11 @@ function! spelunker#white_list#init_white_list()
 		let l:wl += ['config', 'conf', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
-		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
+		let l:wl += ['lang', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
 		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'ansi', 'unicode']
 		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook', 'iframe']
 		let l:wl += ['charset', 'os', 'num', 'expr', 'msg', 'std', 'ime', 'nav', 'img']
+		let l:wl += ['util', 'utils', 'param', 'params']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
