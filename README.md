@@ -147,17 +147,27 @@ Commonly used words are set to be excluded.
 Compound words and complex words may be highlighted incorrectly, but another highlight group (SpelunkerComplexOrCompoundWord) is being adapted.
 
 Please see the code for details.  
-https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list.vim
+https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list.vim
 
 ### 4.ii. Whitelist adapted according to programming language.
-Currently only JS (TypeScript), PHP and Vim are supported.  
+Currently only JS (TypeScript), PHP, Ruby, HTML, CSS and Vim Script are supported.  
 Other programming languages will be added in the future.  
 
 | Programming language | White list |
 | --- | --- |
-| Vim Script | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_vim.vim|
-| PHP | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_php.vim |
-| JS (TypeScript) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_javascript.vim |
-| Ruby | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_ruby.vim |
-| HTML | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_html.vim |
-| CSS, LESS, SCSS(Sass) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/white_list_css.vim |
+| Vim Script | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_vim.vim|
+| PHP | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_php.vim |
+| JS (TypeScript) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_javascript.vim |
+| Ruby | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_ruby.vim |
+| HTML | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_html.vim |
+| CSS, LESS, SCSS(Sass) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_css.vim |
+
+### 4.iii. User's whitelist.
+You can add your whitelist setting.
+It is very easy to add.
+Please add to .vimrc as follows:
+
+```
+" example
+let g:spelunker_white_list_for_user = ['kamykn', 'spelunker']
+```
