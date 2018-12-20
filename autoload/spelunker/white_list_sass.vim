@@ -7,9 +7,10 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! white_list_scss#get_white_list()
-	return white_list_css#get_white_list()
+function! spelunker#white_list_sass#get_white_list()
+	return spelunker#white_list_css#get_white_list()
 endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+

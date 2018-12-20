@@ -7,7 +7,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! white_list_html#get_white_list()
+function! spelunker#white_list_html#get_white_list()
 	let l:wl = ['basefont', 'bdi', 'bdo', 'blockquote', 'br', 'colgroup', 'colspan', 'doctype', 'datalist', 'dfn', 'dir', 'dl', 'dt', 'fieldset', 'figcaption', 'frameset', 'lt', 'kbd', 'keygen', 'li', 'menuitem', 'noframes', 'noscript', 'ol', 'optgroup', 'rowspan', 'rp', 'samp', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'tt', 'ul', 'wbr', 'rb', 'rtc']
 	return l:wl
 endfunction

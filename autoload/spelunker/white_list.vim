@@ -8,7 +8,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! white_list#init_white_list()
+function! spelunker#white_list#init_white_list()
 	if !exists('g:spelunker_white_list')
 		let l:wl = []
 
@@ -129,7 +129,7 @@ endfunction
 "
 " FYI:https://www.cieej.or.jp/toefl/webmagazine/interview-lifelong/1508/
 "
-function! white_list#is_complex_or_compound_word(wrong_word)
+function! spelunker#white_list#is_complex_or_compound_word(wrong_word)
 	let l:wrong_word = tolower(a:wrong_word)
 	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un', 'no']
 

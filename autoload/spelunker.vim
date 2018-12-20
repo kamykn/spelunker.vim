@@ -77,14 +77,14 @@ function! s:filter_spell_bad_list(word_list)
 	let l:white_list_for_lang = []
 	try
 		let l:filetype = &filetype
-		execute 'let l:white_list_for_lang = s:filter_list_char_length(white_list_' . l:filetype . '#get_white_list())'
+		execute 'let l:white_list_for_lang = s:filter_list_char_length(spelunker#white_list_' . l:filetype . '#get_white_list())'
 	catch
 		" 読み捨て
 	endtry
 
 	let l:white_list_for_user = []
 	try
-		execute 'let l:white_list_for_user = g:white_list_for_user'
+		execute 'let l:white_list_for_user = g:spelunker_white_list_for_user'
 	catch
 		" 読み捨て
 	endtry
@@ -287,7 +287,7 @@ function! s:add_matches(spell_bad_list, match_id_dict)
 		if index(l:current_matched_list, word) == -1
 			" 新しく見つかった場合highlightを設定する
 			let l:highlight_group = g:spelunker_spell_bad_group
-			if white_list#is_complex_or_compound_word(word)
+			if spelunker#white_list#is_complex_or_compound_word(word)
 				let l:highlight_group = g:spelunker_complex_or_compound_word_group
 			endif
 
@@ -495,7 +495,7 @@ function! spelunker#execute_with_target_word(command)
 endfunction
 
 function! s:get_spell_bad_list()
-	call white_list#init_white_list()
+	call spelunker#white_list#init_white_list()
 
 	let l:window_text_list = getline(1, '$')
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
