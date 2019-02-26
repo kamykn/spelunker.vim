@@ -7,8 +7,8 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! white_list_less#get_white_list()
-	return white_list_css#get_white_list()
+function! spelunker#white_list_typescript#get_white_list()
+	return spelunker#white_list_javascript#get_white_list()
 endfunction
 
 let &cpo = s:save_cpo

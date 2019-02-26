@@ -8,7 +8,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! white_list#init_white_list()
+function! spelunker#white_list#init_white_list()
 	if !exists('g:spelunker_white_list')
 		let l:wl = []
 
@@ -85,10 +85,11 @@ function! white_list#init_white_list()
 		let l:wl += ['config', 'conf', 'goto', 'eval', 'exec', 'init', 'calc', 'iter']
 		let l:wl += ['auth', 'sync', 'del', 'bin', 'wasm', 'ttl', 'sec', 'dom', 'cmd']
 		let l:wl += ['tls', 'ssl', 'tmp', 'etc', 'usr', 'pos', 'ptr', 'err', 'docs']
-		let l:wl += ['lang', 'param', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
+		let l:wl += ['lang', 'ajax', 'async', 'attr', 'elem', 'ctrl', 'alt']
 		let l:wl += ['asc', 'desc', 'wifi', 'url', 'ascii', 'ansi', 'unicode']
 		let l:wl += ['cnt', 'api', 'href', 'src', 'cui', 'gui', 'webhook', 'iframe']
 		let l:wl += ['charset', 'os', 'num', 'expr', 'msg', 'std', 'ime', 'nav', 'img']
+		let l:wl += ['util', 'utils', 'param', 'params']
 
 		" Comment
 		let l:wl += ['todo', 'fixme', 'fyi']
@@ -129,7 +130,7 @@ endfunction
 "
 " FYI:https://www.cieej.or.jp/toefl/webmagazine/interview-lifelong/1508/
 "
-function! white_list#is_complex_or_compound_word(wrong_word)
+function! spelunker#white_list#is_complex_or_compound_word(wrong_word)
 	let l:wrong_word = tolower(a:wrong_word)
 	let l:common_word_prefix  = ['re', 'dis', 'pre', 'co', 'un', 'no']
 
