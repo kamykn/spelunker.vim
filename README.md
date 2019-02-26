@@ -169,5 +169,5 @@ Please add to .vimrc as follows:
 
 ```
 " example
-let g:spelunker_white_list_for_user = ['kamykn', 'spelunker']
+let g:spelunker_white_list_for_user = ['kamykn', 'vimrc']
 ```
