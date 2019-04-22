@@ -30,6 +30,10 @@ if !exists('g:spelunker_max_hi_words_each_buf')
 	let g:spelunker_max_hi_words_each_buf = 100
 endif
 
+if !exists('g:spelunker_disable_auto_group')
+  let g:spelunker_disable_auto_group = 0
+endif
+
 " [spelunker_spell_bad_group] ===========================================================
 
 if !exists('g:spelunker_spell_bad_group')
@@ -196,10 +200,12 @@ endif
 :command! SpelunkerAddAll call spelunker#add_all_spellgood() | call spelunker#check()
 
 " [augroup] ==================================================================
-augroup spelunker
-	autocmd!
-	autocmd BufWinEnter,BufWritePost * call spelunker#check()
-augroup END
+if g:spelunker_disable_auto_group == 0
+  augroup spelunker
+    autocmd!
+    autocmd BufWinEnter,BufWritePost * call spelunker#check()
+  augroup END
+endif
 
 
 let &cpo = s:save_cpo
