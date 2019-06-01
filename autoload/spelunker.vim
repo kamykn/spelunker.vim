@@ -147,7 +147,10 @@ function! s:code_to_words(line_of_code)
 
 	" ABCdef -> AB Cdef
 	" abcAPI -> abc API
-	let l:code_for_split = substitute(l:code_for_split, '\v([A-Z\s]@<![A-Z]|[A-Z][a-z])\C', l:split_by . "\\1", "g")
+	" let l:code_for_split = substitute(l:code_for_split, '\v([A-Z\s]@<![A-Z]|[A-Z][a-z])\C', l:split_by . "\\1", "g")
+  let l:code_for_split = substitute(l:code_for_split,
+        \ '\v(([A-Z\s]@<![A-Z]|[A-Z][a-z])|([A-Z]+$))\C',
+        \ l:split_by . "\\1", "g")
 
 	" AA__BB -> AA  BB -> AA BB
 	let l:code_for_split = substitute(l:code_for_split, '\v\s+', l:split_by, "g")
