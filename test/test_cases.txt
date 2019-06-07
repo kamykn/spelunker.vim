@@ -2,6 +2,7 @@
 ## キャメルケース
 ### 検知しない
 appleBananaOrange
+APPLEBananaORANGE
 
 ### 検知する
 applBananOran
@@ -11,6 +12,8 @@ applBananOrange
 appleBananaOran
 applBananaOrange
 appleBananOrange
+fooHTMLF
+FFFCC
 
 ## スネークケース
 ### 検知しない
@@ -77,3 +80,7 @@ Wednesday
 
 ## 修正候補リストにシングルクオートが入ってこないように
 Wednesday <- ZL
+
+# ISSUE/PR
+# #6
+thisT // 過去に[A-Z\s]が事故ってたため
