@@ -372,6 +372,11 @@ function! s:get_spell_from_correct_list(target_word, feeling_lucky)
 	endif
 
 	let l:selected = inputlist(l:spell_suggest_list_for_input_list)
+
+	if l:selected <= 0
+		return ''
+	endif
+
 	return  l:spell_suggest_list_for_replace[l:selected - 1]
 endfunction
 
@@ -482,6 +487,11 @@ function! s:correct_from_list(is_correct_all, is_feeling_lucky)
 	endif
 
 	let l:selected_word = s:get_spell_from_correct_list(l:target_word, a:is_feeling_lucky)
+
+	if l:selected_word == ''
+		return
+	endif
+
 	call s:replace_word(l:target_word, l:selected_word, a:is_correct_all)
 endfunction
 
