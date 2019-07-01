@@ -8,6 +8,18 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! spelunker#check_only_display_area()
+	if &readonly
+		return
+	endif
+
+	if g:enable_spelunker_vim == 0
+		return
+	endif
+
+	call spelunker#words#check(line("w0"), line("w$"))
+endfunction
+
 function! spelunker#check()
 	if &readonly
 		return
@@ -17,7 +29,7 @@ function! spelunker#check()
 		return
 	endif
 
-	call spelunker#words#check()
+	call spelunker#words#check(1, '$')
 endfunction
 
 function! spelunker#check_and_echo_list()
@@ -34,7 +46,7 @@ function! spelunker#check_and_echo_list()
 	let l:orig_spelunker_target_min_char_len = g:spelunker_target_min_char_len
 	let g:spelunker_target_min_char_len = 1
 
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
 
 	" ホワイトリスト作るとき用のオプション
 	let g:spelunker_target_min_char_len = l:orig_spelunker_target_min_char_len
@@ -51,7 +63,7 @@ function! spelunker#execute_with_target_word(command)
 endfunction
 
 function! spelunker#add_all_spellgood()
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
 
 	if len(l:spell_bad_list) == 0
 		return

@@ -204,9 +204,9 @@ if g:spelunker_disable_auto_group == 0
   augroup spelunker
     autocmd!
     autocmd BufWinEnter,BufWritePost * call spelunker#check()
+    autocmd CursorHold * call spelunker#check_only_display_area()
   augroup END
 endif
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

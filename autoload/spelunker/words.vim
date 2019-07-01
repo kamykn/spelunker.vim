@@ -142,10 +142,10 @@ function! spelunker#words#echo_for_white_list(spell_bad_list)
 endfunction
 
 " 大文字小文字は区別してリスト登録している
-function! spelunker#words#check()
+function! spelunker#words#check(start_line, end_line)
 	call spelunker#cases#reset_case_counter()
 
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(a:start_line, a:end_line)
 
 	" matchadd()の対象が多すぎるとスクロール時に毎回チェックが走るっぽく、重くなるため
 	if len(l:spell_bad_list) > g:spelunker_max_hi_words_each_buf
