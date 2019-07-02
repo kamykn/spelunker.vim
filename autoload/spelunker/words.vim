@@ -142,12 +142,33 @@ function! spelunker#words#echo_for_white_list(spell_bad_list)
 endfunction
 
 " 大文字小文字は区別してリスト登録している
-function! spelunker#words#check(start_line, end_line)
+function! spelunker#words#check()
 	call spelunker#cases#reset_case_counter()
 
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(a:start_line, a:end_line)
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
+	call spelunker#words#highlight(l:spell_bad_list)
+endfunction
 
-	" matchadd()の対象が多すぎるとスクロール時に毎回チェックが走るっぽく、重くなるため
+" 大文字小文字は区別してリスト登録している
+function! spelunker#words#check_display_area()
+	call spelunker#cases#reset_case_counter()
+
+	let l:spell_bad_list = []
+	for i in range(line("w0"), line("w$"))
+		" 折りたたみが無い行のみチェック
+		if foldlevel(i) <= 0 
+			let l:tmp_spell_bad_list = spelunker#spellbad#get_spell_bad_list(i, -1)
+			let l:spell_bad_list = l:spell_bad_list + l:tmp_spell_bad_list
+		endif
+	endfor
+
+	call spelunker#words#highlight(l:spell_bad_list)
+endfunction
+
+function! spelunker#words#highlight(spell_bad_list)
+	let l:spell_bad_list = a:spell_bad_list
+
+	" matchadd()の対象が多すぎるとスクロール時に毎回処理が走るっぽく、重くなるため
 	if len(l:spell_bad_list) > g:spelunker_max_hi_words_each_buf
 		if !exists('b:is_too_much_words_notified')
 			echon 'Too many spell bad words. (' . len(l:spell_bad_list) . ' words found.)'

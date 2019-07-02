@@ -17,7 +17,7 @@ function! spelunker#check_only_display_area()
 		return
 	endif
 
-	call spelunker#words#check(line("w0"), line("w$"))
+	call spelunker#words#check_display_area()
 endfunction
 
 function! spelunker#check()
@@ -29,7 +29,7 @@ function! spelunker#check()
 		return
 	endif
 
-	call spelunker#words#check(1, '$')
+	call spelunker#words#check()
 endfunction
 
 function! spelunker#check_and_echo_list()
