@@ -42,18 +42,9 @@ let g:spelunker_max_suggest_words = 15
 " Setting for max highlight words each buffers. (default 100)
 let g:spelunker_max_hi_words_each_buf = 100
 
-" Override highlight group name of wrong spell words. (default 'SpelunkerSpellBad')
-let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
-
-" Override highlight group name of complex or compound words. (default 'SpelunkerComplexOrCompoundWord')
-let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
-
-" Override highlight setting.
-highlight SpelunkerSpellBad cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
-highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
-
 " Check type setting. (default 1 - buffer open or write)
-" Mode of checking spell when buffer open or write. But maybe large files opening or saving take a long time.
+" Mode of checking spell when buffer open or write.
+" But maybe large files opening or saving take a long time.
 g:spelunker_check_type = 1
 
 " Fast words check mode to check only the displayed words.
@@ -72,6 +63,16 @@ augroup spelunker
   " Setting for g:spelunker_check_type = 2
   autocmd CursorHold *.vim,*.js,*.jsx,*.json,*.md call spelunker#check_displayed_words()
 augroup END
+
+" Override highlight group name of wrong spell words. (default 'SpelunkerSpellBad')
+let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
+
+" Override highlight group name of complex or compound words. (default 'SpelunkerComplexOrCompoundWord')
+let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
+
+" Override highlight setting.
+highlight SpelunkerSpellBad cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
 ```
 
 ![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
