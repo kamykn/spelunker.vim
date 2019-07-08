@@ -212,7 +212,7 @@ if g:spelunker_disable_auto_group == 0
   augroup spelunker
     autocmd!
     autocmd BufWinEnter,BufWritePost * call spelunker#check()
-    autocmd CursorHold * call spelunker#check_only_display_area()
+    autocmd CursorHold * call spelunker#check_displayed_words()
   augroup END
 endif
 

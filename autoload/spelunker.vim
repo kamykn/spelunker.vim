@@ -8,7 +8,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! spelunker#check_only_display_area()
+function! spelunker#check_displayed_words()
 	if &readonly
 		return
 	endif
