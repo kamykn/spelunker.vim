@@ -80,7 +80,7 @@ function! spelunker#words#format_spell_suggest_list(spell_suggest_list, target_w
 			let l:spell = substitute(l:spell, '\s', ' ', 'g')
 			let l:suggest_words = split(l:spell, ' ')
 
-			if spelunker#spellbad#is_snake_case_file()
+			if spelunker#cases#is_snake_case_file()
 				let l:spell = join(l:suggest_words, '_')
 			else
 				let l:spell = spelunker#cases#words_to_camel_case(l:suggest_words)
@@ -109,14 +109,6 @@ function! spelunker#words#cut_text_word_before (text, word)
 	let l:word_length = len(a:word)
 	return strpart(a:text, l:found_pos + l:word_length)
 endfunction
-
-" "cwordの特定位置の文字を置き換えてreplace用文字列を作成
-" function! s:get_replace_word(cword, target_word, word_start_pos_in_cword, correct_word)
-" 	let l:replace  = strpart(a:cword, 0, a:word_start_pos_in_cword)
-" 	let l:replace .= a:correct_word
-" 	let l:replace .= strpart(a:cword, a:word_start_pos_in_cword + strlen(a:target_word), strlen(a:cword))
-" 	return l:replace
-" endfunction
 
 " 書き換えてカーソルポジションを直す
 function! spelunker#words#replace_word(target_word, replace_word, is_correct_all)
@@ -159,7 +151,7 @@ function! spelunker#words#check_display_area()
 
 	while 1
 		if foldclosed(l:current_line) > 0
-			let l:current_line = foldclosedend(l:current_line)
+			let l:current_line = foldclosedend(l:current_line) + 1
 		endif
 
 		if l:current_line > l:end_line

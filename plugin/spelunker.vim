@@ -34,6 +34,14 @@ if !exists('g:spelunker_disable_auto_group')
   let g:spelunker_disable_auto_group = 0
 endif
 
+let g:spelunker_check_type_buf_lead_write = 1
+let g:spelunker_check_type_cursor_hold = 2
+
+" setting default
+if !exists('g:spelunker_check_type_buf_lead_write')
+	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
+endif
+
 " [spelunker_spell_bad_group] ===========================================================
 
 if !exists('g:spelunker_spell_bad_group')

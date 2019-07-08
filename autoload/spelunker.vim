@@ -17,6 +17,10 @@ function! spelunker#check_only_display_area()
 		return
 	endif
 
+	if g:spelunker_check_type != g:spelunker_check_type_cursor_hold
+		return
+	endif
+
 	call spelunker#words#check_display_area()
 endfunction
 
@@ -26,6 +30,10 @@ function! spelunker#check()
 	endif
 
 	if g:enable_spelunker_vim == 0
+		return
+	endif
+
+	if g:spelunker_check_type != g:spelunker_check_type_buf_lead_write
 		return
 	endif
 
