@@ -38,7 +38,7 @@ let g:spelunker_check_type_buf_lead_write = 1
 let g:spelunker_check_type_cursor_hold = 2
 
 " setting default
-if !exists('g:spelunker_check_type_buf_lead_write')
+if !exists('g:spelunker_check_type')
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
 endif
 
