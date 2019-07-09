@@ -3,6 +3,10 @@ Spelunker.vim is a plugin that improved [Vim's spell checking function](https://
 It supports both Camel Case and Snake Case and provides a smart way to correct spelling.
 This plugin have a whitelist for each programming language (currently JS, PHP, Ruby, CSS, HTML and Vim Script).
 
+**NEWS: 2019/07/10**  
+Added a mode to check only the displayed words.  
+This mode is checking spell faster than ever when large file open.
+
 ## 1.Installation
 ### vim-plug
 ```
@@ -26,7 +30,7 @@ set nospell
 Spelunker.vim offers the following options.
 
 ```
-" Enable spelunker.vim. (1 / 0) (default 1)
+" Enable spelunker.vim. (1 / 0) (default 1 - enable)
 let g:enable_spelunker_vim = 1
 
 " Setting for start checking min length of character. (default 4)
@@ -38,6 +42,28 @@ let g:spelunker_max_suggest_words = 15
 " Setting for max highlight words each buffers. (default 100)
 let g:spelunker_max_hi_words_each_buf = 100
 
+" Check type setting. (default 1 - buffer open or write)
+" Mode of checking spell when buffer open or write.
+" But maybe large files opening or saving take a long time.
+g:spelunker_check_type = 1
+
+" Fast words check mode to check only the displayed words.
+g:spelunker_check_type = 2
+
+" If check type is set to 2, the waiting time to start checking depends on the setting of CursorHold.
+" ex) set updatetime=1000
+
+" Disable default autogroup. (default 0 - check all file types)
+let g:spelunker_disable_auto_group = 1
+" then specify custom autogroup with file types you want to check:
+augroup spelunker
+  autocmd!
+  " Setting for g:spelunker_check_type = 1
+  autocmd BufWinEnter,BufWritePost *.vim,*.js,*.jsx,*.json,*.md call spelunker#check()
+  " Setting for g:spelunker_check_type = 2
+  autocmd CursorHold *.vim,*.js,*.jsx,*.json,*.md call spelunker#check_displayed_words()
+augroup END
+
 " Override highlight group name of wrong spell words. (default 'SpelunkerSpellBad')
 let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
 
@@ -47,14 +73,6 @@ let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord
 " Override highlight setting.
 highlight SpelunkerSpellBad cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
 highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
-
-" Disable default autogroup. (default 0 - check all file types)
-let g:spelunker_disable_auto_group = 1
-" then specify custom autogroup with file types you want to check:
-augroup spelunker
-  autocmd!
-  autocmd BufWinEnter,BufWritePost *.vim,*.js,*.jsx,*.json,*.md call spelunker#check()
-augroup END
 ```
 
 ![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
