@@ -41,7 +41,7 @@ p_pu_pur_purp_purpl_purple
 appleBananaOranP
 appleBananaOranPe
 appleBananaOranPea
-appleBananaOranPeac
+appleBananaOranPeac #=> NG
 appleBananaOranPeach
 
 ## 機能を使って修正
@@ -82,5 +82,12 @@ Wednesday
 Wednesday <- ZL
 
 # ISSUE/PR
-# #6
-thisT // 過去に[A-Z\s]が事故ってたため
+# #6 https://github.com/kamykn/spelunker.vim/pull/6
+# 過去に[A-Z\s]が事故ってたため
+thisT #=> OK
+
+# #10 https://github.com/kamykn/spelunker.vim/issues/10
+format #=> ormatが反応しないように
+doormat #=> ormatが反応しないように
+ormat
+
