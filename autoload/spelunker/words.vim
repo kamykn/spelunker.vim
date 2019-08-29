@@ -88,7 +88,8 @@ function! spelunker#words#format_spell_suggest_list(spell_suggest_list, target_w
 		endif
 
 		if a:target_word[0] =~# '\v[A-Z]\C'
-			let l:spell = spelunker#cases#to_first_char_upper(l:spell)
+			" #10 2語以上の場合、後ろの文字が小文字になったりしないように修正した
+			let l:spell = toupper(l:spell[0]) . l:spell[1:-1]
 		endif
 
 		call add(l:spell_suggest_list_for_replace, l:spell)
