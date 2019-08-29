@@ -47,6 +47,7 @@ appleBananaOranPeach
 ## 機能を使って修正
 ### Zl: 1文字をリストから選択
 apple_banan_orange
+ShowDocumention #10 2語になるときかつ修正前が先頭大文字
 
 ### ZL: リストから選択してバッファ内すべて修正
 apple_banan_orange
