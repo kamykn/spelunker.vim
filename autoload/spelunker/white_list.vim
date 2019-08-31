@@ -14,8 +14,8 @@ function! spelunker#white_list#init_white_list()
 
 		" Programming language keywords
 		" Common
-		let l:wl += ['elseif', 'elsif', 'elif', 'endif', 'endfor', 'endforeach', 'endswitch']
-		let l:wl += ['endwhile', 'endfunction', 'endtry', 'xor', 'trait']
+		let l:wl += ['elif', 'elseif', 'elsif', 'endfor', 'endforeach', 'endif', 'endswitch', 'esac']
+    let l:wl += ['endwhile', 'endfunc', 'endfunction', 'endtry', 'xor', 'trait']
 
 		" JS: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Reserved_Words
 		let l:wl += ['let', 'const', 'var', 'typeof', 'instanceof']
