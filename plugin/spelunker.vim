@@ -207,6 +207,12 @@ endif
 " [add all spell bad to dict] ==================================================================
 :command! SpelunkerAddAll call spelunker#add_all_spellgood() | call spelunker#check()
 
+" [jump next spell bad]===============================================================
+nnoremap <silent> <Plug>(jump-spellunker-matched) :call spelunker#jump_spelunker_matched()<CR>
+if !hasmapto('<Plug>(jump-spellunker-matched)')
+	silent! nmap <unique> ZJ <Plug>(jump-spellunker-matched)
+endif
+
 " [augroup] ==================================================================
 if g:spelunker_disable_auto_group == 0
   augroup spelunker

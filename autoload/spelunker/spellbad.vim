@@ -8,13 +8,15 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+" end_lineの指定がなければ1行のみ
 function! spelunker#spellbad#get_spell_bad_list(start_line, end_line)
 	call spelunker#white_list#init_white_list()
 
 	let l:window_text_list = []
 	if a:end_line >= 0
 		let l:window_text_list = getline(a:start_line, a:end_line)
-	else 
+	else
+		" 1行のみ
 		call add(l:window_text_list, getline(a:start_line))
 	endif
 
@@ -68,6 +70,7 @@ function! spelunker#spellbad#get_word_list_in_line(line, word_list)
 	return l:word_list
 endfunction
 
+" word_listから、misspelledなワードだけを返す
 function! s:filter_spell_bad_list(word_list)
 	let l:spell_bad_list  = []
 
