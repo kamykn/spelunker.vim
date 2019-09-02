@@ -174,12 +174,12 @@ JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script is currently supporte
 
 | Programming language | White list |
 | --- | --- |
-| CSS, LESS, SCSS(Sass) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_css.vim |
-| HTML | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_html.vim |
-| JavaScript/TypeScript | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_javascript.vim |
-| PHP | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_php.vim |
-| Ruby | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_ruby.vim |
-| Vim Script | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_vim.vim|
+| CSS, LESS, SCSS(Sass) | [white_list_css.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_css.vim) |
+| HTML | [white_list_html.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_html.vim) |
+| JavaScript/TypeScript | [white_list_javascript.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_javascript.vim) |
+| PHP | [white_list_php.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_php.vim) |
+| Ruby | [white_list_ruby.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_ruby.vim) |
+| Vim Script | [white_list_vim.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_vim.vim)|
 
 ### 4.3 User's whitelist.
 You can add words to your user specific whitelist:
