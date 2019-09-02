@@ -4,13 +4,13 @@ Spelunker.vim is a plugin that improves [Vim's spell checking function](https://
 
 ## 1 Installation
 
-### vim-plug
+#### vim-plug
 
 ```
 Plug 'kamykn/spelunker.vim'
 ```
 
-### NeoBundle
+#### NeoBundle
 
 ```
 NeoBundle 'kamykn/spelunker.vim'
@@ -178,7 +178,7 @@ Run the following command to add all misspelled words to the `spellfile`:
 
 Commonly used words are set to be excluded. Compound words and complex words may be highlighted incorrectly, but another highlight group (SpelunkerComplexOrCompoundWord) is being adapted.
 
-Please see the code for details: https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list.vim
+Please see the code for details: [white_list.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list.vim)
 
 ### 4.2 Programming language specific whitelist
 
