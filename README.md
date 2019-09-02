@@ -1,19 +1,23 @@
 # Spelunker.vim
 
-Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting *PascalCase*, *camelCase* and *snake_case*. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) have a whitelist.
+Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting _PascalCase_, _camelCase_ and _snake_case_. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) have a whitelist.
 
 ## 1 Installation
+
 ### vim-plug
+
 ```
 Plug 'kamykn/spelunker.vim'
 ```
 
 ### NeoBundle
+
 ```
 NeoBundle 'kamykn/spelunker.vim'
 ```
 
 ## 2 Usage
+
 ### 2.1 Settings
 
 Turn off Vim's `spell` as it highlights the same words.
@@ -23,6 +27,7 @@ set nospell
 ```
 
 ### 2.2 Options
+
 Spelunker.vim offers the following configuration options:
 
 ```vim
@@ -74,6 +79,7 @@ highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underl
 ![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
 
 ## 3 Commands
+
 ### 3.1 Correct wrong spell.
 
 #### `ZL / Zl`
@@ -125,6 +131,7 @@ An example of `ZF` in action:
 ![spelunker_zf](https://user-images.githubusercontent.com/7608231/50171177-16ab8400-0335-11e9-8eae-6ce1b249babd.gif)
 
 ### 3.2 Add words to spellfile
+
 Spelunker.vim use Vim `spell` commands as default. You can also add word under cursor to `spellfile` with the following commands:
 
 ```vim
@@ -157,8 +164,8 @@ ZUW
 
 Read http://vim-jp.org/vimdoc-en/spell.html#zg for more information.
 
-
 ### 3.3 Add all misspelled words in buffer to spellfile.
+
 Run the following command to add all misspelled words to the `spellfile`:
 
 ```vim
@@ -168,23 +175,26 @@ Run the following command to add all misspelled words to the `spellfile`:
 ## 4 Whitelist
 
 ### 4.1 General programming whitelist
+
 Commonly used words are set to be excluded. Compound words and complex words may be highlighted incorrectly, but another highlight group (SpelunkerComplexOrCompoundWord) is being adapted.
 
 Please see the code for details: https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list.vim
 
 ### 4.2 Programming language specific whitelist
+
 JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script is currently supported. More support will be added in the future.
 
-| Programming language | White list |
-| --- | --- |
-| CSS, LESS, SCSS(Sass) | [white_list_css.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_css.vim) |
-| HTML | [white_list_html.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_html.vim) |
+| Programming language  | White list                                                                                                                               |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS, LESS, SCSS(Sass) | [white_list_css.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_css.vim)               |
+| HTML                  | [white_list_html.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_html.vim)             |
 | JavaScript/TypeScript | [white_list_javascript.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_javascript.vim) |
-| PHP | [white_list_php.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_php.vim) |
-| Ruby | [white_list_ruby.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_ruby.vim) |
-| Vim Script | [white_list_vim.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_vim.vim)|
+| PHP                   | [white_list_php.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_php.vim)               |
+| Ruby                  | [white_list_ruby.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_ruby.vim)             |
+| Vim Script            | [white_list_vim.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_vim.vim)               |
 
 ### 4.3 User's whitelist.
+
 You can add words to your user specific whitelist:
 
 ```vim
