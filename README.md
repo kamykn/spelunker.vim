@@ -7,7 +7,7 @@ This plugin have a whitelist for each programming language (currently JS, PHP, R
 Added a mode to check only the displayed words.  
 This mode is checking spell faster than ever when large file open.
 
-## 1.Installation
+## 1 Installation
 ### vim-plug
 ```
 Plug 'kamykn/spelunker.vim'
@@ -18,15 +18,15 @@ Plug 'kamykn/spelunker.vim'
 NeoBundle 'kamykn/spelunker.vim'
 ```
 
-## 2.Usage
-### 2.i. Settings
+## 2 Usage
+### 2.1 Settings
 If you are using Vim's `spell`, turn it off (because it will highlight the same words).
 
 ```
 set nospell
 ```
 
-### 2.ii. Options
+### 2.2 Options
 Spelunker.vim offers the following options.
 
 ```
@@ -77,8 +77,8 @@ highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underl
 
 ![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
 
-## 3.Commands
-### 3.i. Correct wrong spell.
+## 3 Commands
+### 3.1 Correct wrong spell.
 
 **ZL / Zl**  
 In a buffer with many camel cases, it will suggest same case words. (And snake case also too.)  
@@ -125,7 +125,7 @@ Zf
 
 **These functions work on not only wrong spelling, but also correct spelling!**
 
-### 3.ii. Add words to spellfile.
+### 3.2 Add words to spellfile.
 Spelunker.vim use `spell` commands provided by Vim as default.  
 You can add under cursor word to `spellfile` with following commands (like a Vim commands):
 
@@ -160,7 +160,7 @@ ZUW
 FYI:
 http://vim-jp.org/vimdoc-en/spell.html#zg
 
-### 3.iii. Add all misspelled words in buffer to spellfile.
+### 3.3 Add all misspelled words in buffer to spellfile.
 When there are many misspelled words, it is possible to add them all to the `spellfile`.
 
 ```
@@ -168,14 +168,14 @@ When there are many misspelled words, it is possible to add them all to the `spe
 ```
 
 ## 4.Whitelist
-### 4.i. Whitelist applied to all programming languages.
+### 4.1 Whitelist applied to all programming languages.
 Commonly used words are set to be excluded.  
 Compound words and complex words may be highlighted incorrectly, but another highlight group (SpelunkerComplexOrCompoundWord) is being adapted.
 
 Please see the code for details.  
 https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list.vim
 
-### 4.ii. Whitelist adapted according to programming language.
+### 4.2 Whitelist adapted according to programming language.
 Currently only JS (TypeScript), PHP, Ruby, HTML, CSS and Vim Script are supported.  
 Other programming languages will be added in the future.  
 
@@ -188,7 +188,7 @@ Other programming languages will be added in the future.
 | HTML | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_html.vim |
 | CSS, LESS, SCSS(Sass) | https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list_css.vim |
 
-### 4.iii. User's whitelist.
+### 4.3 User's whitelist.
 You can add your whitelist setting.
 It is very easy to add.
 Please add to .vimrc as follows:
