@@ -76,7 +76,8 @@ highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underl
 ## 3 Commands
 ### 3.1 Correct wrong spell.
 
-**ZL / Zl**
+#### `ZL / Zl`
+
 Correct misspelled words with a list of suggestions.
 
 ```vim
@@ -91,7 +92,8 @@ An example of `ZL` in action:
 
 ![spelunker_zl](https://user-images.githubusercontent.com/7608231/48882608-89246380-ee5e-11e8-88e3-958b47353ddb.gif)
 
-**ZC / Zc**
+#### `ZC / Zc`
+
 Correct misspelled words by inserting a correction.
 
 ```vim
@@ -106,7 +108,8 @@ An example of `ZC` in action:
 
 ![spelunker_zc](https://user-images.githubusercontent.com/7608231/48882594-7c077480-ee5e-11e8-83fe-68691bb13823.gif)
 
-**ZF / Zf**
+#### `ZF / Zf`
+
 Correct misspelled words by picking first item on suggestion list. (This is like "I'm feeling lucky!")
 
 ```vim
