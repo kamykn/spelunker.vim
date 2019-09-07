@@ -208,9 +208,15 @@ endif
 :command! SpelunkerAddAll call spelunker#add_all_spellgood() | call spelunker#check()
 
 " [jump next spell bad]===============================================================
-nnoremap <silent> <Plug>(jump-spellunker-matched) :call spelunker#jump_spelunker_matched()<CR>
-if !hasmapto('<Plug>(jump-spellunker-matched)')
-	silent! nmap <unique> ZJ <Plug>(jump-spellunker-matched)
+nnoremap <silent> <Plug>(spellunker-jump-next) :call spelunker#jump_next()<CR>
+if !hasmapto('<Plug>(spellunker-jump-next)')
+	silent! nmap <unique> ZN <Plug>(spellunker-jump-next)
+endif
+
+" [jump next spell bad]===============================================================
+nnoremap <silent> <Plug>(spellunker-jump-prev) :call spelunker#jump_prev()<CR>
+if !hasmapto('<Plug>(spellunker-jump-prev)')
+	silent! nmap <unique> ZP <Plug>(spellunker-jump-prev)
 endif
 
 " [augroup] ==================================================================

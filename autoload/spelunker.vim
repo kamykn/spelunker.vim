@@ -134,8 +134,12 @@ function! spelunker#get_current_spell_setting()
 endfunction
 
 " spelunkerでmatchしたposに移動
-function! spelunker#jump_spelunker_matched()
-    call spelunker#jump#jump_matched()
+function! spelunker#jump_next()
+    call spelunker#jump#jump_matched(1)
+endfunction
+
+function! spelunker#jump_prev()
+    call spelunker#jump#jump_matched(0)
 endfunction
 
 let &cpo = s:save_cpo
