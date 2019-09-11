@@ -105,7 +105,7 @@ endfunction
 
 function s:get_end_of_line(is_search_next)
     if a:is_search_next == 1
-        return line("w$")
+        return line("$")
     else
         return 0
     endif
