@@ -37,9 +37,16 @@ endif
 let g:spelunker_check_type_buf_lead_write = 1
 let g:spelunker_check_type_cursor_hold = 2
 
-" setting default
+let g:spelunker_find_misspelled_mode_all = 1
+let g:spelunker_find_misspelled_mode_only_bad = 2
+
+" [setting default] ===========================================================
 if !exists('g:spelunker_check_type')
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
+endif
+
+if !exists('g:spelunker_find_misspelled_mode')
+	let g:spelunker_find_misspelled_mode = g:spelunker_find_misspelled_mode_all
 endif
 
 " [spelunker_spell_bad_group] ===========================================================
