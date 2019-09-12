@@ -101,11 +101,15 @@ function! s:filter_spell_bad_list(word_list)
 			continue
 		endif
 
-		let [l:spell_bad_word, l:error_type] = spellbadword(l:lowercase_word)
+		let [l:spell_bad_word, l:spell_bad_type] = spellbadword(l:lowercase_word)
 
 		if l:spell_bad_word == ''
 			" Wednesdayなど、先頭大文字しかない単語があるためもう一回チェック
-			let [l:spell_bad_word, l:error_type] = spellbadword(spelunker#cases#to_first_char_upper(l:lowercase_word))
+			let [l:spell_bad_word, l:spell_bad_type] = spellbadword(spelunker#cases#to_first_char_upper(l:lowercase_word))
+		endif
+
+		if g:spelunker_find_misspelled_mode == g:spelunker_find_misspelled_mode_only_bad && l:spell_bad_type != 'bad'
+			continue
 		endif
 
 		" 登録は元のケースで行う。辞書登録とそのチェックにかけるときのみlowerケースになる。
