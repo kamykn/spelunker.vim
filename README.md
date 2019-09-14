@@ -47,8 +47,8 @@ let g:spelunker_max_hi_words_each_buf = 100
 " 1: File is checked for spelling mistakes when opening and saving. This
 " may take a bit of time on large files.
 " 2: Spellcheck displayed words in buffer. Fast and dynamic. The waiting time
-g:spelunker_check_type = 1
 " depends on the setting of CursorHold `set updatetime=1000`.
+let g:spelunker_check_type = 1
 
 " Disable default autogroup. (default: 0)
 let g:spelunker_disable_auto_group = 1
