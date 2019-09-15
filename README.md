@@ -1,6 +1,6 @@
 # Spelunker.vim
 
-Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting _PascalCase_, _camelCase_ and _snake_case_. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) have a whitelist.
+Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting _PascalCase_, _camelCase_ and _snake_case_. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) has a whitelist.
 
 ## 1 Installation
 
@@ -40,15 +40,15 @@ let g:spelunker_target_min_char_len = 4
 " Max amount of word suggestions. (default: 15)
 let g:spelunker_max_suggest_words = 15
 
-" Max amount of highlighteds words in buffer. (default: 100)
+" Max amount of highlighted words in buffer. (default: 100)
 let g:spelunker_max_hi_words_each_buf = 100
 
 " Spellcheck type: (default: 1)
 " 1: File is checked for spelling mistakes when opening and saving. This
 " may take a bit of time on large files.
 " 2: Spellcheck displayed words in buffer. Fast and dynamic. The waiting time
-" depeds on the setting of CursorHold `set updatetime=1000`.
-g:spelunker_check_type = 1
+" depends on the setting of CursorHold `set updatetime=1000`.
+let g:spelunker_check_type = 1
 
 " Disable default autogroup. (default: 0)
 let g:spelunker_disable_auto_group = 1
@@ -63,7 +63,7 @@ augroup spelunker
   autocmd CursorHold *.vim,*.js,*.jsx,*.json,*.md call spelunker#check_displayed_words()
 augroup END
 
-" Override highlight group name of incorrectly spelledc words. (default:
+" Override highlight group name of incorrectly spelled words. (default:
 " 'SpelunkerSpellBad')
 let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
 
