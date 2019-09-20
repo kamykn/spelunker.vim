@@ -180,6 +180,17 @@ Run the following command to add all misspelled words to the `spellfile`:
 
 ### 3.4 Jump cursor to misspelled words.
 #### `ZN / ZP`
+```
+" Jump cursor to next misspelled words.
+ZN
+
+" Jump cursor to previous misspelled words.
+ZP
+```
+
+This function is depend on [wrapscan](https://vim-jp.org/vimdoc-en/options.html#'wrapscan') setting.
+
+An example of `ZN`/`ZP` in action:
 
 <img src="https://user-images.githubusercontent.com/7608231/65333922-52dd7f00-dbfc-11e9-93a4-39f239196a51.gif" width=540>
 
