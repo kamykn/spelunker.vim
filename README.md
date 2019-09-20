@@ -50,6 +50,12 @@ let g:spelunker_max_hi_words_each_buf = 100
 " depends on the setting of CursorHold `set updatetime=1000`.
 let g:spelunker_check_type = 1
 
+" Highlight type: (default: 1)
+" 1: Highlight all types (SpellBad, SpellCap, SpellRare, SpellLocal).
+" 2: Highlight only SpellBad.
+" FYI: https://vim-jp.org/vimdoc-en/spell.html#spell-quickstart
+let g:spelunker_highlight_type = 1
+
 " Disable default autogroup. (default: 0)
 let g:spelunker_disable_auto_group = 1
 
@@ -76,7 +82,7 @@ highlight SpelunkerSpellBad cterm=underline ctermfg=247 gui=underline guifg=#9e9
 highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=NONE gui=underline guifg=NONE
 ```
 
-![spelunker_highlight_group](https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png)
+<img src="https://user-images.githubusercontent.com/7608231/48882590-71e57600-ee5e-11e8-9b1a-16191c1ac3b9.png" width=540>
 
 ## 3 Commands
 
@@ -96,7 +102,7 @@ Zl
 
 An example of `ZL` in action:
 
-![spelunker_zl](https://user-images.githubusercontent.com/7608231/48882608-89246380-ee5e-11e8-88e3-958b47353ddb.gif)
+<img src="https://user-images.githubusercontent.com/7608231/48882608-89246380-ee5e-11e8-88e3-958b47353ddb.gif" width=540>
 
 #### `ZC / Zc`
 
@@ -112,7 +118,7 @@ Zc
 
 An example of `ZC` in action:
 
-![spelunker_zc](https://user-images.githubusercontent.com/7608231/48882594-7c077480-ee5e-11e8-83fe-68691bb13823.gif)
+<img src="https://user-images.githubusercontent.com/7608231/48882594-7c077480-ee5e-11e8-83fe-68691bb13823.gif" width=540>
 
 #### `ZF / Zf`
 
@@ -128,7 +134,7 @@ Zf
 
 An example of `ZF` in action:
 
-![spelunker_zf](https://user-images.githubusercontent.com/7608231/50171177-16ab8400-0335-11e9-8eae-6ce1b249babd.gif)
+<img src="https://user-images.githubusercontent.com/7608231/50171177-16ab8400-0335-11e9-8eae-6ce1b249babd.gif" width=540>
 
 ### 3.2 Add words to spellfile
 
@@ -171,6 +177,11 @@ Run the following command to add all misspelled words to the `spellfile`:
 ```vim
 :SpelunkerAddAll
 ```
+
+### 3.4 Jump cursor to misspelled words.
+#### `ZN / ZP`
+
+<img src="https://user-images.githubusercontent.com/7608231/65333922-52dd7f00-dbfc-11e9-93a4-39f239196a51.gif" width=540>
 
 ## 4 Whitelist
 

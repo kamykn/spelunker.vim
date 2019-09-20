@@ -97,5 +97,5 @@ ormat
 it is important to chek spelling
 
 # set spelllang=en_us
-# を設定するとlocalになり、g:spelunker_find_misspelled_mode_only_badでハイライトしないようになる
+# を設定するとlocalになり、g:spelunker_highlight_only_badでハイライトしないようになる
 colour
