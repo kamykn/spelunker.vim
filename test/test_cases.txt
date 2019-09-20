@@ -92,3 +92,10 @@ format #=> ormatが反応しないように
 doormat #=> ormatが反応しないように
 ormat
 
+# SpellCapの検知はできない
+# 理由としては単語ずつspellbadword()にかけているから
+it is important to chek spelling
+
+# set spelllang=en_us
+# を設定するとlocalになり、g:spelunker_highlight_only_badでハイライトしないようになる
+colour

@@ -23,20 +23,7 @@ function! spelunker#matches#add_matches(spell_bad_list, match_id_dict)
 				let l:highlight_group = g:spelunker_complex_or_compound_word_group
 			endif
 
-			" ここに来るwordはbuffer上と同じUpper case First or Lowercase
-			" 大文字小文字無視オプションを使わない(事故るのを防止するため)
-			" ng: xxxAttr -> [atTr]iplePoint
-			" priorityはhlsearchと同じ0で指定して、検索時は検索が優先されるようにする
-			"
-			" #10 小文字で続く場合はormatという間違いでformatのように正しい単語をハイライトしてほしくない
-
-			let l:uc_position = match(word, '\v[A-Z]\C', 0)
-			if l:uc_position == 0
-				let l:pattern = '\v[A-Z]@<!' . word . '[a-z]@!\C'
-			else
-				" start with lower case #10
-				let l:pattern = '\v[A-Za-z]@<!' . word . '[a-z]@!\C'
-			endif
+			let l:pattern = spelunker#matches#get_match_pattern(word)
 
 			let l:match_id = matchadd(l:highlight_group, l:pattern, 0)
 			execute 'let l:match_id_dict.' . word . ' = ' . l:match_id
@@ -48,6 +35,26 @@ function! spelunker#matches#add_matches(spell_bad_list, match_id_dict)
 	endfor
 
 	return [l:word_list_for_delete_match, l:match_id_dict]
+endfunction
+
+" match系関数用のpattern生成関数
+function spelunker#matches#get_match_pattern(word)
+	" ここに来るwordはbuffer上と同じUpper case First or Lowercase
+	" 大文字小文字無視オプションを使わない(事故るのを防止するため)
+	" ng: xxxAttr -> [atTr]iplePoint
+	" priorityはhlsearchと同じ0で指定して、検索時は検索が優先されるようにする
+	"
+	" #10 小文字で続く場合はormatという間違いでformatのように正しい単語をハイライトしてほしくない
+
+	let l:uc_position = match(a:word, '\v[A-Z]\C', 0)
+	if l:uc_position == 0
+		let l:pattern = '\v[A-Z]@<!' . a:word . '[a-z]@!\C'
+	else
+		" start with lower case #10
+		let l:pattern = '\v[A-Za-z]@<!' . a:word . '[a-z]@!\C'
+	endif
+
+	return l:pattern
 endfunction
 
 function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict)

@@ -8,13 +8,15 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+" end_lineの指定がなければ1行のみ
 function! spelunker#spellbad#get_spell_bad_list(start_line, end_line)
 	call spelunker#white_list#init_white_list()
 
 	let l:window_text_list = []
 	if a:end_line >= 0
 		let l:window_text_list = getline(a:start_line, a:end_line)
-	else 
+	else
+		" 1行のみ
 		call add(l:window_text_list, getline(a:start_line))
 	endif
 
@@ -68,6 +70,7 @@ function! spelunker#spellbad#get_word_list_in_line(line, word_list)
 	return l:word_list
 endfunction
 
+" word_listから、misspelledなワードだけを返す
 function! s:filter_spell_bad_list(word_list)
 	let l:spell_bad_list  = []
 
@@ -98,11 +101,15 @@ function! s:filter_spell_bad_list(word_list)
 			continue
 		endif
 
-		let [l:spell_bad_word, l:error_type] = spellbadword(l:lowercase_word)
+		let [l:spell_bad_word, l:spell_bad_type] = spellbadword(l:lowercase_word)
 
 		if l:spell_bad_word == ''
 			" Wednesdayなど、先頭大文字しかない単語があるためもう一回チェック
-			let [l:spell_bad_word, l:error_type] = spellbadword(spelunker#cases#to_first_char_upper(l:lowercase_word))
+			let [l:spell_bad_word, l:spell_bad_type] = spellbadword(spelunker#cases#to_first_char_upper(l:lowercase_word))
+		endif
+
+		if g:spelunker_highlight_type == g:spelunker_highlight_spell_bad && l:spell_bad_type != 'bad'
+			continue
 		endif
 
 		" 登録は元のケースで行う。辞書登録とそのチェックにかけるときのみlowerケースになる。

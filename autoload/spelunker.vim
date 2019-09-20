@@ -133,5 +133,14 @@ function! spelunker#get_current_spell_setting()
 	return  substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
 endfunction
 
+" spelunkerでmatchしたposに移動
+function! spelunker#jump_next()
+    call spelunker#jump#jump_matched(1)
+endfunction
+
+function! spelunker#jump_prev()
+    call spelunker#jump#jump_matched(0)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

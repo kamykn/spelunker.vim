@@ -37,9 +37,18 @@ endif
 let g:spelunker_check_type_buf_lead_write = 1
 let g:spelunker_check_type_cursor_hold = 2
 
-" setting default
+" include SpellBad, SpellCap, SpellRare and SpellLocal
+let g:spelunker_highlight_all = 1
+" only SpellBad
+let g:spelunker_highlight_spell_bad = 2
+
+" [setting default] ===========================================================
 if !exists('g:spelunker_check_type')
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
+endif
+
+if !exists('g:spelunker_highlight_type')
+	let g:spelunker_highlight_type = g:spelunker_highlight_all
 endif
 
 " [spelunker_spell_bad_group] ===========================================================
@@ -206,6 +215,18 @@ endif
 
 " [add all spell bad to dict] ==================================================================
 :command! SpelunkerAddAll call spelunker#add_all_spellgood() | call spelunker#check()
+
+" [jump next spell bad]===============================================================
+nnoremap <silent> <Plug>(spellunker-jump-next) :call spelunker#jump_next()<CR>
+if !hasmapto('<Plug>(spellunker-jump-next)')
+	silent! nmap <unique> ZN <Plug>(spellunker-jump-next)
+endif
+
+" [jump next spell bad]===============================================================
+nnoremap <silent> <Plug>(spellunker-jump-prev) :call spelunker#jump_prev()<CR>
+if !hasmapto('<Plug>(spellunker-jump-prev)')
+	silent! nmap <unique> ZP <Plug>(spellunker-jump-prev)
+endif
 
 " [augroup] ==================================================================
 if g:spelunker_disable_auto_group == 0
