@@ -142,5 +142,10 @@ function! spelunker#jump_prev()
     call spelunker#jump#jump_matched(0)
 endfunction
 
+" spelunkerの機能のon/off
+function! spelunker#toggle()
+	call spelunker#toggle#toggle()
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -194,6 +194,17 @@ An example of `ZN`/`ZP` in action:
 
 <img src="https://user-images.githubusercontent.com/7608231/65333922-52dd7f00-dbfc-11e9-93a4-39f239196a51.gif" width=540>
 
+### 3.5 Toggle on and off.
+#### `ZT`
+```
+" The initial state depends on the value of g:enable_spelunker_vim.
+" 1: Default on.
+" 0: Default off.
+" g:enable_spelunker_vim = 1
+```
+
+<img src="https://user-images.githubusercontent.com/7608231/65375352-6a396c80-dccf-11e9-9295-1dd061140a78.gif" width=540>
+
 ## 4 Whitelist
 
 ### 4.1 General programming whitelist

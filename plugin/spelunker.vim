@@ -228,6 +228,12 @@ if !hasmapto('<Plug>(spellunker-jump-prev)')
 	silent! nmap <unique> ZP <Plug>(spellunker-jump-prev)
 endif
 
+" [toggle feature]===============================================================
+nnoremap <silent> <Plug>(spellunker-toggle) :call spelunker#toggle()<CR>
+if !hasmapto('<Plug>(spellunker-toggle)')
+	silent! nmap <unique> ZT <Plug>(spellunker-toggle)
+endif
+
 " [augroup] ==================================================================
 if g:spelunker_disable_auto_group == 0
   augroup spelunker
