@@ -135,11 +135,11 @@ endfunction
 
 " spelunkerでmatchしたposに移動
 function! spelunker#jump_next()
-    call spelunker#jump#jump_matched(1)
+	call spelunker#jump#jump_matched(1)
 endfunction
 
 function! spelunker#jump_prev()
-    call spelunker#jump#jump_matched(0)
+	call spelunker#jump#jump_matched(0)
 endfunction
 
 " spelunkerの機能のon/off
