@@ -15,7 +15,11 @@ function! spelunker#toggle#toggle()
 		" matchからの削除処理を利用してハイライト削除
 		let b:match_id_dict = spelunker#matches#delete_matches(keys(b:match_id_dict), b:match_id_dict)
 	else
-		call spelunker#check()
+		if g:spelunker_check_type == g:spelunker_check_type_buf_lead_write
+			call spelunker#check()
+		elseif g:spelunker_check_type == g:spelunker_check_type_cursor_hold
+			call spelunker#check_displayed_words()
+		endif
 	endif
 endfunction
 
