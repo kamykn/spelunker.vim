@@ -92,7 +92,7 @@ format #=> ormatが反応しないように
 doormat #=> ormatが反応しないように
 ormat
 
-# SpellCapの検知はできない
+# SpellCapの検知はできない(先頭大文字にするべき単語 => 文の先頭だけ...？)
 # 理由としては単語ずつspellbadword()にかけているから
 it is important to chek spelling
 
