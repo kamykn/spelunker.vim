@@ -99,3 +99,13 @@ it is important to chek spelling
 # set spelllang=en_us
 # を設定するとlocalになり、g:spelunker_highlight_only_badでハイライトしないようになる
 colour
+
+# jump function
+- jumpはg:spelunker_highlight_XXXXに依存する
+- jumpはwrapscanの設定に依存する
+    - wrapscanなら一番下の次は一番上になるように周回できる
+	- nowrapscanなら一番下の次は特に動作しない
+
+# toggle highlightが効くかどうか
+- jumpはhighlightがdisableでも実行可能
+- ZLやZCはhighlightがdisableでも実行可能
