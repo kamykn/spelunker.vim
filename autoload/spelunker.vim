@@ -177,11 +177,11 @@ endfunction
 
 " 実行可能な条件のチェック
 function s:is_runnable()
-	if g:enable_spelunker_vim_on_readonly == 0 && &readonly
+	if g:enable_spelunker_vim == 0
 		return 0
 	endif
 
-	if g:enable_spelunker_vim == 0
+	if g:enable_spelunker_vim_on_readonly == 0 && &readonly
 		return 0
 	endif
 

@@ -221,21 +221,21 @@ endif
 :command! SpelunkerAddAll call spelunker#add_all_spellgood() | call spelunker#check()
 
 " [jump next spell bad]===============================================================
-nnoremap <silent> <Plug>(spellunker-jump-next) :call spelunker#jump_next()<CR>
-if !hasmapto('<Plug>(spellunker-jump-next)')
-	silent! nmap <unique> ZN <Plug>(spellunker-jump-next)
+nnoremap <silent> <Plug>(spelunker-jump-next) :call spelunker#jump_next()<CR>
+if !hasmapto('<Plug>(spelunker-jump-next)')
+	silent! nmap <unique> ZN <Plug>(spelunker-jump-next)
 endif
 
 " [jump next spell bad]===============================================================
-nnoremap <silent> <Plug>(spellunker-jump-prev) :call spelunker#jump_prev()<CR>
-if !hasmapto('<Plug>(spellunker-jump-prev)')
-	silent! nmap <unique> ZP <Plug>(spellunker-jump-prev)
+nnoremap <silent> <Plug>(spelunker-jump-prev) :call spelunker#jump_prev()<CR>
+if !hasmapto('<Plug>(spelunker-jump-prev)')
+	silent! nmap <unique> ZP <Plug>(spelunker-jump-prev)
 endif
 
 " [toggle feature]===============================================================
-nnoremap <silent> <Plug>(spellunker-toggle) :call spelunker#toggle()<CR>
-if !hasmapto('<Plug>(spellunker-toggle)')
-	silent! nmap <unique> ZT <Plug>(spellunker-toggle)
+nnoremap <silent> <Plug>(spelunker-toggle) :call spelunker#toggle()<CR>
+if !hasmapto('<Plug>(spelunker-toggle)')
+	silent! nmap <unique> ZT <Plug>(spelunker-toggle)
 endif
 
 " [augroup] ==================================================================
