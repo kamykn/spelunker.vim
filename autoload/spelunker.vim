@@ -9,11 +9,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! spelunker#check_displayed_words()
-	if &readonly
-		return
-	endif
-
-	if g:enable_spelunker_vim == 0
+	if s:is_runnable() == 0
 		return
 	endif
 
@@ -25,11 +21,7 @@ function! spelunker#check_displayed_words()
 endfunction
 
 function! spelunker#check()
-	if &readonly
-		return
-	endif
-
-	if g:enable_spelunker_vim == 0
+	if s:is_runnable() == 0
 		return
 	endif
 
@@ -41,11 +33,7 @@ function! spelunker#check()
 endfunction
 
 function! spelunker#check_and_echo_list()
-	if &readonly
-		return
-	endif
-
-	if g:enable_spelunker_vim == 0
+	if s:is_runnable() == 0
 		return
 	endif
 
@@ -62,6 +50,10 @@ function! spelunker#check_and_echo_list()
 endfunction
 
 function! spelunker#execute_with_target_word(command)
+	if s:is_runnable() == 0
+		return
+	endif
+
 	let l:target_word = spelunker#words#search_target_word()
 	if l:target_word == ''
 		return
@@ -71,6 +63,10 @@ function! spelunker#execute_with_target_word(command)
 endfunction
 
 function! spelunker#add_all_spellgood()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
 
 	if len(l:spell_bad_list) == 0
@@ -85,32 +81,56 @@ function! spelunker#add_all_spellgood()
 endfunction
 
 function! spelunker#correct()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	call spelunker#correct#correct(0)
 endfunction
 
 function! spelunker#correct_all()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	call spelunker#correct#correct(1)
 endfunction
 
 function! spelunker#correct_from_list()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	let l:is_correct_all = 0
 	let l:is_feeling_lucky = 0
 	call spelunker#correct#correct_from_list(l:is_correct_all, l:is_feeling_lucky)
 endfunction
 
 function! spelunker#correct_all_from_list()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	let l:is_correct_all = 1
 	let l:is_feeling_lucky = 0
 	call spelunker#correct#correct_from_list(l:is_correct_all, l:is_feeling_lucky)
 endfunction
 
 function! spelunker#correct_feeling_lucky()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	let l:is_correct_all = 0
 	let l:is_feeling_lucky = 1
 	call spelunker#correct#correct_from_list(l:is_correct_all, l:is_feeling_lucky)
 endfunction
 
 function! spelunker#correct_all_feeling_lucky()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	let l:is_correct_all = 1
 	let l:is_feeling_lucky = 1
 	call spelunker#correct#correct_from_list(l:is_correct_all, l:is_feeling_lucky)
@@ -135,16 +155,37 @@ endfunction
 
 " spelunkerでmatchしたposに移動
 function! spelunker#jump_next()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	call spelunker#jump#jump_matched(1)
 endfunction
 
 function! spelunker#jump_prev()
+	if s:is_runnable() == 0
+		return
+	endif
+
 	call spelunker#jump#jump_matched(0)
 endfunction
 
 " spelunkerの機能のon/off
 function! spelunker#toggle()
 	call spelunker#toggle#toggle()
+endfunction
+
+" 実行可能な条件のチェック
+function s:is_runnable()
+	if g:enable_spelunker_vim_on_readonly == 0 && &readonly
+		return 0
+	endif
+
+	if g:enable_spelunker_vim == 0
+		return 0
+	endif
+
+	return 1
 endfunction
 
 let &cpo = s:save_cpo

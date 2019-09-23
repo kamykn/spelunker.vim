@@ -32,7 +32,14 @@ Spelunker.vim offers the following configuration options:
 
 ```vim
 " Enable spelunker.vim. (default: 1)
+" 1: enable
+" 0: disable
 let g:enable_spelunker_vim = 1
+
+" Enable spelunker.vim on readonly files or buffer. (default: 0)
+" 1: enable
+" 0: disable
+let g:enable_spelunker_vim_on_readonly = 0
 
 " Check spelling for words longer than set characters. (default: 4)
 let g:spelunker_target_min_char_len = 4

@@ -18,6 +18,10 @@ if !exists('g:enable_spelunker_vim')
 	let g:enable_spelunker_vim = 1
 endif
 
+if !exists('g:enable_spelunker_vim_on_readonly')
+	let g:enable_spelunker_vim_on_readonly = 0
+endif
+
 if !exists('g:spelunker_target_min_char_len')
 	let g:spelunker_target_min_char_len = 4
 endif
