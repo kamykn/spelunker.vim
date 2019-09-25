@@ -191,13 +191,20 @@ function! spelunker#words#highlight(spell_bad_list)
 		let b:match_id_dict = {}
 	endif
 
-	let [l:word_list_for_delete_match, b:match_id_dict] = spelunker#matches#add_matches(l:spell_bad_list, b:match_id_dict)
+	let l:window_id = win_getid()
+	if !has_key(b:match_id_dict, l:window_id)
+		let b:match_id_dict[l:window_id] = {}
+	endif
+
+	let [l:word_list_for_delete_match, b:match_id_dict[l:window_id]] =
+				\ spelunker#matches#add_matches(l:spell_bad_list, b:match_id_dict[l:window_id])
 
 	if len(l:word_list_for_delete_match) == 0
 		return
 	endif
 
-	let b:match_id_dict = spelunker#matches#delete_matches(l:word_list_for_delete_match, b:match_id_dict)
+	let b:match_id_dict[l:window_id] =
+				\ spelunker#matches#delete_matches(l:word_list_for_delete_match, b:match_id_dict[l:window_id])
 endfunction
 
 let &cpo = s:save_cpo
