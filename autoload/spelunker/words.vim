@@ -191,6 +191,7 @@ function! spelunker#words#highlight(spell_bad_list)
 		let b:match_id_dict = {}
 	endif
 
+	" 同じbufferながら、ウインドウを2つ開いたときに両方正しくhighlightされるように
 	let l:window_id = win_getid()
 	if !has_key(b:match_id_dict, l:window_id)
 		let b:match_id_dict[l:window_id] = {}
