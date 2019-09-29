@@ -138,16 +138,16 @@ function! spelunker#white_list#is_complex_or_compound_word(wrong_word)
 	let l:common_word_prefix += ['str', 'fprint', 'sprint', 'print', 'get', 'set', 'calc', 'sub']
 	let l:common_word_prefix += ['match', 'byte', 'is', 'has', 'to']
 
-	for prefix in l:common_word_prefix
-		if stridx(l:wrong_word, prefix) == 0
+	for l:prefix in l:common_word_prefix
+		if stridx(l:wrong_word, l:prefix) == 0
 			return 1
 		endif
 	endfor
 
 	let l:common_word_suffix = ['able', 'ly', 'ness', 'pos', 'list', 'map', 'cmd', 'bg', 'fg', 'id', 'log', 'num']
 
-	for suffix in l:common_word_suffix
-		if stridx(l:wrong_word, suffix) + strlen(suffix) == strlen(l:wrong_word)
+	for l:suffix in l:common_word_suffix
+		if stridx(l:wrong_word, l:suffix) + strlen(l:suffix) == strlen(l:wrong_word)
 			return 1
 		endif
 	endfor

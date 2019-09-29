@@ -16,6 +16,8 @@ function! spelunker#test#check()
 
 	call s:check_utils()
 	call s:check_cases()
+	call s:check_white_list()
+	call s:check_spellbad()
 
 	echo v:errors
 endfunction
@@ -125,6 +127,36 @@ function! s:check_cases()
 	call assert_equal('camelCaseAbc', spelunker#cases#words_to_camel_case(['camel', 'case', 'abc']))
 	call assert_equal('camelcase', spelunker#cases#words_to_camel_case(['camelcase']))
 	" }}}
+endfunction
+
+function! s:check_white_list()
+	" spelunker#white_list#init_white_list"{{{
+	try
+		unlet g:spelunker_white_list
+	catch
+		" エラー読み捨て
+	endtry
+	call spelunker#white_list#init_white_list()
+	call assert_equal(exists('g:spelunker_white_list'), 1)
+	call assert_notequal(len(g:spelunker_white_list), 0)
+	" }}}
+
+	" spelunker#white_list#is_complex_or_compound_word"{{{
+	call assert_equal(spelunker#white_list#is_complex_or_compound_word('build'), 0)
+	" prefix
+	call assert_equal(spelunker#white_list#is_complex_or_compound_word('rebuild'), 1)
+	" suffix
+	call assert_equal(spelunker#white_list#is_complex_or_compound_word('nullable'), 1)
+	" }}}
+endfunction
+
+function! s:check_spellbad()
+	" spelunker#spellbad#get_word_list_in_line"{{{
+	call assert_equal(spelunker#spellbad#get_word_list_in_line('    $this->car->func()', []), ['this', 'car', 'func'])
+	call assert_equal(spelunker#spellbad#get_word_list_in_line('    \tapple', []), ['apple'])
+	call assert_equal(spelunker#spellbad#get_word_list_in_line('apple\rthis', []), ['apple', 'this'])
+	" }}}
+
 endfunction
 
 let &cpo = s:save_cpo
