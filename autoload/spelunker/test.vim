@@ -157,6 +157,57 @@ function! s:check_spellbad()
 	call assert_equal(spelunker#spellbad#get_word_list_in_line('apple\rthis', []), ['apple', 'this'])
 	" }}}
 
+	" 通常の引っかかるケース"{{{
+	call s:open_unit_test_buffer('case1')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call assert_equal(l:result, ['appl', 'Banan', 'Oran'])
+
+	let l:result = spelunker#spellbad#get_spell_bad_list(6, -1)
+	call assert_equal(l:result, ['appl', 'banan', 'oran'])
+
+	" First Upper Case and lower case
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, 6)
+	call assert_equal(l:result, ['appl', 'Banan', 'Oran', 'banan', 'oran'])
+	" }}}
+
+	" Upper Case"{{{
+	call s:open_unit_test_buffer('case2')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	call assert_equal(l:result, ['HTMLF', 'FFFCC'])
+	" }}}
+
+	" control character "{{{
+	call s:open_unit_test_buffer('case3')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call assert_equal(l:result, [])
+
+	let l:result = spelunker#spellbad#get_spell_bad_list(9, -1)
+	call assert_equal(l:result, ['Banan', 'Oage', 'Pach'])
+	" }}}
+
+	" char count "{{{
+	call s:open_unit_test_buffer('case4')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call assert_equal(l:result, ['purp', 'purpl'])
+	" }}}
+
+	" First upper case word "{{{
+	" TODO: 多分不具合なので直す
+	call s:open_unit_test_buffer('case5')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call assert_equal(l:result, ['Wednesday'])
+	" }}}
+
+	" Edge cases "{{{
+	call s:open_unit_test_buffer('case6')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call assert_equal(l:result, [])
+	" }}}
+
+endfunction
+
+function! s:open_unit_test_buffer(filename)
+	execute ':edit ' . escape(g:spelunker_plugin_path, ' ') . '/test/unit_test/' . a:filename . '.md'
 endfunction
 
 let &cpo = s:save_cpo

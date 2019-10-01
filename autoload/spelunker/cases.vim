@@ -13,19 +13,37 @@ function! spelunker#cases#reset_case_counter()
 	let b:snake_case_count = 0
 endfunction
 
+" Unit Testのときにb:で定義されない時があったので、定義がなくても取れるように
+function! spelunker#cases#get_camel_case_count()
+	if !exists('b:camel_case_count')
+		call spelunker#cases#reset_case_counter()
+	endif
+
+	return b:camel_case_count
+endfunction
+
+" Unit Testのときにb:で定義されない時があったので、定義がなくても取れるように
+function! spelunker#cases#get_snake_case_count()
+	if !exists('b:snake_case_count')
+		call spelunker#cases#reset_case_counter()
+	endif
+
+	return b:snake_case_count
+endfunction
+
 " ファイル全体でスネークかキャメルケースかを判断してincrement
 function! spelunker#cases#case_counter(word)
 	if a:word =~# '\v[a-z]_\C'
 		" x_ にマッチしたらスネークケース
-		let b:snake_case_count += 1
+		let b:snake_case_count = spelunker#cases#get_snake_case_count() + 1
 	elseif a:word =~# '\v[a-z][A-Z]\C'
 		" xX にマッチしたらキャメルケース
-		let b:camel_case_count += 1
+		let b:camel_case_count = spelunker#cases#get_camel_case_count() + 1
 	endif
 endfunction
 
 function! spelunker#cases#is_snake_case_file()
-	return (b:snake_case_count >= b:camel_case_count)
+	return (spelunker#cases#get_snake_case_count() >= spelunker#cases#get_camel_case_count())
 endfunction
 
 " キャメルケース、パスカルケース、スネークケースの抜き出し
