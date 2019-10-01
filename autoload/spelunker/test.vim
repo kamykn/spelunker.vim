@@ -200,7 +200,7 @@ function! s:check_spellbad()
 
 	" Edge cases "{{{
 	call s:open_unit_test_buffer('case6')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	let l:result = spelunker#spellbad#get_spell_bad_list(7, -1)
 	call assert_equal(l:result, [])
 	" }}}
 
