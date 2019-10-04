@@ -103,7 +103,7 @@ function! s:filter_spell_bad_list(word_list)
 
 		let [l:spell_bad_word, l:spell_bad_type] = spellbadword(l:lowercase_word)
 
-		if l:spell_bad_word == ''
+		if l:spell_bad_word != ''
 			" Wednesdayなど、先頭大文字しかない単語があるためもう一回チェック
 			let [l:spell_bad_word, l:spell_bad_type] = spellbadword(spelunker#cases#to_first_char_upper(l:lowercase_word))
 		endif
