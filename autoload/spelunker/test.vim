@@ -54,6 +54,10 @@ function! s:check_utils()
 	call assert_equal(['AB', 'Cdef'], spelunker#utils#code_to_words('ABCdef'))
 	call assert_equal(['abc', 'API'], spelunker#utils#code_to_words('abcAPI'))
 	call assert_equal(['AB', 'CD'], spelunker#utils#code_to_words('AB__CD'))
+
+	" # ISSUE/PR
+	" #6 https://github.com/kamykn/spelunker.vim/pull/6
+	call assert_equal(['this', 'T'], spelunker#utils#code_to_words('thisT'))
 	"}}}
 
 	" spelunker#utils#convert_control_character_to_space"{{{
@@ -205,6 +209,26 @@ function! s:check_spellbad()
 	let l:result = spelunker#spellbad#get_spell_bad_list(7, -1)
 	call assert_equal([], l:result)
 	" }}}
+
+	" set spelllang "{{{
+	call s:open_unit_test_buffer('case8')
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	call assert_equal([], l:result)
+
+	setlocal spelllang=en_us
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	call assert_equal(['colour'], l:result)
+
+	let g:spelunker_highlight_type = g:spelunker_highlight_spell_bad
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	call assert_equal([], l:result)
+
+	let g:spelunker_highlight_type = g:spelunker_highlight_all
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	call assert_equal(['colour'], l:result)
+	" 設定戻す
+	setlocal spelllang=en
+	" }}}
 endfunction
 
 function! s:check_match()
@@ -224,7 +248,15 @@ function! s:check_match()
 	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'OreangeBananaapple' )
 
 	" HTTP or HTTPS??
-	call assert_notmatch('HTTPSpanner', spelunker#matches#get_match_pattern(l:word))
+	let l:word = 'Spanner'
+	call assert_equal('\v[A-Z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
+	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'HTTPSpanner')
+
+	" # ISSUE/PR
+	" #10 https://github.com/kamykn/spelunker.vim/pull/10
+	let l:word = 'ormat' " <= typo 'format'
+	call assert_equal('\v[A-Za-z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
+	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'doormat')
 	" }}}
 
 	" get_match_pattern "{{{
