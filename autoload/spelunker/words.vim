@@ -25,7 +25,6 @@ function! spelunker#words#search_target_word()
 		endfor
 	endfor
 
-	echo "There is no word under the cursor."
 	return ''
 endfunction
 

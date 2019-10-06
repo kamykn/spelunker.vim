@@ -40,6 +40,7 @@ endfunction
 function! spelunker#correct#correct(is_correct_all)
 	let l:target_word = spelunker#words#search_target_word()
 	if l:target_word == ''
+		echo "There is no word under the cursor."
 		return
 	endif
 
@@ -55,6 +56,7 @@ endfunction
 function! spelunker#correct#correct_from_list(is_correct_all, is_feeling_lucky)
 	let l:target_word = spelunker#words#search_target_word()
 	if l:target_word == ''
+		echo "There is no word under the cursor."
 		return
 	endif
 

@@ -150,24 +150,24 @@ function! s:check_white_list()
 		" エラー読み捨て
 	endtry
 	call spelunker#white_list#init_white_list()
-	call assert_equal(exists('g:spelunker_white_list'), 1)
-	call assert_notequal(len(g:spelunker_white_list), 0)
+	call assert_equal(1, exists('g:spelunker_white_list'))
+	call assert_notequal(0, len(g:spelunker_white_list))
 	" }}}
 
 	" spelunker#white_list#is_complex_or_compound_word"{{{
-	call assert_equal(spelunker#white_list#is_complex_or_compound_word('build'), 0)
+	call assert_equal(0, spelunker#white_list#is_complex_or_compound_word('build'))
 	" prefix
-	call assert_equal(spelunker#white_list#is_complex_or_compound_word('rebuild'), 1)
+	call assert_equal(1, spelunker#white_list#is_complex_or_compound_word('rebuild'))
 	" suffix
-	call assert_equal(spelunker#white_list#is_complex_or_compound_word('nullable'), 1)
+	call assert_equal(1, spelunker#white_list#is_complex_or_compound_word('nullable'))
 	" }}}
 endfunction
 
 function! s:check_spellbad()
 	" spelunker#spellbad#get_word_list_in_line"{{{
-	call assert_equal(spelunker#spellbad#get_word_list_in_line('    $this->car->func()', []), ['this', 'car', 'func'])
-	call assert_equal(spelunker#spellbad#get_word_list_in_line('    \tapple', []), ['apple'])
-	call assert_equal(spelunker#spellbad#get_word_list_in_line('apple\rthis', []), ['apple', 'this'])
+	call assert_equal(['this', 'car', 'func'], spelunker#spellbad#get_word_list_in_line('    $this->car->func()', []))
+	call assert_equal(['apple'], spelunker#spellbad#get_word_list_in_line('    \tapple', []))
+	call assert_equal(['apple', 'this'], spelunker#spellbad#get_word_list_in_line('apple\rthis', []))
 	" }}}
 
 	" 通常の引っかかるケース"{{{
@@ -315,6 +315,55 @@ function! s:check_jump()
 endfunction
 
 function! s:check_toggle()
+	call s:open_unit_test_buffer('case10')
+	call s:init()
+	call spelunker#toggle#toggle()
+
+	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
+	call assert_equal(0, spelunker#check_displayed_words())
+
+	let g:spelunker_check_type = g:spelunker_check_type_cursor_hold
+	call assert_equal(0, spelunker#check())
+
+	" call assert_equal(0, spelunker#check_and_echo_list())
+	call assert_equal(0, spelunker#execute_with_target_word(''))
+	call assert_equal(0, spelunker#add_all_spellgood())
+	call assert_equal(0, spelunker#correct())
+	call assert_equal(0, spelunker#correct_all())
+	call assert_equal(0, spelunker#correct_from_list())
+	call assert_equal(0, spelunker#correct_all_from_list())
+	call assert_equal(0, spelunker#correct_feeling_lucky())
+	call assert_equal(0, spelunker#correct_all_feeling_lucky())
+
+	call cursor(1,1)
+	call assert_equal(0, spelunker#jump_next())
+	call s:assert_cursor_pos(1, 1)
+	call assert_equal(0, spelunker#jump_prev())
+	call s:assert_cursor_pos(1, 1)
+
+	call assert_equal(1, spelunker#toggle())
+
+	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
+	call assert_equal(1, spelunker#check())
+
+	let g:spelunker_check_type = g:spelunker_check_type_cursor_hold
+	call assert_equal(1, spelunker#check_displayed_words())
+
+	" call assert_equal(0, spelunker#check_and_echo_list())
+	" call assert_equal(0, spelunker#execute_with_target_word(''))
+	" call assert_equal(0, spelunker#add_all_spellgood())
+	" call assert_equal(0, spelunker#correct())
+	" call assert_equal(0, spelunker#correct_all())
+	" call assert_equal(0, spelunker#correct_from_list())
+	" call assert_equal(0, spelunker#correct_all_from_list())
+	" call assert_equal(0, spelunker#correct_feeling_lucky())
+	" call assert_equal(0, spelunker#correct_all_feeling_lucky())
+
+	call cursor(1,1)
+	call assert_equal(1, spelunker#jump_next())
+	call s:assert_cursor_pos(2, 1)
+	call assert_equal(1, spelunker#jump_prev())
+	call s:assert_cursor_pos(1, 1)
 endfunction
 
 function! s:check_words()
@@ -331,6 +380,11 @@ function! s:assert_cursor_pos(lnum, col)
 	let l:pos = getpos('.')
 	call assert_equal(a:lnum, l:pos[1])
 	call assert_equal(a:col, l:pos[2])
+endfunction
+
+function! s:init()
+	let b:match_id_dict = {}
+	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
 endfunction
 
 let &cpo = s:save_cpo
