@@ -18,6 +18,7 @@ function! spelunker#test#check()
 	call s:check_cases()
 	call s:check_white_list()
 	call s:check_spellbad()
+	call s:check_jump()
 
 	" 最後にhighlight系のチェックをする
 	call s:check_match()
@@ -278,8 +279,44 @@ function! s:check_match()
 	" }}}
 endfunction
 
+function! s:check_jump()
+	call s:open_unit_test_buffer('case9')
+	call cursor(1,1)
+	call s:assert_cursor_pos(1, 1)
+
+	call spelunker#jump#jump_matched(1)
+	call s:assert_cursor_pos(2, 8)
+
+	call spelunker#jump#jump_matched(1)
+	call s:assert_cursor_pos(2, 13)
+
+	call spelunker#jump#jump_matched(1)
+	call s:assert_cursor_pos(3, 1)
+
+	call spelunker#jump#jump_matched(1)
+	call s:assert_cursor_pos(1, 1)
+
+	call spelunker#jump#jump_matched(0)
+	call s:assert_cursor_pos(3, 1)
+
+	call spelunker#jump#jump_matched(0)
+	call s:assert_cursor_pos(2, 13)
+
+	call spelunker#jump#jump_matched(0)
+	call s:assert_cursor_pos(2, 8)
+
+	call spelunker#jump#jump_matched(0)
+	call s:assert_cursor_pos(1, 1)
+endfunction
+
 function! s:open_unit_test_buffer(filename)
 	execute ':edit ' . escape(g:spelunker_plugin_path, ' ') . '/test/unit_test/' . a:filename . '.md'
+endfunction
+
+function! s:assert_cursor_pos(lnum, col)
+	let l:pos = getpos('.')
+	call assert_equal(a:lnum, l:pos[1])
+	call assert_equal(a:col, l:pos[2])
 endfunction
 
 let &cpo = s:save_cpo
