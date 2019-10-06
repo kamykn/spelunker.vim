@@ -23,6 +23,11 @@ function! spelunker#test#check()
 	" 最後にhighlight系のチェックをする
 	call s:check_match()
 
+	" not yet
+	call s:check_toggle()
+	call s:check_words()
+	call s:check_correct()
+
 	echo v:errors
 endfunction
 
@@ -307,6 +312,15 @@ function! s:check_jump()
 
 	call spelunker#jump#jump_matched(0)
 	call s:assert_cursor_pos(1, 1)
+endfunction
+
+function! s:check_toggle()
+endfunction
+
+function! s:check_words()
+endfunction
+
+function! s:check_correct()
 endfunction
 
 function! s:open_unit_test_buffer(filename)
