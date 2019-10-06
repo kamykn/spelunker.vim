@@ -315,6 +315,7 @@ function! s:check_jump()
 endfunction
 
 function! s:check_toggle()
+	" [case10-0] =====================================
 	call s:open_unit_test_buffer('case10')
 	call s:init()
 	call spelunker#toggle#toggle()
@@ -325,23 +326,20 @@ function! s:check_toggle()
 	let g:spelunker_check_type = g:spelunker_check_type_cursor_hold
 	call assert_equal(0, spelunker#check())
 
-	" call assert_equal(0, spelunker#check_and_echo_list())
-	call assert_equal(0, spelunker#execute_with_target_word(''))
-	call assert_equal(0, spelunker#add_all_spellgood())
-	call assert_equal(0, spelunker#correct())
-	call assert_equal(0, spelunker#correct_all())
-	call assert_equal(0, spelunker#correct_from_list())
-	call assert_equal(0, spelunker#correct_all_from_list())
-	call assert_equal(0, spelunker#correct_feeling_lucky())
-	call assert_equal(0, spelunker#correct_all_feeling_lucky())
-
 	call cursor(1,1)
 	call assert_equal(0, spelunker#jump_next())
 	call s:assert_cursor_pos(1, 1)
 	call assert_equal(0, spelunker#jump_prev())
 	call s:assert_cursor_pos(1, 1)
 
-	call assert_equal(1, spelunker#toggle())
+	" call assert_equal(0, spelunker#check_and_echo_list())
+	call assert_equal(0, spelunker#add_all_spellgood())
+
+	" register word dict test
+	call assert_equal(0, spelunker#execute_with_target_word(''))
+
+	" [case10-1] =====================================
+	call spelunker#toggle#toggle()
 
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
 	call assert_equal(1, spelunker#check())
@@ -349,21 +347,74 @@ function! s:check_toggle()
 	let g:spelunker_check_type = g:spelunker_check_type_cursor_hold
 	call assert_equal(1, spelunker#check_displayed_words())
 
-	" call assert_equal(0, spelunker#check_and_echo_list())
-	" call assert_equal(0, spelunker#execute_with_target_word(''))
-	" call assert_equal(0, spelunker#add_all_spellgood())
-	" call assert_equal(0, spelunker#correct())
-	" call assert_equal(0, spelunker#correct_all())
-	" call assert_equal(0, spelunker#correct_from_list())
-	" call assert_equal(0, spelunker#correct_all_from_list())
-	" call assert_equal(0, spelunker#correct_feeling_lucky())
-	" call assert_equal(0, spelunker#correct_all_feeling_lucky())
+	" call assert_equal(1, spelunker#check_and_echo_list())
+	" call assert_equal(1, spelunker#add_all_spellgood())
 
 	call cursor(1,1)
 	call assert_equal(1, spelunker#jump_next())
 	call s:assert_cursor_pos(2, 1)
 	call assert_equal(1, spelunker#jump_prev())
 	call s:assert_cursor_pos(1, 1)
+
+	" register word dict test
+	call s:open_unit_test_buffer('case12')
+	call s:init()
+	call cursor(1,1)
+	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
+	call assert_equal(['addgoodword'], l:line)
+
+	call assert_equal(1, spelunker#execute_with_target_word('spellgood!'))
+	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
+	call assert_equal([], l:line)
+
+	call s:reload_buffer()
+	call cursor(2,1)
+	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
+	call assert_equal([], l:line)
+
+	call assert_equal(1, spelunker#execute_with_target_word('spellwrong!'))
+	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
+	call assert_equal(['wrong'], l:line)
+
+	" [case11-0] =====================================
+	call spelunker#toggle#toggle()
+	call s:open_unit_test_buffer('case11')
+	call s:init()
+	call cursor(1, 2)
+	call assert_equal(0, spelunker#correct())
+	call assert_equal(0, spelunker#correct_all())
+	call assert_equal(0, spelunker#correct_from_list())
+	call assert_equal(0, spelunker#correct_all_from_list())
+	call assert_equal(0, spelunker#correct_feeling_lucky())
+	call assert_equal(0, spelunker#correct_all_feeling_lucky())
+	call assert_equal('aple', expand("<cword>"))
+
+	" [case11-1] =====================================
+	call spelunker#toggle#toggle()
+	call s:reload_buffer()
+	call s:init()
+	call cursor(1, 2)
+	" call assert_equal(0, spelunker#correct())
+	" call assert_equal(0, spelunker#correct_all())
+	" call assert_equal(0, spelunker#correct_from_list())
+	" call assert_equal(0, spelunker#correct_all_from_list())
+	call assert_equal(1, spelunker#correct_feeling_lucky())
+	call assert_equal('apple', expand("<cword>"))
+
+	call s:reload_buffer()
+	call s:init()
+	call cursor(1, 2)
+	call assert_equal(1, spelunker#correct_all_feeling_lucky())
+	call assert_equal('apple', expand("<cword>"))
+	call cursor(3, 8)
+	call assert_equal('apple', expand("<cword>"))
+	call cursor(4, 1)
+	call assert_equal('apple', expand("<cword>"))
+
+	" 編集中の変更を破棄
+	call s:reload_buffer()
+
+	call assert_equal(1, spelunker#toggle())
 endfunction
 
 function! s:check_words()
@@ -373,7 +424,11 @@ function! s:check_correct()
 endfunction
 
 function! s:open_unit_test_buffer(filename)
-	execute ':edit ' . escape(g:spelunker_plugin_path, ' ') . '/test/unit_test/' . a:filename . '.md'
+	execute ':edit! ' . escape(g:spelunker_plugin_path, ' ') . '/test/unit_test/' . a:filename . '.md'
+endfunction
+
+function! s:reload_buffer()
+	execute ':edit! %'
 endfunction
 
 function! s:assert_cursor_pos(lnum, col)
