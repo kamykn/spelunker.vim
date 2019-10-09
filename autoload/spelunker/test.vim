@@ -476,6 +476,58 @@ function! s:check_words()
 	let l:result = spelunker#words#cut_text_word_before('applebananaorange', 'melon')
 	call assert_equal('applebananaorange', l:result)
 	" }}}
+
+	" spelunker#words#replace_word "{{{
+	call cursor(3, 6)
+	call spelunker#words#replace_word('documention', 'documentation', 0)
+	call assert_equal('documentation', expand("<cword>"))
+	call s:assert_cursor_pos(3, 6)
+	call cursor(4, 6)
+	call assert_equal('documention', expand("<cword>"))
+	call spelunker#words#replace_word('documention', 'documentation', 0)
+	call assert_equal('documentation', expand("<cword>"))
+
+	call s:reload_buffer()
+
+	call cursor(3, 6)
+	call spelunker#words#replace_word('documention', 'documentation', 1)
+	call assert_equal('documentation', expand("<cword>"))
+	call s:assert_cursor_pos(3, 6)
+	call cursor(4, 6)
+	call assert_equal('documentation', expand("<cword>"))
+	call s:assert_cursor_pos(4, 6)
+
+	call s:reload_buffer()
+	" }}}
+
+	" spelunker#words#check " {{{
+	call s:open_unit_test_buffer('case14')
+	call s:clear_matches()
+	call spelunker#words#check()
+	let l:result = getmatches()
+	call assert_equal(
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 11},
+		\ l:result[0])
+	call assert_equal(
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 12},
+		\ l:result[1])
+	call assert_equal(
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!graape[a-z]@!\C', 'priority': 0, 'id': 13},
+		\ l:result[2])
+	call assert_equal(
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemone[a-z]@!\C', 'priority': 0, 'id': 14},
+		\ l:result[3])
+
+	call s:clear_matches()
+	call spelunker#words#check_display_area()
+	let l:result = getmatches()
+	call assert_equal(
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 15},
+		\ l:result[0])
+	call assert_equal(
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 16},
+		\ l:result[1])
+	"}}}
 endfunction
 
 function! s:check_correct()
@@ -489,6 +541,11 @@ function! s:reload_buffer()
 	execute ':edit! %'
 endfunction
 
+function! s:clear_matches()
+	call clearmatches()
+	let b:match_id_dict = {}
+endfunction
+
 function! s:assert_cursor_pos(lnum, col)
 	let l:pos = getpos('.')
 	call assert_equal(a:lnum, l:pos[1])
@@ -496,7 +553,7 @@ function! s:assert_cursor_pos(lnum, col)
 endfunction
 
 function! s:init()
-	let b:match_id_dict = {}
+	call s:clear_matches()
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
 endfunction
 
