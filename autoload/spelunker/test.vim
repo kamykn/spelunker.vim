@@ -20,11 +20,7 @@ function! spelunker#test#check()
 	call s:check_spellbad()
 	call s:check_jump()
 	call s:check_toggle()
-
-	" 最後にhighlight系のチェックをする
 	call s:check_match()
-
-	" not yet
 	call s:check_words()
 	call s:check_correct()
 
@@ -32,7 +28,7 @@ function! spelunker#test#check()
 endfunction
 
 function! s:check_utils()
-	" spelunker#utils#filter_list_char_length"{{{ 
+	" spelunker#utils#filter_list_char_length"{{{
 	let l:word_list = ['a', 'ab', 'abc', 'abcd', 'abcde']
 
 	" デフォルト設定
@@ -556,6 +552,26 @@ function! s:check_words()
 endfunction
 
 function! s:check_correct()
+	call s:open_unit_test_buffer('case16')
+
+	" spelunker#correct#correct " {{{
+	call cursor(1, 1)
+	call test_feedinput("apple")
+	execute "silent! normal :call spelunker#correct#correct(0)<CR>"
+	call assert_equal('apple', expand("<cword>"))
+	call cursor(2, 1)
+	call assert_equal('aple', expand("<cword>"))
+	call s:reload_buffer()
+
+	call cursor(1, 1)
+	call test_feedinput("apple")
+	execute "silent! normal :call spelunker#correct#correct(1)<CR>"
+	call assert_equal('apple', expand("<cword>"))
+	call cursor(2, 1)
+	call assert_equal('apple', expand("<cword>"))
+	call s:reload_buffer()
+	"}}}
+
 endfunction
 
 function! s:open_unit_test_buffer(filename)
