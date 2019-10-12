@@ -556,22 +556,76 @@ function! s:check_correct()
 
 	" spelunker#correct#correct " {{{
 	call cursor(1, 1)
-	call test_feedinput("apple")
-	execute "silent! normal :call spelunker#correct#correct(0)<CR>"
+	call test_feedinput("apple\<CR>")
+	call spelunker#correct#correct(0)
 	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 1)
 	call cursor(2, 1)
 	call assert_equal('aple', expand("<cword>"))
-	call s:reload_buffer()
 
+	" correct all
+	call s:reload_buffer()
 	call cursor(1, 1)
-	call test_feedinput("apple")
-	execute "silent! normal :call spelunker#correct#correct(1)<CR>"
+	call test_feedinput("apple\<CR>")
+	call spelunker#correct#correct(1)
 	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 1)
 	call cursor(2, 1)
 	call assert_equal('apple', expand("<cword>"))
+
+	" cursor pos test
 	call s:reload_buffer()
+	call cursor(1, 3)
+	call test_feedinput("apple\<CR>")
+	call spelunker#correct#correct(1)
+	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 3)
+
+	" cursor pos test
+	call s:reload_buffer()
+	call cursor(1, 4)
+	call test_feedinput("apple\<CR>")
+	call spelunker#correct#correct(1)
+	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 4)
 	"}}}
 
+	" spelunker#correct#correct_from_list " {{{
+	call s:reload_buffer()
+	call cursor(1, 1)
+	call test_feedinput("1\<CR>")
+	call spelunker#correct#correct_from_list(0, 0)
+	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 1)
+	call cursor(2, 1)
+	call assert_equal('aple', expand("<cword>"))
+
+	call s:reload_buffer()
+	call cursor(1, 1)
+	call test_feedinput("2\<CR>")
+	call spelunker#correct#correct_from_list(0, 0)
+	call assert_equal('pale', expand("<cword>"))
+
+	call s:reload_buffer()
+	call cursor(1, 1)
+	call test_feedinput("1\<CR>")
+	call spelunker#correct#correct_from_list(0, 1)
+	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 1)
+	call cursor(2, 1)
+	call assert_equal('aple', expand("<cword>"))
+
+	call s:reload_buffer()
+	call cursor(1, 1)
+	call spelunker#correct#correct_from_list(1, 1)
+	call assert_equal('apple', expand("<cword>"))
+	call s:assert_cursor_pos(1, 1)
+	call cursor(2, 1)
+	call assert_equal('apple', expand("<cword>"))
+	" }}}
+
+	call s:reload_buffer()
+	call test_feedinput('')
 endfunction
 
 function! s:open_unit_test_buffer(filename)
