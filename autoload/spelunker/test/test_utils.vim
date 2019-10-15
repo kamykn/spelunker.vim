@@ -8,7 +8,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! spelunker#test#test_utils#test_utils()
+function! spelunker#test#test_utils#test()
 	call s:test_filter_list_char_length()
 	call s:test_code_to_words()
 	call s:test_convert_control_character_to_space()

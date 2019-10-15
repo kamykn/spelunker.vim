@@ -8,7 +8,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! spelunker#test#test_utils#test_cases()
+function! spelunker#test#test_cases#test()
 	call s:test_reset_case_counter()
 	call s:test_case_counter()
 	call s:test_is_snake_case_file()
@@ -75,3 +75,6 @@ function! s:test_words_to_camel_case()
 	call assert_equal('camelCaseAbc', spelunker#cases#words_to_camel_case(['camel', 'case', 'abc']))
 	call assert_equal('camelcase', spelunker#cases#words_to_camel_case(['camelcase']))
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

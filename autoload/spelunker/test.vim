@@ -14,13 +14,13 @@ set cpo&vim
 function! spelunker#test#check()
 	let v:errors = []
 
-	call spelunker#test#test_utils#test_utils()
-	call spelunker#test#test_utils#test_cases()
-	call s:check_white_list()
-	call s:check_spellbad()
+	call spelunker#test#test_utils#test()
+	call spelunker#test#test_cases#test()
+	call spelunker#test#test_spellbad#test()
+	call spelunker#test#test_white_list#test()
+	call spelunker#test#test_match#test()
 	call s:check_jump()
 	call s:check_toggle()
-	call s:check_match()
 	call s:check_words()
 	call s:check_correct()
 
@@ -28,212 +28,9 @@ function! spelunker#test#check()
 endfunction
 
 
-function! s:check_cases()
-	" spelunker#utils#convert_control_character_to_space"{{{
-	let b:camel_case_count = 1
-	let b:snake_case_count = 2
-
-	call spelunker#cases#reset_case_counter()
-
-	call assert_equal(0, b:camel_case_count)
-	call assert_equal(0, b:snake_case_count)
-	"}}}
-
-	" spelunker#cases#case_counter"{{{
-	call spelunker#cases#case_counter('_abc_def')
-	call assert_equal(0, b:camel_case_count)
-	call assert_equal(1, b:snake_case_count)
-
-	call spelunker#cases#case_counter('abcDef')
-	call assert_equal(1, b:camel_case_count)
-	call assert_equal(1, b:snake_case_count)
-
-	call spelunker#cases#case_counter('AbcDef')
-	call assert_equal(2, b:camel_case_count)
-	call assert_equal(1, b:snake_case_count)
-
-	call spelunker#cases#case_counter('ABCDEF')
-	call assert_equal(2, b:camel_case_count)
-	call assert_equal(1, b:snake_case_count)
-	" }}}
-
-	" spelunker#cases#reset_case_counter()"{{{
-	call spelunker#cases#reset_case_counter()
-	let b:camel_case_count = 1
-	let b:snake_case_count = 2
-	call assert_equal(1, spelunker#cases#is_snake_case_file())
-
-	call spelunker#cases#reset_case_counter()
-	let b:camel_case_count = 2
-	let b:snake_case_count = 1
-	call assert_equal(0, spelunker#cases#is_snake_case_file())
-	" }}}
-
-	" spelunker#cases#get_first_word_in_line()"{{{
-	call assert_equal('camelCase', spelunker#cases#get_first_word_in_line('camelCase, PascalCase'))
-	call assert_equal('PascalCase', spelunker#cases#get_first_word_in_line('PascalCase, snake_case'))
-	call assert_equal('snake_case', spelunker#cases#get_first_word_in_line('snake_case, lowercase'))
-	call assert_equal('lowercase', spelunker#cases#get_first_word_in_line('lowercase camelCase'))
-	call assert_equal('camelCase', spelunker#cases#get_first_word_in_line('a camelCase'))
-	" call assert_equal('kebab-case', spelunker#cases#get_first_word_in_line('a kebab-case'))
-	" }}}
-
-	" spelunker#cases#to_first_char_upper()"{{{
-	call assert_equal('Lowercase', spelunker#cases#to_first_char_upper('lowercase'))
-	call assert_equal('Uppercase', spelunker#cases#to_first_char_upper('Uppercase'))
-	" }}}
-
-	" spelunker#cases#words_to_camel_case()"{{{
-	call assert_equal('camelCaseAbc', spelunker#cases#words_to_camel_case(['camel', 'case', 'abc']))
-	call assert_equal('camelcase', spelunker#cases#words_to_camel_case(['camelcase']))
-	" }}}
-endfunction
-
-function! s:check_white_list()
-	" spelunker#white_list#init_white_list"{{{
-	try
-		unlet g:spelunker_white_list
-	catch
-		" エラー読み捨て
-	endtry
-	call spelunker#white_list#init_white_list()
-	call assert_equal(1, exists('g:spelunker_white_list'))
-	call assert_notequal(0, len(g:spelunker_white_list))
-	" }}}
-
-	" spelunker#white_list#is_complex_or_compound_word"{{{
-	call assert_equal(0, spelunker#white_list#is_complex_or_compound_word('build'))
-	" prefix
-	call assert_equal(1, spelunker#white_list#is_complex_or_compound_word('rebuild'))
-	" suffix
-	call assert_equal(1, spelunker#white_list#is_complex_or_compound_word('nullable'))
-	" }}}
-endfunction
-
-function! s:check_spellbad()
-	" spelunker#spellbad#get_word_list_in_line"{{{
-	call assert_equal(['this', 'car', 'func'], spelunker#spellbad#get_word_list_in_line('    $this->car->func()', []))
-	call assert_equal(['apple'], spelunker#spellbad#get_word_list_in_line('    \tapple', []))
-	call assert_equal(['apple', 'this'], spelunker#spellbad#get_word_list_in_line('apple\rthis', []))
-	" }}}
-
-	" 通常の引っかかるケース"{{{
-	call s:open_unit_test_buffer('case1')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
-	call assert_equal(['appl', 'Banan', 'Oran'], l:result)
-
-	let l:result = spelunker#spellbad#get_spell_bad_list(6, -1)
-	call assert_equal(['appl', 'banan', 'oran'], l:result)
-
-	" First Upper Case and lower case
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 6)
-	call assert_equal(['appl', 'Banan', 'Oran', 'banan', 'oran'], l:result)
-	" }}}
-
-	" Upper Case"{{{
-	call s:open_unit_test_buffer('case2')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
-	call assert_equal(['HTMLF', 'FFFCC'], l:result)
-	" }}}
-
-	" control character "{{{
-	call s:open_unit_test_buffer('case3')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
-	call assert_equal([], l:result)
-
-	let l:result = spelunker#spellbad#get_spell_bad_list(9, -1)
-	call assert_equal(['Banan', 'Oage', 'Pach'], l:result)
-	" }}}
-
-	" char count "{{{
-	call s:open_unit_test_buffer('case4')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
-	call assert_equal(['purp', 'purpl'], l:result)
-	" }}}
-
-	" First upper case word "{{{
-	call s:open_unit_test_buffer('case5')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
-	call assert_equal([], l:result)
-	" }}}
-
-	" Edge cases "{{{
-	call s:open_unit_test_buffer('case6')
-	let l:result = spelunker#spellbad#get_spell_bad_list(7, -1)
-	call assert_equal([], l:result)
-	" }}}
-
-	" set spelllang "{{{
-	call s:open_unit_test_buffer('case8')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
-	call assert_equal([], l:result)
-
-	setlocal spelllang=en_us
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
-	call assert_equal(['colour'], l:result)
-
-	let g:spelunker_highlight_type = g:spelunker_highlight_spell_bad
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
-	call assert_equal([], l:result)
-
-	let g:spelunker_highlight_type = g:spelunker_highlight_all
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
-	call assert_equal(['colour'], l:result)
-	" 設定戻す
-	setlocal spelllang=en
-	" }}}
-endfunction
-
-function! s:check_match()
-	" get_match_pattern "{{{
-	let l:word = 'banana'
-	call assert_equal('\v[A-Za-z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
-	call assert_match(spelunker#matches#get_match_pattern(l:word), 'orange_banana_apple')
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'orangebanana_apple')
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'orange_bananaapple')
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'Abanana')
-	" }}}
-
-	" get_match_pattern "{{{
-	let l:word = 'Banana'
-	call assert_equal('\v[A-Z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
-	call assert_match(spelunker#matches#get_match_pattern(l:word), 'OreangeBananaApple')
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'OreangeBananaapple' )
-
-	" HTTP or HTTPS??
-	let l:word = 'Spanner'
-	call assert_equal('\v[A-Z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'HTTPSpanner')
-
-	" # ISSUE/PR
-	" #10 https://github.com/kamykn/spelunker.vim/pull/10
-	let l:word = 'ormat' " <= typo 'format'
-	call assert_equal('\v[A-Za-z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'doormat')
-	" }}}
-
-	" get_match_pattern "{{{
-	call s:open_unit_test_buffer('case7')
-	let l:match_id_list = spelunker#matches#add_matches(['apple', 'orange', 'melon', 'lemon'], {})
-	call assert_equal([], l:match_id_list[0])
-	call assert_equal({'orange': 9, 'apple': 8, 'melon': 10, 'lemon': 11}, l:match_id_list[1])
-
-	let l:match_id_list = spelunker#matches#add_matches(['apple', 'orange', 'peach', 'grape'], l:match_id_list[1])
-	call assert_equal(['melon', 'lemon'], l:match_id_list[0])
-	call assert_equal({'orange': 9, 'peach': 12, 'apple': 8, 'melon': 10, 'lemon': 11, 'grape': 13}, l:match_id_list[1])
-
-	let l:match_id_list_after_delete = spelunker#matches#delete_matches(l:match_id_list[0], l:match_id_list[1])
-	call assert_equal({'orange': 9, 'peach': 12, 'apple': 8, 'grape': 13}, l:match_id_list_after_delete)
-
-	let l:all_ids = keys(l:match_id_list_after_delete)
-	let l:match_id_list_after_delete = spelunker#matches#delete_matches(l:all_ids, l:match_id_list_after_delete)
-	call assert_equal({}, l:match_id_list_after_delete)
-	" }}}
-endfunction
-
 function! s:check_jump()
 	" cursor pos reset "{{{
-	call s:open_unit_test_buffer('case9')
+	call spelunker#test#open_unit_test_buffer('case9')
 	call cursor(1,1)
 	call s:assert_cursor_pos(1, 1)
 	" }}}
@@ -269,7 +66,7 @@ endfunction
 
 function! s:check_toggle()
 	" [case10-0] =====================================
-	call s:open_unit_test_buffer('case10')
+	call spelunker#test#open_unit_test_buffer('case10')
 	call s:init()
 	call spelunker#toggle#toggle()
 
@@ -323,7 +120,7 @@ function! s:check_toggle()
 	" call assert_equal(1, spelunker#add_all_spellgood())
 
 	" register word dict test
-	call s:open_unit_test_buffer('case12')
+	call spelunker#test#open_unit_test_buffer('case12')
 	call s:init()
 	call cursor(1,1)
 	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
@@ -347,7 +144,7 @@ function! s:check_toggle()
 	call spelunker#toggle#toggle()
 
 	" spelunker#correct "{{{
-	call s:open_unit_test_buffer('case11')
+	call spelunker#test#open_unit_test_buffer('case11')
 	call s:init()
 	call cursor(1, 2)
 	call assert_equal(0, spelunker#correct())
@@ -389,7 +186,7 @@ function! s:check_toggle()
 endfunction
 
 function! s:check_words()
-	call s:open_unit_test_buffer('case13')
+	call spelunker#test#open_unit_test_buffer('case13')
 
 	" spelunker#words#search_target_word "{{{
 	call cursor(1, 1)
@@ -461,7 +258,7 @@ function! s:check_words()
 	" }}}
 
 	" spelunker#words#check " {{{
-	call s:open_unit_test_buffer('case14')
+	call spelunker#test#open_unit_test_buffer('case14')
 	call s:clear_matches()
 	call spelunker#words#check()
 	let l:result = getmatches()
@@ -490,7 +287,7 @@ function! s:check_words()
 	"}}}
 
 	" spelunker#words#highlight " {{{
-	call s:open_unit_test_buffer('case15')
+	call spelunker#test#open_unit_test_buffer('case15')
 	call spelunker#words#highlight(['banana', 'apple', 'lemon', 'Banana', 'Apple', 'Lemon'])
 	let l:result = getmatches()
 	call assert_equal(
@@ -500,7 +297,7 @@ function! s:check_words()
 endfunction
 
 function! s:check_correct()
-	call s:open_unit_test_buffer('case16')
+	call spelunker#test#open_unit_test_buffer('case16')
 
 	" spelunker#correct#correct " {{{
 	call cursor(1, 1)
@@ -576,7 +373,7 @@ function! s:check_correct()
 	call test_feedinput('')
 endfunction
 
-function! s:open_unit_test_buffer(filename)
+function! spelunker#test#open_unit_test_buffer(filename)
 	execute ':edit! ' . escape(g:spelunker_plugin_path, ' ') . '/test/unit_test/' . a:filename . '.md'
 endfunction
 
