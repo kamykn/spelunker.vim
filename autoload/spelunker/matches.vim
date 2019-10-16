@@ -60,8 +60,8 @@ endfunction
 function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict)
 	let l:match_id_dict = a:match_id_dict
 
-	for l in a:word_list_for_delete
-		let l:delete_match_id = get(l:match_id_dict, l, 0)
+	for l:word in a:word_list_for_delete
+		let l:delete_match_id = get(l:match_id_dict, l:word, 0)
 		if l:delete_match_id > 0
 			try
 				call matchdelete(l:delete_match_id)
