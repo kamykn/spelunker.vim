@@ -62,8 +62,8 @@ function! s:test_get_first_word_in_line()
 	call assert_equal('PascalCase', spelunker#cases#get_first_word_in_line('PascalCase, snake_case'))
 	call assert_equal('snake_case', spelunker#cases#get_first_word_in_line('snake_case, lowercase'))
 	call assert_equal('lowercase', spelunker#cases#get_first_word_in_line('lowercase camelCase'))
+	call assert_equal('kebab', spelunker#cases#get_first_word_in_line('kebab-case'))
 	call assert_equal('camelCase', spelunker#cases#get_first_word_in_line('a camelCase'))
-	call assert_equal('kebab-case', spelunker#cases#get_first_word_in_line('a kebab-case'))
 endfunction
 
 function! s:test_to_first_char_upper()

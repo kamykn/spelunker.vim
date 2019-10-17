@@ -18,7 +18,15 @@ function! s:test_toggle()
 	call spelunker#test#init()
 	call spelunker#toggle#toggle()
 
-	" spelunker#check_displayed_words spelunker#check "{{{
+	" highlightがなくなっていることを確認
+	call spelunker#toggle#toggle()
+	let l:result = getmatches()
+	call assert_equal([{'group' : 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 10}], l:result)
+	call spelunker#toggle#toggle()
+	let l:result = getmatches()
+	call assert_equal([], l:result)
+
+	" spelunker#check_displayed_words spelunker#check
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
 	call assert_equal(0, spelunker#check_displayed_words())
 
@@ -26,22 +34,18 @@ function! s:test_toggle()
 	call assert_equal(0, spelunker#check())
 
 	" call assert_equal(0, spelunker#check_and_echo_list())
-	" }}}
 
-	" spelunker#jump_next spelunker#jump_prev "{{{
+	" spelunker#jump_next spelunker#jump_prev
 	call cursor(1,1)
 	call assert_equal(0, spelunker#jump_next())
 	call spelunker#test#assert_cursor_pos(1, 1)
 	call assert_equal(0, spelunker#jump_prev())
 	call spelunker#test#assert_cursor_pos(1, 1)
-	" }}}
 
-	" "{{{
 	call assert_equal(0, spelunker#add_all_spellgood())
 
 	" register word dict test
 	call assert_equal(0, spelunker#execute_with_target_word(''))
-	" }}}
 
 	" [case10-1] =====================================
 	call spelunker#toggle#toggle()
@@ -91,7 +95,7 @@ function! s:test_toggle()
 	" [case11-0] =====================================
 	call spelunker#toggle#toggle()
 
-	" spelunker#correct "{{{
+	" spelunker#correct
 	call spelunker#test#open_unit_test_buffer('case11')
 	call spelunker#test#init()
 	call cursor(1, 2)
@@ -102,12 +106,11 @@ function! s:test_toggle()
 	call assert_equal(0, spelunker#correct_feeling_lucky())
 	call assert_equal(0, spelunker#correct_all_feeling_lucky())
 	call assert_equal('aple', expand("<cword>"))
-	" }}}
 
 	" [case11-1] =====================================
 	call spelunker#toggle#toggle()
 
-	" spelunker#correct "{{{
+	" spelunker#correct
 	call spelunker#test#reload_buffer()
 	call spelunker#test#init()
 	call cursor(1, 2)
@@ -130,7 +133,6 @@ function! s:test_toggle()
 
 	" 編集中の変更を破棄
 	call spelunker#test#reload_buffer()
-	" }}}
 endfunction
 
 let &cpo = s:save_cpo

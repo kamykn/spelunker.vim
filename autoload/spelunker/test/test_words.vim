@@ -106,16 +106,16 @@ function! s:test_check()
 	call spelunker#words#check()
 	let l:result = getmatches()
 	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 22},
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 23},
 		\ l:result[0])
 	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 23},
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 24},
 		\ l:result[1])
 	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!graape[a-z]@!\C', 'priority': 0, 'id': 24},
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!graape[a-z]@!\C', 'priority': 0, 'id': 25},
 		\ l:result[2])
 	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemone[a-z]@!\C', 'priority': 0, 'id': 25},
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemone[a-z]@!\C', 'priority': 0, 'id': 26},
 		\ l:result[3])
 endfunction
 
@@ -126,10 +126,10 @@ function! s:test_check_display_area()
 	call spelunker#words#check_display_area()
 	let l:result = getmatches()
 	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 26},
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 27},
 		\ l:result[0])
 	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 27},
+		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 28},
 		\ l:result[1])
 endfunction
 
@@ -139,7 +139,7 @@ function! s:test_highlight()
 	call spelunker#words#highlight(['banana', 'apple', 'lemon', 'Banana', 'Apple', 'Lemon'])
 	let l:result = getmatches()
 	call assert_equal(
-		\ [{'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 26}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 27}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banana[a-z]@!\C', 'priority': 0, 'id': 31}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!apple[a-z]@!\C', 'priority': 0, 'id': 32}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemon[a-z]@!\C', 'priority': 0, 'id': 33}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Banana[a-z]@!\C', 'priority': 0, 'id': 34}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Apple[a-z]@!\C', 'priority': 0, 'id': 35}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Lemon[a-z]@!\C', 'priority': 0, 'id': 36}],
+		\ [{'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 27}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 28}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banana[a-z]@!\C', 'priority': 0, 'id': 32}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!apple[a-z]@!\C', 'priority': 0, 'id': 33}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemon[a-z]@!\C', 'priority': 0, 'id': 34}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Banana[a-z]@!\C', 'priority': 0, 'id': 35}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Apple[a-z]@!\C', 'priority': 0, 'id': 36}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Lemon[a-z]@!\C', 'priority': 0, 'id': 37}],
 		\ l:result)
 endfunction
 

@@ -44,18 +44,19 @@ function! s:test_add_matches()
 	call spelunker#test#open_unit_test_buffer('case7')
 	let l:match_id_list = spelunker#matches#add_matches(['apple', 'orange', 'melon', 'lemon'], {})
 	call assert_equal([], l:match_id_list[0])
-	call assert_equal({'orange': 9, 'apple': 8, 'melon': 10, 'lemon': 11}, l:match_id_list[1])
+	call assert_equal({'orange': 5, 'apple': 4, 'melon': 6, 'lemon': 7}, l:match_id_list[1])
 
 	let l:match_id_list = spelunker#matches#add_matches(['apple', 'orange', 'peach', 'grape'], l:match_id_list[1])
 	call assert_equal(['melon', 'lemon'], l:match_id_list[0])
-	call assert_equal({'orange': 9, 'peach': 12, 'apple': 8, 'melon': 10, 'lemon': 11, 'grape': 13}, l:match_id_list[1])
+	call assert_equal({'orange': 5, 'peach': 8, 'apple': 4, 'melon': 6, 'lemon': 7, 'grape': 9}, l:match_id_list[1])
 
 	return l:match_id_list
 endfunction
 
 function! s:test_delete_matches(match_id_list)
+	call spelunker#test#open_unit_test_buffer('case7')
 	let l:match_id_list_after_delete = spelunker#matches#delete_matches(a:match_id_list[0], a:match_id_list[1])
-	call assert_equal({'orange': 9, 'peach': 12, 'apple': 8, 'grape': 13}, l:match_id_list_after_delete)
+	call assert_equal({'orange': 5, 'peach': 8, 'apple': 4, 'grape': 9}, l:match_id_list_after_delete)
 
 	let l:all_ids = keys(l:match_id_list_after_delete)
 	let l:match_id_list_after_delete = spelunker#matches#delete_matches(l:all_ids, l:match_id_list_after_delete)
