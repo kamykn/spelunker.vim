@@ -21,62 +21,66 @@ endfunction
 
 function! s:test_get_spell_bad_list()
 	" 通常の引っかかるケース
-	call spelunker#test#open_unit_test_buffer('case1')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list1.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, -1)
 	call assert_equal(['appl', 'Banan', 'Oran'], l:result)
 
-	let l:result = spelunker#spellbad#get_spell_bad_list(6, -1)
+	let l:result = spelunker#spellbad#get_spell_bad_list(2, -1)
 	call assert_equal(['appl', 'banan', 'oran'], l:result)
 
 	" First Upper Case and lower case
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 6)
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, 2)
 	call assert_equal(['appl', 'Banan', 'Oran', 'banan', 'oran'], l:result)
 
 	" Upper Case
-	call spelunker#test#open_unit_test_buffer('case2')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list2.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, 10)
 	call assert_equal(['HTMLF', 'FFFCC'], l:result)
 
 	" control character
-	call spelunker#test#open_unit_test_buffer('case3')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list3.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(2, -1)
 	call assert_equal([], l:result)
 
-	let l:result = spelunker#spellbad#get_spell_bad_list(9, -1)
+	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
 	call assert_equal(['Banan', 'Oage', 'Pach'], l:result)
 
 	" char count
-	call spelunker#test#open_unit_test_buffer('case4')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list4.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, -1)
 	call assert_equal(['purp', 'purpl'], l:result)
 
-	" First upper case word
-	call spelunker#test#open_unit_test_buffer('case5')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, -1)
+	" 先頭大文字のケースしかない単語
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list5.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, -1)
 	call assert_equal([], l:result)
 
 	" Edge cases
-	call spelunker#test#open_unit_test_buffer('case6')
-	let l:result = spelunker#spellbad#get_spell_bad_list(7, -1)
+	" # #6 https://github.com/kamykn/spelunker.vim/pull/6
+	" # 過去に[A-Z\s]が事故ってたため
+	" # (引っかからないケース)
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list6.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, -1)
 	call assert_equal([], l:result)
 
 	" set spelllang
-	call spelunker#test#open_unit_test_buffer('case8')
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	" # spelllangによる動作の違いのチェック
+	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list7.txt')
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, 10)
 	call assert_equal([], l:result)
 
 	" en_usなどの国別の設定のケース
 	setlocal spelllang=en_us
 
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, 10)
 	call assert_equal(['colour'], l:result)
 
 	let g:spelunker_highlight_type = g:spelunker_highlight_spell_bad
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, 10)
 	call assert_equal([], l:result)
 
 	let g:spelunker_highlight_type = g:spelunker_highlight_all
-	let l:result = spelunker#spellbad#get_spell_bad_list(5, 10)
+	let l:result = spelunker#spellbad#get_spell_bad_list(1, 10)
 	call assert_equal(['colour'], l:result)
 
 	" 設定戻す

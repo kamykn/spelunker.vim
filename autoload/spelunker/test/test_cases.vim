@@ -10,11 +10,52 @@ set cpo&vim
 
 function! spelunker#test#test_cases#test()
 	call s:test_reset_case_counter()
+	call s:test_get_camel_case_count()
+	call s:test_get_snake_case_count()
 	call s:test_case_counter()
 	call s:test_is_snake_case_file()
 	call s:test_get_first_word_in_line()
 	call s:test_to_first_char_upper()
 	call s:test_words_to_camel_case()
+endfunction
+
+function! s:test_get_camel_case_count()
+	call spelunker#cases#reset_case_counter()
+
+	" call before count
+	call assert_equal(0, spelunker#cases#get_camel_case_count())
+
+	call spelunker#cases#case_counter('_apple_banana')
+	call spelunker#cases#case_counter('appleBanana')
+	call spelunker#cases#case_counter('appleBanana')
+	call spelunker#cases#case_counter('appleBanana')
+	call assert_equal(3, spelunker#cases#get_camel_case_count())
+
+	call spelunker#cases#reset_case_counter()
+	call spelunker#cases#case_counter('apple')
+	call assert_equal(0, spelunker#cases#get_camel_case_count())
+
+	" pascal case
+	call spelunker#cases#reset_case_counter()
+	call spelunker#cases#case_counter('AppleBanana')
+	call assert_equal(1, spelunker#cases#get_camel_case_count())
+endfunction
+
+function! s:test_get_snake_case_count()
+	call spelunker#cases#reset_case_counter()
+
+	" call before count
+	call assert_equal(0, spelunker#cases#get_snake_case_count())
+
+	call spelunker#cases#case_counter('apple_banana')
+	call spelunker#cases#case_counter('apple_banana')
+	call spelunker#cases#case_counter('apple_banana')
+	call spelunker#cases#case_counter('appleBanana')
+	call assert_equal(3, spelunker#cases#get_snake_case_count())
+
+	call spelunker#cases#reset_case_counter()
+	call spelunker#cases#case_counter('apple')
+	call assert_equal(0, spelunker#cases#get_snake_case_count())
 endfunction
 
 function! s:test_reset_case_counter()
@@ -54,6 +95,16 @@ function! s:test_is_snake_case_file()
 	call spelunker#cases#reset_case_counter()
 	let b:camel_case_count = 2
 	let b:snake_case_count = 1
+	call assert_equal(0, spelunker#cases#is_snake_case_file())
+
+	call spelunker#test#open_unit_test_buffer('cases', 'is_snake_case_file1.txt')
+	" 強制的にチェック
+	call spelunker#words#check()
+	call assert_equal(1, spelunker#cases#is_snake_case_file())
+
+	call spelunker#test#open_unit_test_buffer('cases', 'is_snake_case_file2.txt')
+	" 強制的にチェック
+	call spelunker#words#check()
 	call assert_equal(0, spelunker#cases#is_snake_case_file())
 endfunction
 

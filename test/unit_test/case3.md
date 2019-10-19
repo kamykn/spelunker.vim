@@ -1,9 +1,0 @@
-# Unit Test
-
-## 制御文字ケース(検知しない)
-
-apple\nBanana\rOrange\tPeach
-
-## 制御文字ケース(検知する)
-
-apple\nBanan\rOage\tPach

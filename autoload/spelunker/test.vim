@@ -27,8 +27,25 @@ function! spelunker#test#check()
 	echo v:errors
 endfunction
 
-function! spelunker#test#open_unit_test_buffer(filename)
-	execute ':edit! ' . escape(g:spelunker_plugin_path, ' ') . '/test/unit_test/' . a:filename . '.md'
+function! spelunker#test#open_unit_test_buffer_old(filename)
+	execute ':edit! ' . fnameescape(g:spelunker_plugin_path) . '/test/unit_test/' . a:filename . '.md'
+endfunction
+
+function! spelunker#test#open_unit_test_buffer(directory, filename)
+	" NOTE: Windowsを想定していません
+	if stridx(a:directory, '/') >= 0 && stridx(a:filename, '/') >= 0
+		throw 'Path cannot contain a slash.'
+	endif
+
+	let l:directory = fnameescape(a:directory)
+	let l:filename = fnameescape(fnamemodify(a:filename, ':t'))
+	let l:open_path = fnameescape(g:spelunker_plugin_path) . '/test/unit_test/' . l:directory . '/' . l:filename
+
+	if !filereadable(l:open_path)
+		throw 'File is not readable. (' . l:open_path . ')'
+	endif
+
+	execute ':edit! ' . l:open_path
 endfunction
 
 function! spelunker#test#reload_buffer()

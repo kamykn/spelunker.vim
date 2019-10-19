@@ -14,7 +14,7 @@ function! spelunker#test#test_correct#test()
 endfunction
 
 function! s:test_correct()
-	call spelunker#test#open_unit_test_buffer('case16')
+	call spelunker#test#open_unit_test_buffer_old('case16')
 
 	" spelunker#correct#correct
 	call cursor(1, 1)
@@ -53,7 +53,7 @@ function! s:test_correct()
 endfunction
 
 function! s:test_correct_from_list()
-	call spelunker#test#open_unit_test_buffer('case16')
+	call spelunker#test#open_unit_test_buffer_old('case16')
 	call spelunker#test#reload_buffer()
 
 	call cursor(1, 1)
