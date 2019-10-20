@@ -105,18 +105,23 @@ function! s:test_check()
 
 	call spelunker#words#check()
 	let l:result = getmatches()
-	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 23},
-		\ l:result[0])
-	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 24},
-		\ l:result[1])
-	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!graape[a-z]@!\C', 'priority': 0, 'id': 25},
-		\ l:result[2])
-	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemone[a-z]@!\C', 'priority': 0, 'id': 26},
-		\ l:result[3])
+	call assert_equal(4, len(l:result))
+
+	call assert_equal('SpelunkerSpellBad', l:result[0]['group'])
+	call assert_equal('\v[A-Za-z]@<!appl[a-z]@!\C', l:result[0]['pattern'])
+	call assert_equal(0, l:result[0]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[1]['group'])
+	call assert_equal('\v[A-Za-z]@<!banan[a-z]@!\C', l:result[1]['pattern'])
+	call assert_equal(0, l:result[1]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[2]['group'])
+	call assert_equal('\v[A-Za-z]@<!graape[a-z]@!\C', l:result[2]['pattern'])
+	call assert_equal(0, l:result[2]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[3]['group'])
+	call assert_equal('\v[A-Za-z]@<!lemone[a-z]@!\C', l:result[3]['pattern'])
+	call assert_equal(0, l:result[3]['priority'])
 endfunction
 
 function! s:test_check_display_area()
@@ -125,12 +130,16 @@ function! s:test_check_display_area()
 
 	call spelunker#words#check_display_area()
 	let l:result = getmatches()
-	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 27},
-		\ l:result[0])
-	call assert_equal(
-		\ {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 28},
-		\ l:result[1])
+
+	call assert_equal(2, len(l:result))
+
+	call assert_equal('SpelunkerSpellBad', l:result[0]['group'])
+	call assert_equal('\v[A-Za-z]@<!appl[a-z]@!\C', l:result[0]['pattern'])
+	call assert_equal(0, l:result[0]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[1]['group'])
+	call assert_equal('\v[A-Za-z]@<!banan[a-z]@!\C', l:result[1]['pattern'])
+	call assert_equal(0, l:result[1]['priority'])
 endfunction
 
 function! s:test_highlight()
@@ -138,9 +147,40 @@ function! s:test_highlight()
 
 	call spelunker#words#highlight(['banana', 'apple', 'lemon', 'Banana', 'Apple', 'Lemon'])
 	let l:result = getmatches()
-	call assert_equal(
-		\ [{'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!appl[a-z]@!\C', 'priority': 0, 'id': 27}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banan[a-z]@!\C', 'priority': 0, 'id': 28}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!banana[a-z]@!\C', 'priority': 0, 'id': 32}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!apple[a-z]@!\C', 'priority': 0, 'id': 33}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Za-z]@<!lemon[a-z]@!\C', 'priority': 0, 'id': 34}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Banana[a-z]@!\C', 'priority': 0, 'id': 35}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Apple[a-z]@!\C', 'priority': 0, 'id': 36}, {'group': 'SpelunkerSpellBad', 'pattern': '\v[A-Z]@<!Lemon[a-z]@!\C', 'priority': 0, 'id': 37}],
-		\ l:result)
+
+	call assert_equal(8, len(l:result))
+
+	call assert_equal('SpelunkerSpellBad', l:result[0]['group'])
+	call assert_equal('\v[A-Za-z]@<!appl[a-z]@!\C', l:result[0]['pattern'])
+	call assert_equal(0, l:result[0]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[1]['group'])
+	call assert_equal('\v[A-Za-z]@<!banan[a-z]@!\C', l:result[1]['pattern'])
+	call assert_equal(0, l:result[1]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[2]['group'])
+	call assert_equal('\v[A-Za-z]@<!banana[a-z]@!\C', l:result[2]['pattern'])
+	call assert_equal(0, l:result[2]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[3]['group'])
+	call assert_equal('\v[A-Za-z]@<!apple[a-z]@!\C', l:result[3]['pattern'])
+	call assert_equal(0, l:result[3]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[4]['group'])
+	call assert_equal('\v[A-Za-z]@<!lemon[a-z]@!\C', l:result[4]['pattern'])
+	call assert_equal(0, l:result[4]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[5]['group'])
+	call assert_equal('\v[A-Z]@<!Banana[a-z]@!\C', l:result[5]['pattern'])
+	call assert_equal(0, l:result[5]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[6]['group'])
+	call assert_equal('\v[A-Z]@<!Apple[a-z]@!\C', l:result[6]['pattern'])
+	call assert_equal(0, l:result[6]['priority'])
+
+	call assert_equal('SpelunkerSpellBad', l:result[7]['group'])
+	call assert_equal('\v[A-Z]@<!Lemon[a-z]@!\C', l:result[7]['pattern'])
+	call assert_equal(0, l:result[7]['priority'])
 endfunction
 
 let &cpo = s:save_cpo
