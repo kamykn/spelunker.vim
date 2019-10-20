@@ -15,7 +15,7 @@ jobs:
 
       - run:
           name: yum
-          command: yum update -y && yum install gcc ncurses-devel ssh git -y
+          command: yum update -y && yum install make gcc ncurses-devel ssh git -y
 
       - run:
           name: Build latest Vim
