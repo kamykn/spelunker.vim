@@ -19,7 +19,7 @@ jobs:
 
       - run:
           name: Build latest Vim
-          command: git clone https://github.com/vim/vim.git && (cd ~/vim && make && sudo make install)
+          command: git clone https://github.com/vim/vim.git && (cd vim && make && sudo make install)
 
       - run:
           name: Vim version
