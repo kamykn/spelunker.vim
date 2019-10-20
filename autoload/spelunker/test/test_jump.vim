@@ -14,7 +14,7 @@ endfunction
 
 function! s:test_jump_matched()
 	" cursor pos reset
-	call spelunker#test#open_unit_test_buffer_old('case9')
+	call spelunker#test#open_unit_test_buffer('jump', 'jump_matched.txt')
 	call cursor(1,1)
 	call spelunker#test#assert_cursor_pos(1, 1)
 

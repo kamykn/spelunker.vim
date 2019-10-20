@@ -19,7 +19,7 @@ function! spelunker#test#test_words#test()
 endfunction
 
 function! s:test_search_target_word()
-	call spelunker#test#open_unit_test_buffer_old('case13')
+	call spelunker#test#open_unit_test_buffer('words', 'search_target_word.txt')
 
 	" spelunker#words#search_target_word
 	call cursor(1, 1)
@@ -33,7 +33,7 @@ function! s:test_search_target_word()
 endfunction
 
 function! s:test_format_spell_suggest_list()
-	call spelunker#test#open_unit_test_buffer_old('case13')
+	call spelunker#test#open_unit_test_buffer('words', 'search_target_word.txt')
 
 	" spelunker#words#format_spell_suggest_list
 	let l:result = spelunker#words#format_spell_suggest_list(['apple', 'banana', "It's", 'Pièces', 'a.b.c'], 'Apple')
@@ -47,7 +47,7 @@ function! s:test_format_spell_suggest_list()
 endfunction
 
 function! s:test_cut_text_word_before()
-	call spelunker#test#open_unit_test_buffer_old('case13')
+	call spelunker#test#open_unit_test_buffer('words', 'search_target_word.txt')
 
 	" spelunker#words#cut_text_word_before
 	let l:result = spelunker#words#cut_text_word_before('applebananaorange', 'banana')
@@ -58,7 +58,7 @@ function! s:test_cut_text_word_before()
 endfunction
 
 function! s:test_replace_word()
-	call spelunker#test#open_unit_test_buffer_old('case13')
+	call spelunker#test#open_unit_test_buffer('words', 'search_target_word.txt')
 
 	" spelunker#words#replace_word
 	call cursor(3, 6)
@@ -100,7 +100,7 @@ function! s:test_replace_word()
 endfunction
 
 function! s:test_check()
-	call spelunker#test#open_unit_test_buffer_old('case14')
+	call spelunker#test#open_unit_test_buffer('words', 'check.txt')
 	call spelunker#test#clear_matches()
 
 	call spelunker#words#check()
@@ -120,7 +120,7 @@ function! s:test_check()
 endfunction
 
 function! s:test_check_display_area()
-	call spelunker#test#open_unit_test_buffer_old('case14')
+	call spelunker#test#open_unit_test_buffer('words', 'check.txt')
 	call spelunker#test#clear_matches()
 
 	call spelunker#words#check_display_area()
@@ -134,7 +134,7 @@ function! s:test_check_display_area()
 endfunction
 
 function! s:test_highlight()
-	call spelunker#test#open_unit_test_buffer_old('case15')
+	call spelunker#test#open_unit_test_buffer('words', 'highlight.txt')
 
 	call spelunker#words#highlight(['banana', 'apple', 'lemon', 'Banana', 'Apple', 'Lemon'])
 	let l:result = getmatches()

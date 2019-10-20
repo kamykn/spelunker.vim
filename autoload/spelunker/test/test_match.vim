@@ -41,7 +41,7 @@ endfunction
 
 function! s:test_add_matches()
 	" get_match_pattern "{{{
-	call spelunker#test#open_unit_test_buffer_old('case7')
+	call spelunker#test#open_unit_test_buffer('match', 'add_matches.txt')
 	let l:match_id_list = spelunker#matches#add_matches(['apple', 'orange', 'melon', 'lemon'], {})
 	call assert_equal([], l:match_id_list[0])
 	call assert_equal({'orange': 5, 'apple': 4, 'melon': 6, 'lemon': 7}, l:match_id_list[1])
@@ -54,7 +54,7 @@ function! s:test_add_matches()
 endfunction
 
 function! s:test_delete_matches(match_id_list)
-	call spelunker#test#open_unit_test_buffer_old('case7')
+	call spelunker#test#open_unit_test_buffer('match', 'add_matches.txt')
 	let l:match_id_list_after_delete = spelunker#matches#delete_matches(a:match_id_list[0], a:match_id_list[1])
 	call assert_equal({'orange': 5, 'peach': 8, 'apple': 4, 'grape': 9}, l:match_id_list_after_delete)
 

@@ -14,7 +14,7 @@ endfunction
 
 function! s:test_toggle()
 	" [case10-0] =====================================
-	call spelunker#test#open_unit_test_buffer_old('case10')
+	call spelunker#test#open_unit_test_buffer('toggle', 'toggle1.txt')
 	call spelunker#test#init()
 	call spelunker#toggle#toggle()
 
@@ -72,7 +72,7 @@ function! s:test_toggle()
 	" call assert_equal(1, spelunker#add_all_spellgood())
 
 	" register word dict test
-	call spelunker#test#open_unit_test_buffer_old('case12')
+	call spelunker#test#open_unit_test_buffer('toggle', 'toggle2.txt')
 	call spelunker#test#init()
 	call cursor(1,1)
 	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
@@ -96,7 +96,7 @@ function! s:test_toggle()
 	call spelunker#toggle#toggle()
 
 	" spelunker#correct
-	call spelunker#test#open_unit_test_buffer_old('case11')
+	call spelunker#test#open_unit_test_buffer('toggle', 'toggle3.txt')
 	call spelunker#test#init()
 	call cursor(1, 2)
 	call assert_equal(0, spelunker#correct())
