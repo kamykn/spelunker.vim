@@ -13,6 +13,10 @@ let g:loaded_spelunker = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+" for Unit Test
+if !exists('g:spelunker_plugin_path')
+	let g:spelunker_plugin_path = expand('<sfile>:p:h:h')
+endif
 
 if !exists('g:enable_spelunker_vim')
 	let g:enable_spelunker_vim = 1
