@@ -23,14 +23,14 @@ function! s:test_get_spell_bad_list()
 	" 通常の引っかかるケース
 	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list1.txt')
 	let l:result = spelunker#spellbad#get_spell_bad_list(1, -1)
-	call assert_equal(['appl', 'Banan', 'Oran'], l:result)
+	call assert_equal(['appl', 'Banan', 'Orag'], l:result)
 
 	let l:result = spelunker#spellbad#get_spell_bad_list(2, -1)
-	call assert_equal(['appl', 'banan', 'oran'], l:result)
+	call assert_equal(['appl', 'banan', 'orag'], l:result)
 
 	" First Upper Case and lower case
 	let l:result = spelunker#spellbad#get_spell_bad_list(1, 2)
-	call assert_equal(['appl', 'Banan', 'Oran', 'banan', 'oran'], l:result)
+	call assert_equal(['appl', 'Banan', 'Orag', 'banan', 'orag'], l:result)
 
 	" Upper Case
 	call spelunker#test#open_unit_test_buffer('spellbad', 'get_spell_bad_list2.txt')
