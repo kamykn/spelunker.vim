@@ -15,7 +15,11 @@ jobs:
 
       - run:
           name: yum
-          command: yum update -y && yum install gcc ncurses-devel ssh git vim -y
+          command: yum update -y && yum install gcc ncurses-devel ssh git -y
+
+      - run:
+          name: Build latest Vim
+          command: git clone https://github.com/vim/vim.git && (cd ~/vim && make && sudo make install)
 
       - run:
           name: Vim version
