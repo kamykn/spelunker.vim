@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/kamykn/spelunker.vim/tree/master.svg?style=svg)](https://circleci.com/gh/kamykn/spelunker.vim/tree/master)
+
 # Spelunker.vim
 
 Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting _PascalCase_, _camelCase_ and _snake_case_. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) has a whitelist.
