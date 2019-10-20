@@ -11,20 +11,39 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! spelunker#test#check()
+function! spelunker#test#check(no_exit)
 	let v:errors = []
 
-	call spelunker#test#test_utils#test()
-	call spelunker#test#test_cases#test()
-	call spelunker#test#test_spellbad#test()
-	call spelunker#test#test_white_list#test()
-	call spelunker#test#test_match#test()
-	call spelunker#test#test_jump#test()
-	call spelunker#test#test_toggle#test()
-	call spelunker#test#test_words#test()
-	call spelunker#test#test_correct#test()
+	try
+		call spelunker#test#test_utils#test()
+		call spelunker#test#test_cases#test()
+		call spelunker#test#test_spellbad#test()
+		call spelunker#test#test_white_list#test()
+		call spelunker#test#test_match#test()
+		call spelunker#test#test_jump#test()
+		call spelunker#test#test_toggle#test()
+		call spelunker#test#test_words#test()
+		call spelunker#test#test_correct#test()
+	catch
+		echomsg 'error occurred:' . v:exception
 
-	echo v:errors
+		" error exit
+		if a:no_exit != 1
+			execute 'cquit!'
+		endif
+	endtry
+
+	if len(v:errors) >= 1
+		echo v:errors
+		" error exit
+		if a:no_exit != 1
+			execute 'cquit!'
+		endif
+	end
+
+	if a:no_exit != 1
+		execute 'qall!'
+	endif
 endfunction
 
 function! spelunker#test#open_unit_test_buffer_old(filename)

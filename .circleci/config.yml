@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: centos:7
+
+    working_directory: ~/project
+
+    steps:
+      - checkout
+
+      - run:
+          name: ls
+          command: ls -la
+
+      - run:
+          name: yum
+          command: yum update -y && yum install make gcc ncurses-devel ssh git -y
+
+      - run:
+          name: Build latest Vim
+          command: git clone https://github.com/vim/vim.git && (cd vim && make && make install)
+
+      - run:
+          name: Vim version
+          command: vim --version
+
+      - run:
+          name: Unit test
+          command: vim -u .circleci/.vimrc -c "call spelunker#test#check(0)"
