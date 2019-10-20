@@ -15,12 +15,12 @@ jobs:
 
       - run:
           name: yum
-          command: yum install ssh git vim
+          command: yum update -y && yum install gcc ncurses-devel ssh git vim -y
 
       - run:
           name: Vim version
           command: vim --version
 
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          name: Unit test
+          command: vim -u .circleci/.vimrc -c "call spelunker#test#check(0)"

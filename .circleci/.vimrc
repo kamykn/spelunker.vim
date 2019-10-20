@@ -11,4 +11,4 @@ set spelllang=en,cjk
 
 " let g:spelunker_white_list_for_user = ['kamykn', 'vimrc']
 
-set runtimepath+=~/spelunker
+set runtimepath+=~/project
