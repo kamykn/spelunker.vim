@@ -4,13 +4,23 @@ jobs:
     docker:
       - image: centos:7
 
+    working_directory: ~/project
+
     steps:
       - checkout
 
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          name: ls
+          command: ls -la
 
       - run:
-          name: Print the Current Time
-          command: date
+          name: yum
+          command: yum install ssh git vim
+
+      - run:
+          name: Vim version
+          command: vim --version
+
+      - run:
+          name: Greeting
+          command: echo Hello, world.
