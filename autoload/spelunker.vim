@@ -190,9 +190,15 @@ function! spelunker#toggle()
 	return 1
 endfunction
 
+" bufferごとのspelunkerの機能のon/off
+function! spelunker#toggle_buffer()
+	call spelunker#toggle#toggle_buffer()
+	return 1
+endfunction
+
 " 実行可能な条件のチェック
 function s:is_runnable()
-	if g:enable_spelunker_vim == 0
+	if spelunker#toggle#is_enable() == 0
 		return 0
 	endif
 

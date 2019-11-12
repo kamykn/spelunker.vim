@@ -10,15 +10,21 @@ set cpo&vim
 
 function! spelunker#toggle#toggle()
 	let g:enable_spelunker_vim = g:enable_spelunker_vim == 1 ? 0 : 1
+	call spelunker#toggle#init_buffer()
+endfunction
 
-	if g:enable_spelunker_vim == 0
-		" matchからの削除処理を利用してハイライト削除
-		if exists('b:match_id_dict')
-			for l:window_id in keys(b:match_id_dict)
-				let b:match_id_dict[l:window_id] =
-					\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id])
-			endfor
-		endif
+function! spelunker#toggle#toggle_buffer()
+	if !exists('b:enable_spelunker_vim')
+		let b:enable_spelunker_vim = 1
+	endif
+
+	let b:enable_spelunker_vim = b:enable_spelunker_vim == 1 ? 0 : 1
+	call spelunker#toggle#init_buffer()
+endfunction
+
+function! spelunker#toggle#init_buffer()
+	if spelunker#toggle#is_enable() == 0
+		call spelunker#matches#clear_matches()
 	else
 		if g:spelunker_check_type == g:spelunker_check_type_buf_lead_write
 			call spelunker#check()
@@ -26,6 +32,18 @@ function! spelunker#toggle#toggle()
 			call spelunker#check_displayed_words()
 		endif
 	endif
+endfunction
+
+function! spelunker#toggle#is_enable()
+	if g:enable_spelunker_vim == 0
+		return 0
+	endif
+
+	if exists('b:enable_spelunker_vim') && b:enable_spelunker_vim == 0
+		return 0
+	endif
+
+	return 1
 endfunction
 
 let &cpo = s:save_cpo
