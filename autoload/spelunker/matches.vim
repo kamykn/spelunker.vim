@@ -63,6 +63,7 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 	for l:word in a:word_list_for_delete
 		let l:delete_match_id = get(l:match_id_dict, l:word, 0)
 		if l:delete_match_id > 0
+			let l:is_ok = 1
 			try
 				" recommend version is => 8.1.1739
 				" https://github.com/vim/vim/issues/4720

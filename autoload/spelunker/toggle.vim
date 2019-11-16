@@ -10,6 +10,12 @@ set cpo&vim
 
 function! spelunker#toggle#toggle()
 	let g:enable_spelunker_vim = g:enable_spelunker_vim == 1 ? 0 : 1
+
+	" onにするときは今開いているbufferも連動させる
+	if g:enable_spelunker_vim == 1
+		let b:enable_spelunker_vim = 1
+	endif
+
 	call spelunker#toggle#init_buffer()
 endfunction
 
@@ -37,11 +43,7 @@ function! spelunker#toggle#init_buffer()
 endfunction
 
 function! spelunker#toggle#is_enable()
-	if spelunker#toggle#is_enable_global() == 0
-		return 0
-	endif
-
-	if spelunker#toggle#is_enable_buffer() == 0
+	if spelunker#toggle#is_enable_buffer() == 0 || spelunker#toggle#is_enable_global() == 0
 		return 0
 	endif
 
