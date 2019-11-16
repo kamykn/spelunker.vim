@@ -66,13 +66,19 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 			try
 				" recommend version is => 8.1.1739
 				" https://github.com/vim/vim/issues/4720
-				call matchdelete(l:delete_match_id, a:window_id)
+				let l:is_ok = matchdelete(l:delete_match_id, a:window_id)
+				if l:is_ok == -1 && a:window_id == win_getid()
+					" 第2引数がある場合に上手く削除できない不具合があった時期があったため
+					let l:is_ok = matchdelete(l:delete_match_id)
+				endif
 			catch
 				" エラー読み捨て
 			finally
-				let l:del_index = index(values(l:match_id_dict), l:delete_match_id)
-				if l:del_index != 1
-					call remove(l:match_id_dict, keys(l:match_id_dict)[l:del_index])
+				if l:is_ok == 0
+					let l:del_index = index(values(l:match_id_dict), l:delete_match_id)
+					if l:del_index != 1
+						call remove(l:match_id_dict, keys(l:match_id_dict)[l:del_index])
+					endif
 				endif
 			endtry
 		endif
@@ -90,6 +96,16 @@ function! spelunker#matches#clear_matches()
 		endfor
 	endif
 endfunction
+
+function! spelunker#matches#clear_current_buffer_matches()
+	" matchからの削除処理を利用してハイライト削除
+	if exists('b:match_id_dict')
+		let l:window_id = win_getid()
+		let b:match_id_dict[l:window_id] =
+				\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id], l:window_id)
+	endif
+endfunction
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

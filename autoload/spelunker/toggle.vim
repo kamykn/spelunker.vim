@@ -23,8 +23,10 @@ function! spelunker#toggle#toggle_buffer()
 endfunction
 
 function! spelunker#toggle#init_buffer()
-	if spelunker#toggle#is_enable() == 0
+	if spelunker#toggle#is_enable_global() == 0
 		call spelunker#matches#clear_matches()
+	elseif spelunker#toggle#is_enable_buffer() == 0
+		call spelunker#matches#clear_current_buffer_matches()
 	else
 		if g:spelunker_check_type == g:spelunker_check_type_buf_lead_write
 			call spelunker#check()
@@ -35,10 +37,26 @@ function! spelunker#toggle#init_buffer()
 endfunction
 
 function! spelunker#toggle#is_enable()
-	if g:enable_spelunker_vim == 0
+	if spelunker#toggle#is_enable_global() == 0
 		return 0
 	endif
 
+	if spelunker#toggle#is_enable_buffer() == 0
+		return 0
+	endif
+
+	return 1
+endfunction
+
+function! spelunker#toggle#is_enable_global()
+	if g:enable_spelunker_vim == 0
+		return 0
+	endif
+	return 1
+endfunction
+
+
+function! spelunker#toggle#is_enable_buffer()
 	if exists('b:enable_spelunker_vim') && b:enable_spelunker_vim == 0
 		return 0
 	endif
