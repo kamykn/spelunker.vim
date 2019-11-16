@@ -198,7 +198,7 @@ endfunction
 
 " 実行可能な条件のチェック
 function s:is_runnable()
-	if spelunker#toggle#is_enable() == 0
+	if spelunker#toggle#is_enabled() == 0
 		return 0
 	endif
 
