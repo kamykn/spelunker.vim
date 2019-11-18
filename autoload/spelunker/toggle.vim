@@ -16,7 +16,7 @@ function! spelunker#toggle#toggle()
 		let b:enable_spelunker_vim = 1
 	endif
 
-	call spelunker#toggle#init_buffer()
+	call spelunker#toggle#init_buffer(1, g:enable_spelunker_vim)
 
 	if g:enable_spelunker_vim == 1
 		echom 'Spelunker.vim on. (global)'
@@ -31,7 +31,7 @@ function! spelunker#toggle#toggle_buffer()
 	endif
 
 	let b:enable_spelunker_vim = b:enable_spelunker_vim == 1 ? 0 : 1
-	call spelunker#toggle#init_buffer()
+	call spelunker#toggle#init_buffer(2, b:enable_spelunker_vim)
 
 	if b:enable_spelunker_vim == 1
 		echom 'Spelunker.vim on. (buffer)'
@@ -40,12 +40,14 @@ function! spelunker#toggle#toggle_buffer()
 	endif
 endfunction
 
-function! spelunker#toggle#init_buffer()
-	if spelunker#toggle#is_enabled_global() == 0
-		call spelunker#matches#clear_matches()
-	elseif spelunker#toggle#is_enabled_buffer() == 0
-		call spelunker#matches#clear_current_buffer_matches()
-	else
+function! spelunker#toggle#init_buffer(mode, is_enabled)
+	if a:is_enabled == 0
+		if a:mode == 1 " for global
+			call spelunker#matches#clear_matches()
+		elseif a:mode == 2 " for buffer
+			call spelunker#matches#clear_current_buffer_matches()
+		endif
+	elseif a:is_enabled == 1
 		if g:spelunker_check_type == g:spelunker_check_type_buf_lead_write
 			call spelunker#check()
 		elseif g:spelunker_check_type == g:spelunker_check_type_cursor_hold
