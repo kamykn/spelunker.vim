@@ -28,7 +28,6 @@ function! s:test_toggle(toggle_mode)
 	call spelunker#test#init()
 
 	call s:force_enable()
-
 	call s:toggle(a:toggle_mode)
 
 	" highlightがなくなっていることを確認
@@ -90,6 +89,7 @@ function! s:test_toggle(toggle_mode)
 	" register word dict test
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle2.txt')
 	call spelunker#test#init()
+
 	call cursor(1,1)
 	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
 	call assert_equal(['addgoodword'], l:line)
@@ -97,6 +97,7 @@ function! s:test_toggle(toggle_mode)
 	call assert_equal(1, spelunker#execute_with_target_word('spellgood!'))
 	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
 	call assert_equal([], l:line)
+	call execute('spellundo! addgoodword')
 
 	call spelunker#test#reload_buffer()
 	call cursor(2,1)
@@ -106,14 +107,17 @@ function! s:test_toggle(toggle_mode)
 	call assert_equal(1, spelunker#execute_with_target_word('spellwrong!'))
 	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
 	call assert_equal(['wrong'], l:line)
+	call execute('spellundo! wrong')
 	" }}}
 
 	" [case11-0] =====================================
-	call s:toggle(a:toggle_mode)
-
 	" spelunker#correct
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle3.txt')
 	call spelunker#test#init()
+
+	call s:force_enable()
+	call s:toggle(a:toggle_mode)
+
 	call cursor(1, 2)
 	call assert_equal(0, spelunker#correct())
 	call assert_equal(0, spelunker#correct_all())
@@ -124,11 +128,12 @@ function! s:test_toggle(toggle_mode)
 	call assert_equal('aple', expand("<cword>"))
 
 	" [case11-1] =====================================
-	call s:toggle(a:toggle_mode)
-
 	" spelunker#correct
 	call spelunker#test#reload_buffer()
 	call spelunker#test#init()
+
+	call s:force_enable()
+
 	call cursor(1, 2)
 	" call assert_equal(0, spelunker#correct())
 	" call assert_equal(0, spelunker#correct_all())
@@ -139,6 +144,7 @@ function! s:test_toggle(toggle_mode)
 
 	call spelunker#test#reload_buffer()
 	call spelunker#test#init()
+
 	call cursor(1, 2)
 	call assert_equal(1, spelunker#correct_all_feeling_lucky())
 	call assert_equal('apple', expand("<cword>"))
@@ -156,9 +162,9 @@ endfunction
 " 2: buffer mode
 function! s:toggle(toggle_mode)
 	if a:toggle_mode == 1
-		call spelunker#toggle#toggle()
+		silent! call spelunker#toggle#toggle()
 	elseif a:toggle_mode == 2
-		call spelunker#toggle#toggle_buffer()
+		silent! call spelunker#toggle#toggle_buffer()
 	endif
 endfunction
 

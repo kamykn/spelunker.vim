@@ -78,9 +78,9 @@ function! s:test_clear_matches()
 	let [l:word_list_for_delete_match, b:match_id_dict[l:win_id]]
 			\ = spelunker#matches#add_matches(['appl', 'orangg', 'banna'], {})
 
-	echo assert_notequal({}, b:match_id_dict[l:win_id])
+	call assert_notequal({}, b:match_id_dict[l:win_id])
 	call spelunker#matches#clear_matches()
-	echo assert_equal({l:win_id: {}}, b:match_id_dict)
+	call assert_equal({l:win_id: {}}, b:match_id_dict)
 endfunction
 
 function! s:test_clear_buffer_matches()
@@ -91,9 +91,9 @@ function! s:test_clear_buffer_matches()
 	let [l:word_list_for_delete_match, b:match_id_dict[l:win_id]]
 			\ = spelunker#matches#add_matches(['appl', 'orangg', 'banna'], {})
 
-	echo assert_notequal({}, b:match_id_dict[l:win_id])
+	call assert_notequal({}, b:match_id_dict[l:win_id])
 	call spelunker#matches#clear_current_buffer_matches()
-	echo assert_equal({l:win_id: {}}, b:match_id_dict)
+	call assert_equal({l:win_id: {}}, b:match_id_dict)
 endfunction
 
 let &cpo = s:save_cpo

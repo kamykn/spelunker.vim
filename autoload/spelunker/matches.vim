@@ -101,7 +101,6 @@ endfunction
 function! spelunker#matches#clear_current_buffer_matches()
 	" matchからの削除処理を利用してハイライト削除
 	if exists('b:match_id_dict')
-		echo b:match_id_dict
 		let l:window_id = win_getid()
 
 		if exists('b:match_id_dict[l:window_id]')
