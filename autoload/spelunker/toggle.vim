@@ -11,21 +11,73 @@ set cpo&vim
 function! spelunker#toggle#toggle()
 	let g:enable_spelunker_vim = g:enable_spelunker_vim == 1 ? 0 : 1
 
-	if g:enable_spelunker_vim == 0
-		" matchからの削除処理を利用してハイライト削除
-		if exists('b:match_id_dict')
-			for l:window_id in keys(b:match_id_dict)
-				let b:match_id_dict[l:window_id] =
-					\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id])
-			endfor
-		endif
+	" onにするときは今開いているbufferも連動させる
+	if g:enable_spelunker_vim == 1
+		let b:enable_spelunker_vim = 1
+	endif
+
+	call spelunker#toggle#init_buffer(1, g:enable_spelunker_vim)
+
+	if g:enable_spelunker_vim == 1
+		echom 'Spelunker.vim is now enabled.'
 	else
+		echom 'Spelunker.vim has been disabled.'
+	endif
+endfunction
+
+function! spelunker#toggle#toggle_buffer()
+	if !exists('b:enable_spelunker_vim')
+		let b:enable_spelunker_vim = 1
+	endif
+
+	let b:enable_spelunker_vim = b:enable_spelunker_vim == 1 ? 0 : 1
+	call spelunker#toggle#init_buffer(2, b:enable_spelunker_vim)
+
+	if b:enable_spelunker_vim == 1
+		echom 'Spelunker.vim is now enabled in a buffer.'
+	else
+		echom 'Spelunker.vim has been disabled in a buffer.'
+	endif
+endfunction
+
+function! spelunker#toggle#init_buffer(mode, is_enabled)
+	if a:is_enabled == 0
+		if a:mode == 1 " for global
+			call spelunker#matches#clear_matches()
+		elseif a:mode == 2 " for buffer
+			call spelunker#matches#clear_current_buffer_matches()
+		endif
+	elseif a:is_enabled == 1
 		if g:spelunker_check_type == g:spelunker_check_type_buf_lead_write
 			call spelunker#check()
 		elseif g:spelunker_check_type == g:spelunker_check_type_cursor_hold
 			call spelunker#check_displayed_words()
 		endif
 	endif
+endfunction
+
+function! spelunker#toggle#is_enabled()
+	if spelunker#toggle#is_enabled_buffer() == 0 || spelunker#toggle#is_enabled_global() == 0
+		return 0
+	endif
+
+	return 1
+endfunction
+
+function! spelunker#toggle#is_enabled_global()
+	if g:enable_spelunker_vim == 0
+		return 0
+	endif
+	return 1
+endfunction
+
+
+function! spelunker#toggle#is_enabled_buffer()
+	if exists('b:enable_spelunker_vim') && b:enable_spelunker_vim == 0
+		return 0
+	endif
+
+	return 1
 endfunction
 
 let &cpo = s:save_cpo
