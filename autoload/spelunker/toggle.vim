@@ -19,9 +19,9 @@ function! spelunker#toggle#toggle()
 	call spelunker#toggle#init_buffer(1, g:enable_spelunker_vim)
 
 	if g:enable_spelunker_vim == 1
-		echom 'Spelunker.vim on. (global)'
+		echom 'Spelunker.vim is now enabled.'
 	else
-		echom 'Spelunker.vim off. (global)'
+		echom 'Spelunker.vim has been disabled.'
 	endif
 endfunction
 
@@ -34,9 +34,9 @@ function! spelunker#toggle#toggle_buffer()
 	call spelunker#toggle#init_buffer(2, b:enable_spelunker_vim)
 
 	if b:enable_spelunker_vim == 1
-		echom 'Spelunker.vim on. (buffer)'
+		echom 'Spelunker.vim is now enabled in a buffer.'
 	else
-		echom 'Spelunker.vim off. (buffer)'
+		echom 'Spelunker.vim has been disabled in a buffer.'
 	endif
 endfunction
 
