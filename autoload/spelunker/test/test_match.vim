@@ -12,9 +12,6 @@ function! spelunker#test#test_match#test()
 	call s:test_get_match_pattern()
 	let l:match_id_list = s:test_add_matches()
 	call s:test_delete_matches(l:match_id_list)
-
-	call s:test_clear_matches()
-	call s:test_clear_buffer_matches()
 endfunction
 
 function! s:test_get_match_pattern()
@@ -59,41 +56,14 @@ function! s:test_add_matches()
 endfunction
 
 function! s:test_delete_matches(match_id_list)
-	let l:win_id = win_getid()
 	call spelunker#test#open_unit_test_buffer('match', 'add_matches.txt')
-	let l:match_id_list_after_delete = spelunker#matches#delete_matches(a:match_id_list[0], a:match_id_list[1], l:win_id)
+	let l:match_id_list_after_delete = spelunker#matches#delete_matches(a:match_id_list[0], a:match_id_list[1])
 	" {'orange': 5, 'peach': 8, 'apple': 4, 'grape': 9}
 	call assert_equal(['orange', 'peach', 'apple', 'grape'], keys(l:match_id_list_after_delete))
 
 	let l:all_ids = keys(l:match_id_list_after_delete)
-	let l:match_id_list_after_delete = spelunker#matches#delete_matches(l:all_ids, l:match_id_list_after_delete, l:win_id)
+	let l:match_id_list_after_delete = spelunker#matches#delete_matches(l:all_ids, l:match_id_list_after_delete)
 	call assert_equal({}, l:match_id_list_after_delete)
-endfunction
-
-function! s:test_clear_matches()
-	call spelunker#test#open_unit_test_buffer('match', 'clear_matches.txt')
-
-	let l:win_id = win_getid()
-	let b:match_id_dict = {}
-	let [l:word_list_for_delete_match, b:match_id_dict[l:win_id]]
-			\ = spelunker#matches#add_matches(['appl', 'orangg', 'banna'], {})
-
-	call assert_notequal({}, b:match_id_dict[l:win_id])
-	call spelunker#matches#clear_matches()
-	call assert_equal({l:win_id: {}}, b:match_id_dict)
-endfunction
-
-function! s:test_clear_buffer_matches()
-	call spelunker#test#open_unit_test_buffer('match', 'clear_matches.txt')
-
-	let l:win_id = win_getid()
-	let b:match_id_dict = {}
-	let [l:word_list_for_delete_match, b:match_id_dict[l:win_id]]
-			\ = spelunker#matches#add_matches(['appl', 'orangg', 'banna'], {})
-
-	call assert_notequal({}, b:match_id_dict[l:win_id])
-	call spelunker#matches#clear_current_buffer_matches()
-	call assert_equal({l:win_id: {}}, b:match_id_dict)
 endfunction
 
 let &cpo = s:save_cpo
