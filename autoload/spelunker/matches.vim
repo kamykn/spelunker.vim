@@ -57,29 +57,20 @@ function spelunker#matches#get_match_pattern(word)
 	return l:pattern
 endfunction
 
-function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, window_id)
+function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict)
 	let l:match_id_dict = a:match_id_dict
 
 	for l:word in a:word_list_for_delete
 		let l:delete_match_id = get(l:match_id_dict, l:word, 0)
 		if l:delete_match_id > 0
-			let l:is_ok = 1
 			try
-				" recommend version is => 8.1.1739
-				" https://github.com/vim/vim/issues/4720
-				let l:is_ok = matchdelete(l:delete_match_id, a:window_id)
-				if l:is_ok == -1 && a:window_id == win_getid()
-					" 第2引数がある場合に上手く削除できない不具合があった時期があったため
-					let l:is_ok = matchdelete(l:delete_match_id)
-				endif
+				call matchdelete(l:delete_match_id)
 			catch
 				" エラー読み捨て
 			finally
-				if l:is_ok == 0
-					let l:del_index = index(values(l:match_id_dict), l:delete_match_id)
-					if l:del_index != 1
-						call remove(l:match_id_dict, keys(l:match_id_dict)[l:del_index])
-					endif
+				let l:del_index = index(values(l:match_id_dict), l:delete_match_id)
+				if l:del_index != 1
+					call remove(l:match_id_dict, keys(l:match_id_dict)[l:del_index])
 				endif
 			endtry
 		endif
@@ -87,29 +78,6 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 
 	return l:match_id_dict
 endfunction
-
-function! spelunker#matches#clear_matches()
-	" matchからの削除処理を利用してハイライト削除
-	if exists('b:match_id_dict')
-		for l:window_id in keys(b:match_id_dict)
-			let b:match_id_dict[l:window_id] =
-				\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id], l:window_id)
-		endfor
-	endif
-endfunction
-
-function! spelunker#matches#clear_current_buffer_matches()
-	" matchからの削除処理を利用してハイライト削除
-	if exists('b:match_id_dict')
-		let l:window_id = win_getid()
-
-		if exists('b:match_id_dict[l:window_id]')
-			let b:match_id_dict[l:window_id] =
-				\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id], l:window_id)
-		endif
-	endif
-endfunction
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
