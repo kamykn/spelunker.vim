@@ -206,7 +206,7 @@ function! spelunker#words#highlight(spell_bad_list)
 	endif
 
 	let b:match_id_dict[l:window_id] =
-				\ spelunker#matches#delete_matches(l:word_list_for_delete_match, b:match_id_dict[l:window_id])
+				\ spelunker#matches#delete_matches(l:word_list_for_delete_match, b:match_id_dict[l:window_id], l:window_id)
 endfunction
 
 let &cpo = s:save_cpo
