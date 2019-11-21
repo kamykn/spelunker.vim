@@ -10,7 +10,7 @@ set cpo&vim
 
 function! spelunker#check_displayed_words()
 	if s:is_runnable() == 0
-		call s:cleat_matches()
+		call s:clear_matches()
 		return 0
 	endif
 
@@ -24,7 +24,7 @@ endfunction
 
 function! spelunker#check()
 	if s:is_runnable() == 0
-		call s:cleat_matches()
+		call s:clear_matches()
 		return 0
 	endif
 
@@ -198,12 +198,12 @@ function! spelunker#toggle_buffer()
 	return 1
 endfunction
 
-function s:cleat_matches()
-	if spelunker#toggle#is_enabled_buffer() == 0
+function s:clear_matches()
+	if spelunker#toggle#is_enabled_buffer() == 1
 		call spelunker#matches#clear_current_buffer_matches()
 	endif
 
-	if spelunker#toggle#is_enabled_global() == 0
+	if spelunker#toggle#is_enabled_global() == 1
 		call spelunker#matches#clear_matches()
 	endif
 endfunction

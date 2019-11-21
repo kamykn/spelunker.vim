@@ -57,27 +57,28 @@ function! spelunker#toggle#init_buffer(mode, is_enabled)
 endfunction
 
 function! spelunker#toggle#is_enabled()
-	if spelunker#toggle#is_enabled_buffer() == 0 || spelunker#toggle#is_enabled_global() == 0
-		return 0
+	if spelunker#toggle#is_enabled_buffer() == 1 || spelunker#toggle#is_enabled_global() == 1
+		return 1
 	endif
 
-	return 1
+	return 0
 endfunction
 
 function! spelunker#toggle#is_enabled_global()
-	if g:enable_spelunker_vim == 0
-		return 0
+	if g:enable_spelunker_vim == 1
+		return 1
 	endif
-	return 1
+
+	return 0
 endfunction
 
 
 function! spelunker#toggle#is_enabled_buffer()
-	if exists('b:enable_spelunker_vim') && b:enable_spelunker_vim == 0
-		return 0
+	if exists('b:enable_spelunker_vim') && b:enable_spelunker_vim == 1
+		return 1
 	endif
 
-	return 1
+	return 0
 endfunction
 
 let &cpo = s:save_cpo
