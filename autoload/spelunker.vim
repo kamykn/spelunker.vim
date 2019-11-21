@@ -199,11 +199,11 @@ function! spelunker#toggle_buffer()
 endfunction
 
 function s:clear_matches()
-	if spelunker#toggle#is_enabled_buffer() == 1
+	if spelunker#toggle#is_enabled_buffer() == 0
 		call spelunker#matches#clear_current_buffer_matches()
 	endif
 
-	if spelunker#toggle#is_enabled_global() == 1
+	if spelunker#toggle#is_enabled_global() == 0
 		call spelunker#matches#clear_matches()
 	endif
 endfunction

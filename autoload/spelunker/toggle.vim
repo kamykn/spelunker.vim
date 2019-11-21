@@ -41,27 +41,40 @@ function! spelunker#toggle#toggle_buffer()
 endfunction
 
 function! spelunker#toggle#init_buffer(mode, is_enabled)
-	if a:is_enabled == 0
+	if a:is_enabled == 1
+		if a:mode == 1 " for global
+			call spelunker#check()
+		elseif a:mode == 2 " for buffer
+			call spelunker#check_displayed_words()
+		endif
+	elseif a:is_enabled == 0
 		if a:mode == 1 " for global
 			call spelunker#matches#clear_matches()
 		elseif a:mode == 2 " for buffer
 			call spelunker#matches#clear_current_buffer_matches()
 		endif
-	elseif a:is_enabled == 1
-		if g:spelunker_check_type == g:spelunker_check_type_buf_lead_write
-			call spelunker#check()
-		elseif g:spelunker_check_type == g:spelunker_check_type_cursor_hold
-			call spelunker#check_displayed_words()
-		endif
 	endif
 endfunction
 
 function! spelunker#toggle#is_enabled()
-	if spelunker#toggle#is_enabled_buffer() == 1 || spelunker#toggle#is_enabled_global() == 1
-		return 1
+	if !exists('b:enable_spelunker_vim')
+		if spelunker#toggle#is_enabled_global() == 1
+			return 1
+		endif
+
+		return 0
+	else
+		" b:enable_spelunker_vimがあればbuffer優先
+		if spelunker#toggle#is_enabled_buffer() == 0 
+			return 0
+		endif
 	endif
 
-	return 0
+	if spelunker#toggle#is_enabled_global() == 0
+		return 0
+	endif
+
+	return 1
 endfunction
 
 function! spelunker#toggle#is_enabled_global()
