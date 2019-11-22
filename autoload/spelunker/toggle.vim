@@ -11,9 +11,13 @@ set cpo&vim
 function! spelunker#toggle#toggle()
 	let g:enable_spelunker_vim = g:enable_spelunker_vim == 1 ? 0 : 1
 
-	" onにするときは今開いているbufferも連動させる
-	if g:enable_spelunker_vim == 1
-		let b:enable_spelunker_vim = 1
+	" 今開いているbufferも連動させる
+	if exists('b:enable_spelunker_vim')
+		if g:enable_spelunker_vim == 1
+			let b:enable_spelunker_vim = 1
+		else
+			let b:enable_spelunker_vim = 0
+		endif
 	endif
 
 	call spelunker#toggle#init_buffer(1, g:enable_spelunker_vim)
@@ -27,10 +31,12 @@ endfunction
 
 function! spelunker#toggle#toggle_buffer()
 	if !exists('b:enable_spelunker_vim')
-		let b:enable_spelunker_vim = 1
+		" 初回はglobalスコープの方を反転させる
+		let b:enable_spelunker_vim = g:enable_spelunker_vim == 1 ? 0 : 1
+	else
+		let b:enable_spelunker_vim = b:enable_spelunker_vim == 1 ? 0 : 1
 	endif
 
-	let b:enable_spelunker_vim = b:enable_spelunker_vim == 1 ? 0 : 1
 	call spelunker#toggle#init_buffer(2, b:enable_spelunker_vim)
 
 	if b:enable_spelunker_vim == 1
@@ -65,16 +71,18 @@ function! spelunker#toggle#is_enabled()
 		return 0
 	else
 		" b:enable_spelunker_vimがあればbuffer優先
-		if spelunker#toggle#is_enabled_buffer() == 0 
+		if spelunker#toggle#is_enabled_buffer() == 1
+			return 1
+		else
 			return 0
 		endif
-	endif
 
-	if spelunker#toggle#is_enabled_global() == 0
-		return 0
-	endif
+		if spelunker#toggle#is_enabled_global() == 0
+			return 0
+		endif
 
-	return 1
+		return 1
+	endif
 endfunction
 
 function! spelunker#toggle#is_enabled_global()

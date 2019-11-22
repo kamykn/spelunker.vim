@@ -9,13 +9,14 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! spelunker#test#test_toggle#test()
-	call s:test_toggle() " test global toggle
-	call s:test_toggle_buffer() " test local toggle
 	call s:test_is_enabled()
 	call s:test_is_enabled_global()
 	call s:test_is_enabled_buffer()
 
-	call s:force_enable()
+	call s:test_toggle() " test global toggle
+	call s:test_toggle_buffer() " test local toggle
+
+	call s:force_enable_global()
 endfunction
 
 " toggle_mode
@@ -31,14 +32,17 @@ function! s:test_toggle()
 
 	" highlightがなくなっていることを確認
 	silent! call spelunker#toggle#toggle()
+	call assert_equal(1, spelunker#toggle#is_enabled())
+
 	let l:result = getmatches()
 	call assert_equal(1, len(l:result))
 	call assert_equal('SpelunkerSpellBad', l:result[0]['group'])
 	call assert_equal('\v[A-Za-z]@<!appl[a-z]@!\C', l:result[0]['pattern'])
 	call assert_equal(0, l:result[0]['priority'])
-	return
 
 	silent! call spelunker#toggle#toggle()
+	call assert_equal(0, spelunker#toggle#is_enabled())
+
 	let l:result = getmatches()
 	call assert_equal([], l:result)
 
@@ -65,6 +69,7 @@ function! s:test_toggle()
 
 	" [case10-1] =====================================
 	silent! call spelunker#toggle#toggle()
+	call assert_equal(1, spelunker#toggle#is_enabled())
 
 	" spelunker#check_displayed_words spelunker#check "{{{
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
@@ -116,8 +121,9 @@ function! s:test_toggle()
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle3_1.txt')
 	call spelunker#test#init()
 
-	call s:force_enable()
+	call s:force_enable_global()
 	silent! call spelunker#toggle#toggle()
+	call assert_equal(0, spelunker#toggle#is_enabled())
 
 	call cursor(1, 2)
 	call assert_equal(0, spelunker#correct())
@@ -133,7 +139,7 @@ function! s:test_toggle()
 	call spelunker#test#reload_buffer()
 	call spelunker#test#init()
 
-	call s:force_enable()
+	call s:force_enable_global()
 
 	call cursor(1, 2)
 	" call assert_equal(0, spelunker#correct())
@@ -166,18 +172,26 @@ function! s:test_toggle_buffer()
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle1_2.txt')
 	call spelunker#test#init()
 
-	silent! call spelunker#toggle#toggle_buffer()
+	call s:force_enable_global()
 
-	" highlightがなくなっていることを確認
+	" toggle off (global enabled, buffer disabled)
 	silent! call spelunker#toggle#toggle_buffer()
+	call assert_equal(0, spelunker#toggle#is_enabled())
+	call assert_equal(0, spelunker#toggle#is_enabled_buffer())
+
+	silent! call spelunker#toggle#toggle_buffer()
+	call assert_equal(1, spelunker#toggle#is_enabled())
+	call assert_equal(1, spelunker#toggle#is_enabled_buffer())
+
 	let l:result = getmatches()
-	call assert_equal(1, len(l:result))
-	call assert_equal('SpelunkerSpellBad', l:result[0]['group'])
-	call assert_equal('\v[A-Za-z]@<!apll[a-z]@!\C', l:result[0]['pattern'])
-	call assert_equal(0, l:result[0]['priority'])
-	return
+	call assert_equal(0, len(l:result))
+	" call assert_equal('SpelunkerSpellBad', l:result[0]['group'])
+	" call assert_equal('\v[A-Za-z]@<!apll[a-z]@!\C', l:result[0]['pattern'])
+	" call assert_equal(0, l:result[0]['priority'])
 
 	silent! call spelunker#toggle#toggle_buffer()
+	call assert_equal(0, spelunker#toggle#is_enabled())
+
 	let l:result = getmatches()
 	call assert_equal([], l:result)
 
@@ -204,6 +218,7 @@ function! s:test_toggle_buffer()
 
 	" [case10-1] =====================================
 	silent! call spelunker#toggle#toggle_buffer()
+	call assert_equal(1, spelunker#toggle#is_enabled())
 
 	" spelunker#check_displayed_words spelunker#check "{{{
 	let g:spelunker_check_type = g:spelunker_check_type_buf_lead_write
@@ -246,7 +261,7 @@ function! s:test_toggle_buffer()
 
 	call assert_equal(1, spelunker#execute_with_target_word('spellwrong!'))
 	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
-	call assert_equal([''], l:line)
+	call assert_equal(['misspelt'], l:line)
 	call execute('spellundo! misspelt')
 	" }}}
 
@@ -255,8 +270,9 @@ function! s:test_toggle_buffer()
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle3_2.txt')
 	call spelunker#test#init()
 
-	call s:force_enable()
+	call s:force_enable_buffer()
 	silent! call spelunker#toggle#toggle_buffer()
+	call assert_equal(0, spelunker#toggle#is_enabled())
 
 	call cursor(1, 2)
 	call assert_equal(0, spelunker#correct())
@@ -272,7 +288,7 @@ function! s:test_toggle_buffer()
 	call spelunker#test#reload_buffer()
 	call spelunker#test#init()
 
-	call s:force_enable()
+	call s:force_enable_buffer()
 
 	call cursor(1, 2)
 	" call assert_equal(0, spelunker#correct())
@@ -297,38 +313,25 @@ function! s:test_toggle_buffer()
 	call spelunker#test#reload_buffer()
 endfunction
 
-
-" toggle_mode
-" 1: global mode
-" 2: buffer mode
-function! s:toggle(toggle_mode)
-	if a:toggle_mode == 1
-		silent! call spelunker#toggle#toggle()
-	elseif a:toggle_mode == 2
-		silent! call spelunker#toggle#toggle_buffer()
-	endif
-endfunction
-
 function! s:test_is_enabled()
-	call spelunker#test#open_unit_test_buffer('toggle', 'toggle1_1.txt')
+	call spelunker#test#open_unit_test_buffer('toggle', 'is_enabled_1.txt')
 	call spelunker#test#init()
 
 	call assert_equal(1, spelunker#toggle#is_enabled())
 
 	" disabled (global)
 	call spelunker#toggle#toggle()
-	call assert_equal(1, spelunker#toggle#is_enabled())
+	call assert_equal(0, spelunker#toggle#is_enabled())
 
 	" enabled (global)
 	call spelunker#toggle#toggle()
 	call assert_equal(1, spelunker#toggle#is_enabled())
 
-	" disabled (global)
-	call assert_equal(1, spelunker#toggle#is_enabled())
+	call spelunker#test#open_unit_test_buffer('toggle', 'is_enabled_2.txt')
 
 	" disabled (buffer)
 	call spelunker#toggle#toggle_buffer()
-	call assert_equal(1, spelunker#toggle#is_enabled())
+	call assert_equal(0, spelunker#toggle#is_enabled())
 
 	" enabled (global)
 	call spelunker#toggle#toggle_buffer()
@@ -340,11 +343,11 @@ function! s:test_is_enabled()
 	call spelunker#toggle#toggle() " disabled (global)
 	call assert_equal(1, spelunker#toggle#is_enabled())
 
-	call s:force_enable()
+	call s:force_enable_global()
 endfunction
 
 function! s:test_is_enabled_global()
-	call spelunker#test#open_unit_test_buffer('toggle', 'toggle1_1.txt')
+	call spelunker#test#open_unit_test_buffer('toggle', 'is_enabled_global.txt')
 	call spelunker#test#init()
 
 	" enabled (global)
@@ -358,29 +361,32 @@ function! s:test_is_enabled_global()
 	call spelunker#toggle#toggle()
 	call assert_equal(1, spelunker#toggle#is_enabled_global())
 
-	call s:force_enable()
+	call s:force_enable_global()
 endfunction
 
 function! s:test_is_enabled_buffer()
-	call spelunker#test#open_unit_test_buffer('toggle', 'toggle1_1.txt')
+	call spelunker#test#open_unit_test_buffer('toggle', 'is_enabled_buffer.txt')
 	call spelunker#test#init()
-	call s:force_enable()
 
-	call assert_equal(1, spelunker#toggle#is_enabled_buffer())
+	call s:force_enable_global()
 
-	" disabled (global)
+	" b:enable_spelunker_vim is empty
+	call assert_equal(0, spelunker#toggle#is_enabled_buffer())
+
+	" toggle off (global enabled, buffer disabled)
 	call spelunker#toggle#toggle_buffer()
 	call assert_equal(0, spelunker#toggle#is_enabled_buffer())
 
-	" enabled (global)
+	" enable on
 	call spelunker#toggle#toggle_buffer()
 	call assert_equal(1, spelunker#toggle#is_enabled_buffer())
-
-	call s:force_enable()
 endfunction
 
-function! s:force_enable()
+function! s:force_enable_global()
 	let g:enable_spelunker_vim = 1
+endfunction
+
+function! s:force_enable_buffer()
 	let b:enable_spelunker_vim = 1
 endfunction
 
