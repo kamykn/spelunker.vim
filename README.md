@@ -204,7 +204,15 @@ An example of `ZN`/`ZP` in action:
 <img src="https://user-images.githubusercontent.com/7608231/65333922-52dd7f00-dbfc-11e9-93a4-39f239196a51.gif" width=540>
 
 ### 3.5 Toggle on and off.
-#### `ZT`
+#### `ZT / Zt`
+```vim
+" Toggle to enable or disable.
+ZT
+
+" Toggle to enable or disable only the current buffer.
+Zt
+```
+
 ```
 " The initial state depends on the value of g:enable_spelunker_vim.
 " 1: Default on.
