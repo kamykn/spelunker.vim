@@ -242,6 +242,12 @@ if !hasmapto('<Plug>(spelunker-toggle)')
 	silent! nmap <unique> ZT <Plug>(spelunker-toggle)
 endif
 
+" [toggle in the buffer feature]===============================================================
+nnoremap <silent> <Plug>(spelunker-toggle-buffer) :call spelunker#toggle_buffer()<CR>
+if !hasmapto('<Plug>(spelunker-toggle-buffer)')
+	silent! nmap <unique> Zt <Plug>(spelunker-toggle-buffer)
+endif
+
 " [augroup] ==================================================================
 if g:spelunker_disable_auto_group == 0
   augroup spelunker
