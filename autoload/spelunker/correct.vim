@@ -9,7 +9,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-function! s:get_correct_list(target_word, feeling_lucky)
+function! s:get_correct_list(target_word)
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell
 
@@ -48,10 +48,15 @@ function! spelunker#correct#correct_from_list(is_correct_all, is_feeling_lucky)
 		return
 	endif
 
-	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:get_correct_list(l:target_word, a:is_feeling_lucky)
+	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:get_correct_list(l:target_word)
+
+	if len(l:spell_suggest_list_for_replace) < 1
+		return
+	endif
 
 	if a:is_feeling_lucky
-		return l:spell_suggest_list_for_replace[0]
+		call spelunker#words#replace_word(l:target_word, l:spell_suggest_list_for_replace[0], a:is_correct_all)
+		return
 	endif
 
 	" 共通化でpopup_menuとinputlistの差を吸収
@@ -68,7 +73,7 @@ function! spelunker#correct#correct_from_list(is_correct_all, is_feeling_lucky)
 					\ a:selected)
 	endfunction
 
-	if exists('*popup_menu')
+	if exists('*popup_menu') && (!exists('g:enable_inputlist_for_test') || g:enable_inputlist_for_test != 1)
 		let l:curpos = getpos(".")
 		call popup_menu(l:spell_suggest_list_for_input_list, #{
 			\ callback: l:callback.funcall,
