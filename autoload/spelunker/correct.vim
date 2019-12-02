@@ -75,7 +75,7 @@ function! spelunker#correct#correct_from_list(is_correct_all, is_feeling_lucky)
 
 	if exists('*popup_menu') && (!exists('g:enable_inputlist_for_test') || g:enable_inputlist_for_test != 1)
 		let l:curpos = getpos(".")
-		call popup_menu(l:spell_suggest_list_for_input_list, #{
+		call popup_menu(l:spell_suggest_list_for_replace, #{
 			\ callback: l:callback.funcall,
 			\ title: '[spelunker.vim]',
 			\ pos: 'topleft',
