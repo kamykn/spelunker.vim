@@ -109,7 +109,11 @@ ZL
 Zl
 ```
 
-An example of `ZL` in action:
+An example of `ZL` in action:  
+<img src="https://user-images.githubusercontent.com/7608231/69977024-516df280-156d-11ea-90df-22b662e4c9a7.gif" width=400>
+
+If you using old vim, this function using [inputlist()](https://vim-jp.org/vimdoc-en/eval.html#inputlist()) instead of [popup_menu()](https://vim-jp.org/vimdoc-en/popup.html#popup_menu()).  
+(Before vim version 8.1.1391.)
 
 <img src="https://user-images.githubusercontent.com/7608231/48882608-89246380-ee5e-11e8-88e3-958b47353ddb.gif" width=540>
 
