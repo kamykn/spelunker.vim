@@ -9,7 +9,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-function! s:get_spell_from_correct_list(target_word, feeling_lucky)
+function! s:get_correct_list(target_word)
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell
 
@@ -22,19 +22,7 @@ function! s:get_spell_from_correct_list(target_word, feeling_lucky)
 		return ''
 	endif
 
-	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = spelunker#words#format_spell_suggest_list(l:spell_suggest_list, a:target_word)
-
-	if a:feeling_lucky
-		return l:spell_suggest_list_for_replace[0]
-	endif
-
-	let l:selected = inputlist(l:spell_suggest_list_for_input_list)
-
-	if l:selected <= 0
-		return ''
-	endif
-
-	return  l:spell_suggest_list_for_replace[l:selected - 1]
+	return spelunker#words#format_spell_suggest_list(l:spell_suggest_list, a:target_word)
 endfunction
 
 function! spelunker#correct#correct(is_correct_all)
@@ -60,15 +48,54 @@ function! spelunker#correct#correct_from_list(is_correct_all, is_feeling_lucky)
 		return
 	endif
 
-	let l:selected_word = s:get_spell_from_correct_list(l:target_word, a:is_feeling_lucky)
+	let [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace] = s:get_correct_list(l:target_word)
 
-	if l:selected_word == ''
+	if len(l:spell_suggest_list_for_replace) < 1
 		return
 	endif
 
-	call spelunker#words#replace_word(l:target_word, l:selected_word, a:is_correct_all)
+	if a:is_feeling_lucky
+		call spelunker#words#replace_word(l:target_word, l:spell_suggest_list_for_replace[0], a:is_correct_all)
+		return
+	endif
+
+	" 共通化でpopup_menuとinputlistの差を吸収
+	let l:callback = {
+				\ 'target_word': l:target_word,
+				\ 'is_correct_all': a:is_correct_all,
+				\ 'spell_suggest_list_for_replace': l:spell_suggest_list_for_replace}
+
+	function l:callback.funcall(_id, selected) dict
+		call s:correct_callback(
+					\ self.target_word,
+					\ self.is_correct_all,
+					\ self.spell_suggest_list_for_replace,
+					\ a:selected)
+	endfunction
+
+	if exists('*popup_menu') && (!exists('g:enable_inputlist_for_test') || g:enable_inputlist_for_test != 1)
+		let l:curpos = getpos(".")
+		call popup_menu(l:spell_suggest_list_for_replace, #{
+			\ callback: l:callback.funcall,
+			\ title: '[spelunker.vim]',
+			\ pos: 'topleft',
+			\ line: 'cursor+1',
+			\ col: 'cursor'
+			\ })
+	else
+		let l:selected = inputlist(l:spell_suggest_list_for_input_list)
+		call l:callback.funcall(0, l:selected)
+	endif
 endfunction
 
+function! s:correct_callback(target_word, is_correct_all, spell_suggest_list_for_replace, selected)
+	if a:selected <= 0
+		return
+	endif
+
+	let l:selected_word = a:spell_suggest_list_for_replace[a:selected - 1]
+	call spelunker#words#replace_word(a:target_word, l:selected_word, a:is_correct_all)
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

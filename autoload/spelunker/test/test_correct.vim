@@ -56,6 +56,13 @@ function! s:test_correct_from_list()
 	call spelunker#test#open_unit_test_buffer('correct', 'correct.txt')
 	call spelunker#test#reload_buffer()
 
+	" [test for popup_menu] ======================================
+	" popup_menu()のcallback形式のユニットテストが書けない...
+	" コールバックよりも先にassertが実行されてしまう
+
+	" [test for inputlist] ======================================
+	let g:enable_inputlist_for_test = 1
+
 	call cursor(1, 1)
 	call test_feedinput("1\<CR>")
 	call spelunker#correct#correct_from_list(0, 0)
