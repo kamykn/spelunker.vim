@@ -226,6 +226,23 @@ Zt
 
 <img src="https://user-images.githubusercontent.com/7608231/65375352-6a396c80-dccf-11e9-9295-1dd061140a78.gif" width=540>
 
+### 3.6 CtrlP Extention
+#### CtrlPSpell
+
+[ctrlp](https://github.com/ctrlpvim/ctrlp.vim) is fuzzy finder.
+
+Need setting, see below:
+
+```vim
+" ctrlp ext
+let g:ctrlp_extensions = get(g:, 'ctrlp_extensions', [])
+      \ + ['spelunker']
+```
+
+Start `:CtrlPSPell` then list up bad spell.
+Select word to jump first find this bad spell.
+Check the context and suitability and take action(fix or add, etc...).
+
 ## 4 Whitelist
 
 ### 4.1 General programming whitelist
