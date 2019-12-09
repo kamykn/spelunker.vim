@@ -239,9 +239,9 @@ let g:ctrlp_extensions = get(g:, 'ctrlp_extensions', [])
       \ + ['spelunker']
 ```
 
-Start `:CtrlPSPell` then list up bad spell.
+Start `:CtrlPSpell` then list up bad spell.
 Select word to jump first find this bad spell.
-Check the context and suitability and take action(fix or add, etc...).
+Check the context and suitability and act (fix or add, etc...).
 
 ## 4 Whitelist
 
