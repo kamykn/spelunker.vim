@@ -1,8 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" global variable option
-
+" command define after ctrlp load
 command! CtrlPSpell :call ctrlp#init(ctrlp#spelunker#id())
 
 let &cpo = s:save_cpo
