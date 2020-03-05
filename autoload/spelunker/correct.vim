@@ -59,36 +59,33 @@ function! spelunker#correct#correct_from_list(is_correct_all, is_feeling_lucky)
 		return
 	endif
 
-	" 共通化でpopup_menuとinputlistの差を吸収
-	let l:callback = {
-				\ 'target_word': l:target_word,
-				\ 'is_correct_all': a:is_correct_all,
-				\ 'spell_suggest_list_for_replace': l:spell_suggest_list_for_replace}
-
-	function l:callback.funcall(_id, selected) dict
-		call s:correct_callback(
-					\ self.target_word,
-					\ self.is_correct_all,
-					\ self.spell_suggest_list_for_replace,
-					\ a:selected)
-	endfunction
-
 	if exists('*popup_menu') && (!exists('g:enable_inputlist_for_test') || g:enable_inputlist_for_test != 1)
-		let l:curpos = getpos(".")
 		call popup_menu(l:spell_suggest_list_for_replace, #{
-			\ callback: l:callback.funcall,
-			\ title: '[spelunker.vim]',
-			\ pos: 'topleft',
-			\ line: 'cursor+1',
-			\ col: 'cursor'
-			\ })
+				\ callback: {id, selected -> s:correct_callback(l:target_word, a:is_correct_all, l:spell_suggest_list_for_replace, selected)},
+				\ title: '[spelunker.vim]',
+				\ pos: 'topleft',
+				\ line: 'cursor+1',
+				\ col: 'cursor'
+				\ })
+	elseif has('nvim') && exists('g:loaded_popup_menu_plugin')
+		call popup_menu#open(
+				\ l:spell_suggest_list_for_replace,
+				\ {selected -> s:nvim_popup_menu_plugin_callback(l:target_word, a:is_correct_all, l:spell_suggest_list_for_replace, selected)})
 	else
 		let l:selected = inputlist(l:spell_suggest_list_for_input_list)
-		call l:callback.funcall(0, l:selected)
+		call s:correct_callback(l:target_word, a:is_correct_all, l:spell_suggest_list_for_replace, l:selected)
 	endif
 endfunction
 
-function! s:correct_callback(target_word, is_correct_all, spell_suggest_list_for_replace, selected)
+function! s:nvim_popup_menu_plugin_callback(target_word, is_correct_all, spell_suggest_list_for_replace, selected_word) abort
+	if a:selected_word == ''
+		return
+	endif
+
+	call spelunker#words#replace_word(a:target_word, a:selected_word, a:is_correct_all)
+endfunction
+
+function! s:correct_callback(target_word, is_correct_all, spell_suggest_list_for_replace, selected) abort
 	if a:selected <= 0
 		return
 	endif
