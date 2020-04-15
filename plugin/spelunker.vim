@@ -42,6 +42,15 @@ if !exists('g:spelunker_disable_auto_group')
   let g:spelunker_disable_auto_group = 0
 endif
 
+if !exists('g:spelunker_disable_back_quoted_string')
+  let g:spelunker_disable_back_quoted_string = 0
+endif
+
+if !exists('g:spelunker_disable_url')
+  let g:spelunker_disable_url = 0
+endif
+
+
 let g:spelunker_check_type_buf_lead_write = 1
 let g:spelunker_check_type_cursor_hold = 2
 
