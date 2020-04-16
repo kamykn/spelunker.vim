@@ -5,7 +5,7 @@ set cpo&vim
 
 function! spelunker#get_buffer#all()
 	let l:window_text_list = getline(1, '$')
-	call s:filter(l:window_text_list)
+	return s:filter(l:window_text_list)
 endfunction
 
 function! spelunker#get_buffer#displayed()
@@ -28,7 +28,7 @@ function! spelunker#get_buffer#displayed()
 		let l:current_line = l:current_line + 1
 	endwhile
 
-	call s:filter(l:window_text_list)
+	return  s:filter(l:window_text_list)
 endfunction
 
 function! s:filter(window_text_list)
@@ -37,7 +37,7 @@ function! s:filter(window_text_list)
 	let l:window_text = s:filter_uri(l:window_text)
 	let l:window_text = s:filter_back_quoted_string(l:window_text)
 
-	echo l:window_text
+	return split(l:window_text, "\n")
 endfunction
 
 function! s:filter_uri(text)
