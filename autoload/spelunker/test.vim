@@ -24,6 +24,7 @@ function! spelunker#test#check(no_exit)
 		call spelunker#test#test_toggle#test()
 		call spelunker#test#test_words#test()
 		call spelunker#test#test_correct#test()
+		call spelunker#test#test_get_buffer#test()
 	catch
 		echomsg 'error occurred:' . v:exception
 
