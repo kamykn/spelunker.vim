@@ -4,6 +4,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! spelunker#test#test_get_buffer#test()
+	" init
+	let g:spelunker_disable_backquoted_checking = 1
+	let g:spelunker_disable_uri_checking = 1
+
 	call s:test_all()
 	call s:test_displayed()
 	call s:test_disable_url_checking()

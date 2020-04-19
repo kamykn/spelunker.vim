@@ -43,11 +43,11 @@ if !exists('g:spelunker_disable_auto_group')
 endif
 
 if !exists('g:spelunker_disable_backquoted_checking')
-  let g:spelunker_disable_backquoted_checking = 1
+  let g:spelunker_disable_backquoted_checking = 0
 endif
 
 if !exists('g:spelunker_disable_uri_checking')
-  let g:spelunker_disable_uri_checking = 1
+  let g:spelunker_disable_uri_checking = 0
 endif
 
 
