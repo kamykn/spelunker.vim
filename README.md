@@ -244,7 +244,7 @@ let g:spelunker_disable_uri_checking = 1
 
 #### Disable checking words in backtick/backquote.
 ```
-let g:spelunker_disable_uri_checking = 1
+let g:spelunker_disable_backquoted_checking = 1
 ```
 
 ### 3.7 CtrlP Extention
