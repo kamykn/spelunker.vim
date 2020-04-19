@@ -236,7 +236,18 @@ Zt
 
 <img src="https://user-images.githubusercontent.com/7608231/65375352-6a396c80-dccf-11e9-9295-1dd061140a78.gif" width=540>
 
-### 3.6 CtrlP Extention
+### 3.6 Option to disable word checking.
+#### Disable URI checking.
+```
+let g:spelunker_disable_uri_checking = 1
+```
+
+#### Disable checking words in backtick/backquote.
+```
+let g:spelunker_disable_uri_checking = 1
+```
+
+### 3.7 CtrlP Extention
 #### CtrlPSpell
 
 [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) is fuzzy finder.
