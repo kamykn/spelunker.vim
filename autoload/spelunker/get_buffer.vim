@@ -10,7 +10,7 @@ function! spelunker#get_buffer#all()
 	let l:window_text = join(l:window_text_list, l:newline_character)
 
 	let l:window_text = spelunker#get_buffer#filter_uri(l:window_text)
-	let l:window_text = spelunker#get_buffer#filter_backquoted_string(l:window_text, l:newline_character)
+	let l:window_text = spelunker#get_buffer#filter_backquoted_words(l:window_text, l:newline_character)
 
 	return split(l:window_text, l:newline_character)
 endfunction
@@ -52,7 +52,7 @@ function! s:get_newline_character()
 endfunc
 
 function! spelunker#get_buffer#filter_uri(text)
-	if g:spelunker_disable_url_check == 0
+	if g:spelunker_disable_uri_checking == 0
 		return a:text
 	endif
 
@@ -60,10 +60,10 @@ function! spelunker#get_buffer#filter_uri(text)
 	return substitute(a:text, '\w\+:\/\/[^[:space:]]\+', '', 'g')
 endfunction
 
-function! spelunker#get_buffer#filter_backquoted_string(text, newline_character)
+function! spelunker#get_buffer#filter_backquoted_words(text, newline_character)
 	" for shell command
 	" ex) `ls -la`
-	if g:spelunker_disable_backquoted_check == 0
+	if g:spelunker_disable_backquoted_checking == 0
 		return a:text
 	endif
 

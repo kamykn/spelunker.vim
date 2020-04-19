@@ -42,12 +42,12 @@ if !exists('g:spelunker_disable_auto_group')
   let g:spelunker_disable_auto_group = 0
 endif
 
-if !exists('g:spelunker_disable_backquoted_check')
-  let g:spelunker_disable_backquoted_check = 1
+if !exists('g:spelunker_disable_backquoted_checking')
+  let g:spelunker_disable_backquoted_checking = 1
 endif
 
-if !exists('g:spelunker_disable_url_check')
-  let g:spelunker_disable_url_check = 1
+if !exists('g:spelunker_disable_uri_checking')
+  let g:spelunker_disable_uri_checking = 1
 endif
 
 

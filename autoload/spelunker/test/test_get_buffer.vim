@@ -6,8 +6,8 @@ set cpo&vim
 function! spelunker#test#test_get_buffer#test()
 	call s:test_all()
 	call s:test_displayed()
-	call s:test_disable_url_check()
-	call s:test_disable_backquoted_check()
+	call s:test_disable_url_checking()
+	call s:test_disable_backquoted_checking()
 	call s:test_folded()
 endfunction
 
@@ -21,30 +21,30 @@ function! s:test_displayed()
 	call assert_equal(['appl banan'], spelunker#get_buffer#displayed())
 endfunction
 
-function! s:test_disable_url_check()
+function! s:test_disable_url_checking()
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_url.txt')
 	call assert_equal(
 				\ ['abc  def', '', 'ghi', '', 'jkl'],
 				\ spelunker#get_buffer#all()
 				\ )
 
-	let g:spelunker_disable_url_check = 0
+	let g:spelunker_disable_uri_checking = 0
 	call assert_equal(
 				\ ['http://github.com', '', 'abc http://github.com def', '', 'ghi', 'http://github.com', 'jkl'],
 				\ spelunker#get_buffer#all()
 				\ )
 
-	let g:spelunker_disable_url_check = 1
+	let g:spelunker_disable_uri_checking = 1
 endfunction
 
-function! s:test_disable_backquoted_check()
+function! s:test_disable_backquoted_checking()
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_backquote.txt')
 	call assert_equal(
 				\ ['abc', '', ' def', '', 'ghi ', ' jkl', '', 'mno', '', 'pqr', '', '', '', '', '', '', ''],
 				\ spelunker#get_buffer#all()
 				\ )
 
-	let g:spelunker_disable_backquoted_check = 0
+	let g:spelunker_disable_backquoted_checking = 0
 	call assert_equal(
 				\ [
 				\ 	'abc', '', '`aaa` def', '', 'ghi `fff', 'fff` jkl', '', 'mno`', 'aaa', '`pqr', '', '`ccc',
@@ -52,7 +52,7 @@ function! s:test_disable_backquoted_check()
 				\ ],
 				\ spelunker#get_buffer#all()
 				\ )
-	let g:spelunker_disable_backquoted_check = 1
+	let g:spelunker_disable_backquoted_checking = 1
 endfunction
 
 function! s:test_folded()
@@ -75,7 +75,7 @@ function! s:test_folded()
 				\ spelunker#get_buffer#displayed()
 				\ )
 
-	let g:spelunker_disable_backquoted_check = 0
+	let g:spelunker_disable_backquoted_checking = 0
 	call assert_equal(
 				\ [
 				\ 	'" vim: foldmethod=marker', '" vim: foldcolumn=3', '" vim: foldlevel=0', '', '', '', '`ccccccccc',
@@ -93,7 +93,7 @@ function! s:test_folded()
 				\ spelunker#get_buffer#displayed()
 				\ )
 
-	let g:spelunker_disable_backquoted_check = 1
+	let g:spelunker_disable_backquoted_checking = 1
 endfunction
 
 let &cpo = s:save_cpo
