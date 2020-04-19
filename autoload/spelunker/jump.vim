@@ -17,11 +17,13 @@ function! spelunker#jump#jump_matched(is_search_next)
 	let l:end_line = s:get_end_of_line(a:is_search_next)
 	let l:is_enable_wrapscan = s:is_enable_wrapscan()
 
+	let l:filtered_buffer = spelunker#get_buffer#all()
+
 	" 表示範囲だけhighlightしている場合もあるので、1行ずつチェックしていく
 	while 1
 		let l:matched_pos = -1
 
-		let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:current_line, -1)
+		let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, l:current_line - 1, '')])
 
 		if len(l:spell_bad_list) > 0
 			for word in l:spell_bad_list

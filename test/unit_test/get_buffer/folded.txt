@@ -1,0 +1,28 @@
+" vim: foldmethod=marker
+" vim: foldcolumn=3
+" vim: foldlevel=0
+
+http://sample2.com\n
+
+`ccccccccc
+
+orange peach meron
+" {{{
+	banana
+	bannana
+	http://sample1.com aaa
+	`aaaaaaa`
+" }}}
+
+ccc`
+
+grape
+
+pineappple
+
+`bbbbbbb`
+
+`a
+b
+c
+d`

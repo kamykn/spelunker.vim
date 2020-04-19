@@ -139,7 +139,9 @@ endfunction
 function! spelunker#words#check()
 	call spelunker#cases#reset_case_counter()
 
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
+	let l:window_text_list = spelunker#get_buffer#all()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:window_text_list)
+
 	call spelunker#words#highlight(l:spell_bad_list)
 endfunction
 
@@ -147,25 +149,8 @@ endfunction
 function! spelunker#words#check_display_area()
 	call spelunker#cases#reset_case_counter()
 
-	let l:spell_bad_list = []
-	let l:current_line = line("w0")
-	let l:end_line = line("w$")
-
-	while 1
-		if foldclosed(l:current_line) > 0
-			let l:current_line = foldclosedend(l:current_line) + 1
-		endif
-
-		if l:current_line > l:end_line
-			break
-		endif
-
-		" 折りたたみが無い行のみチェック
-		let l:tmp_spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:current_line, -1)
-		let l:spell_bad_list = l:spell_bad_list + l:tmp_spell_bad_list
-
-		let l:current_line = l:current_line + 1
-	endwhile
+	let l:window_text_list = spelunker#get_buffer#displayed()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:window_text_list)
 
 	" unique
 	let l:spell_bad_list = filter(copy(l:spell_bad_list), 'index(l:spell_bad_list, v:val, v:key+1)==-1')

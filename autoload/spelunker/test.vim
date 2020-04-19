@@ -24,6 +24,7 @@ function! spelunker#test#check(no_exit)
 		call spelunker#test#test_toggle#test()
 		call spelunker#test#test_words#test()
 		call spelunker#test#test_correct#test()
+		call spelunker#test#test_get_buffer#test()
 	catch
 		echomsg 'error occurred:' . v:exception
 
@@ -34,7 +35,7 @@ function! spelunker#test#check(no_exit)
 	endtry
 
 	if len(v:errors) >= 1
-		echo v:errors
+		echomsg v:errors
 		" error exit
 		if a:no_exit != 1
 			execute 'cquit!'

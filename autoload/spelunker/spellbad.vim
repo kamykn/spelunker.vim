@@ -9,21 +9,13 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " end_lineの指定がなければ1行のみ
-function! spelunker#spellbad#get_spell_bad_list(start_line, end_line)
+function! spelunker#spellbad#get_spell_bad_list(window_text_list)
 	call spelunker#white_list#init_white_list()
-
-	let l:window_text_list = []
-	if a:end_line >= 0
-		let l:window_text_list = getline(a:start_line, a:end_line)
-	else
-		" 1行のみ
-		call add(l:window_text_list, getline(a:start_line))
-	endif
 
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
 	" NOTE: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
 	"       ただし、match_id_dictをglobalにする必要あり
-	let l:word_list = s:get_word_list(l:window_text_list)
+	let l:word_list = s:get_word_list(a:window_text_list)
 
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
 	setlocal spell

@@ -94,24 +94,25 @@ function! s:test_toggle()
 
 	" register word dict test
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle2_1.txt')
+	let l:filtered_buffer = spelunker#get_buffer#all()
 	call spelunker#test#init()
 
 	call cursor(1,1)
-	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 0, '')])
 	call assert_equal(['addgoodword'], l:line)
 
 	call assert_equal(1, spelunker#execute_with_target_word('spellgood!'))
-	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 0, '')])
 	call assert_equal([], l:line)
 	call execute('spellundo! addgoodword')
 
 	call spelunker#test#reload_buffer()
 	call cursor(2,1)
-	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 1, '')])
 	call assert_equal([], l:line)
 
 	call assert_equal(1, spelunker#execute_with_target_word('spellwrong!'))
-	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 1, '')])
 	call assert_equal(['wrong'], l:line)
 	call execute('spellundo! wrong')
 	" }}}
@@ -243,24 +244,25 @@ function! s:test_toggle_buffer()
 
 	" register word dict test
 	call spelunker#test#open_unit_test_buffer('toggle', 'toggle2_2.txt')
+	let l:filtered_buffer = spelunker#get_buffer#all()
 	call spelunker#test#init()
 
 	call cursor(1,1)
-	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 0, '')])
 	call assert_equal(['addcorrectedword'], l:line)
 
 	call assert_equal(1, spelunker#execute_with_target_word('spellgood!'))
-	let l:line = spelunker#spellbad#get_spell_bad_list(1, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 0, '')])
 	call assert_equal([], l:line)
 	call execute('spellundo! addcorrectedword')
 
 	call spelunker#test#reload_buffer()
 	call cursor(2,1)
-	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 1, '')])
 	call assert_equal([], l:line)
 
 	call assert_equal(1, spelunker#execute_with_target_word('spellwrong!'))
-	let l:line = spelunker#spellbad#get_spell_bad_list(2, -1)
+	let l:line = spelunker#spellbad#get_spell_bad_list([get(l:filtered_buffer, 1, '')])
 	call assert_equal(['misspelt'], l:line)
 	call execute('spellundo! misspelt')
 	" }}}
