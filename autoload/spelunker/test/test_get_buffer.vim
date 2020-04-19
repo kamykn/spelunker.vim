@@ -58,6 +58,10 @@ endfunction
 function! s:test_folded()
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'folded.txt')
 
+	set foldmethod=marker
+	set foldcolumn=1
+	set foldlevel=0
+
 	call assert_equal(
 				\ [
 				\ 	'" vim: foldmethod=marker', '" vim: foldcolumn=3', '" vim: foldlevel=0', '', '', '', '', '', '',
