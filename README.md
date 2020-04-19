@@ -65,6 +65,13 @@ let g:spelunker_check_type = 1
 " FYI: https://vim-jp.org/vimdoc-en/spell.html#spell-quickstart
 let g:spelunker_highlight_type = 1
 
+" Option to disable word checking.
+" Disable URI checking. (default: 0)
+let g:spelunker_disable_uri_checking = 1
+
+Disable checking words in backtick/backquote. (default: 0)
+let g:spelunker_disable_backquoted_checking = 1
+
 " Disable default autogroup. (default: 0)
 let g:spelunker_disable_auto_group = 1
 
@@ -236,18 +243,7 @@ Zt
 
 <img src="https://user-images.githubusercontent.com/7608231/65375352-6a396c80-dccf-11e9-9295-1dd061140a78.gif" width=540>
 
-### 3.6 Option to disable word checking.
-#### Disable URI checking.
-```
-let g:spelunker_disable_uri_checking = 1
-```
-
-#### Disable checking words in backtick/backquote.
-```
-let g:spelunker_disable_backquoted_checking = 1
-```
-
-### 3.7 CtrlP Extention
+### 3.6 CtrlP Extention
 #### CtrlPSpell
 
 [ctrlp](https://github.com/ctrlpvim/ctrlp.vim) is fuzzy finder.
