@@ -15,18 +15,14 @@ function! spelunker#get_buffer#all()
 	return split(l:window_text, l:newline_character)
 endfunction
 
-function! s:get_newline_character()
-	return  has('win32') || has('win64') ? '\r': '\n'
-endfunc
-
 function! spelunker#get_buffer#displayed()
 	" filter済みのbufferを変数で保持する
 	" 変数と実際のバッファーは行数が一致するようにする
 	" filter済みのbufferで処理をしながら、foldの判定を実際のbufferで判定する
 	let l:filtered_buffer = spelunker#get_buffer#all()
 
-	let l:current_line = line("w0")
-	let l:end_line = line("w$")
+	let l:current_line = line('w0')
+	let l:end_line = line('w$')
 
 	let l:window_text_list = []
 
@@ -40,7 +36,10 @@ function! spelunker#get_buffer#displayed()
 		endif
 
 		" 配列なので現在行-1のindexで取得
-		call get(l:window_text_list, l:current_line - 1, '')
+		let l:line = get(l:filtered_buffer, l:current_line - 1, '')
+		if l:line != ''
+			call add(l:window_text_list, l:line)
+		endif
 
 		let l:current_line = l:current_line + 1
 	endwhile
@@ -48,13 +47,17 @@ function! spelunker#get_buffer#displayed()
 	return  l:window_text_list
 endfunction
 
+function! s:get_newline_character()
+	return  has('win32') || has('win64') ? "\r": "\n"
+endfunc
+
 function! spelunker#get_buffer#filter_uri(text, newline_character)
 	if g:spelunker_disable_url_check == 0
 		return a:text
 	endif
 
 	" FYI: https://vi.stackexchange.com/questions/3990/ignore-urls-and-email-addresses-in-spell-file/24534#24534
-	return substitute(a:text, '\w\+:\/\/[^[:space:](\' . a:newline_character . ')]\+', '', 'g')
+	return substitute(a:text, '\w\+:\/\/[^[:space:]]\+', '', 'g')
 endfunction
 
 function! spelunker#get_buffer#filter_back_quoted_string(text, newline_character)
@@ -81,5 +84,5 @@ function! spelunker#get_buffer#filter_back_quoted_string(text, newline_character
 	"         aaaa`
 	"         bbb`ccc
 	"     ```
-	return substitute(a:text, '`\([^`]*[\' . a:newline_character . ']*\)\+`', '\=substitute(submatch(0), "[^\' . a:newline_character . ']", "", "g")', 'g')
+	return substitute(a:text, '`\([^`]*[' . a:newline_character . ']*\)\+`', '\=substitute(submatch(0), "[^' . a:newline_character . ']", "", "g")', 'g')
 endfunction

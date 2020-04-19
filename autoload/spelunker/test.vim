@@ -35,7 +35,7 @@ function! spelunker#test#check(no_exit)
 	endtry
 
 	if len(v:errors) >= 1
-		echo v:errors
+		echomsg v:errors
 		" error exit
 		if a:no_exit != 1
 			execute 'cquit!'
