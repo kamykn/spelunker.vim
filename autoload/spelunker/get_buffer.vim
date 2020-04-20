@@ -86,3 +86,6 @@ function! spelunker#get_buffer#filter_backquoted_words(text, newline_character)
 	"     ```
 	return substitute(a:text, '`\([^`]*[' . a:newline_character . ']*\)\+`', '\=substitute(submatch(0), "[^' . a:newline_character . ']", "", "g")', 'g')
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
