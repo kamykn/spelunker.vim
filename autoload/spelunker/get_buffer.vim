@@ -49,7 +49,7 @@ endfunction
 
 function! s:get_newline_character()
 	return  has('win32') || has('win64') ? "\r": "\n"
-endfunc
+endfunction
 
 function! spelunker#get_buffer#filter_uri(text)
 	if g:spelunker_disable_uri_checking == 0
