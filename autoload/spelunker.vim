@@ -46,7 +46,8 @@ function! spelunker#check_and_echo_list()
 	let l:orig_spelunker_target_min_char_len = g:spelunker_target_min_char_len
 	let g:spelunker_target_min_char_len = 1
 
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
+	let l:window_text_list = spelunker#get_buffer#all()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:window_text_list)
 
 	" ホワイトリスト作るとき用のオプション
 	let g:spelunker_target_min_char_len = l:orig_spelunker_target_min_char_len
@@ -74,7 +75,8 @@ function! spelunker#add_all_spellgood()
 		return 0
 	endif
 
-	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(1, '$')
+	let l:window_text_list = spelunker#get_buffer#all()
+	let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:window_text_list)
 
 	if len(l:spell_bad_list) == 0
 		return 0

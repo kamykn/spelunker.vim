@@ -33,9 +33,10 @@ let s:id = s:ctrlp_builtins + len(g:ctrlp_ext_vars)
 unlet s:ctrlp_builtins
 
 function! s:spellbadlist() abort
-  let spellbadlist = spelunker#spellbad#get_spell_bad_list(1, '$')
+  let l:window_text_list = spelunker#get_buffer#all()
+  let l:spell_bad_list = spelunker#spellbad#get_spell_bad_list(l:window_text_list)
 
-  return uniq(sort(spellbadlist))
+  return uniq(sort(l:spell_bad_list))
 endfunction
 
 function! ctrlp#spelunker#id() abort
