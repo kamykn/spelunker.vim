@@ -68,12 +68,18 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 				" recommend version is => 8.1.1739
 				" https://github.com/vim/vim/issues/4720
 				let l:is_ok = matchdelete(l:delete_match_id, a:window_id)
+
 				if l:is_ok == -1 && a:window_id == win_getid()
-					" 第2引数がある場合に上手く削除できない不具合があった時期があったため
+					" Vimでも第2引数がある場合に上手く削除できない不具合があった時期があったため
 					let l:is_ok = matchdelete(l:delete_match_id)
 				endif
 			catch
-				" エラー読み捨て
+				" nvimでmatchdeleteの第2引数が効かない
+				" FYI: https://github.com/neovim/neovim/issues/12110
+				if a:window_id == win_getid()
+					" 第2引数がある場合に上手く削除できない不具合があった時期があったため
+					let l:is_ok = matchdelete(l:delete_match_id)
+				endif
 			finally
 				if l:is_ok == 0
 					let l:del_index = index(values(l:match_id_dict), l:delete_match_id)
