@@ -70,13 +70,15 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 				let l:is_ok = matchdelete(l:delete_match_id, a:window_id)
 
 				if l:is_ok == -1 && a:window_id == win_getid()
+					" vimでmatchdeleteの第2引数が効かない場合はこちら
 					" Vimでも第2引数がある場合に上手く削除できない不具合があった時期があったため
 					let l:is_ok = matchdelete(l:delete_match_id)
 				endif
 			catch
-				" nvimでmatchdeleteの第2引数が効かない
+				" Issue: #35, #40
+				" nvimでmatchdeleteの第2引数が効かない場合はこちら
 				" FYI: https://github.com/neovim/neovim/issues/12110
-				if a:window_id == win_getid()
+				if spelunker#matches#is_exist_match_id(l:delete_match_id) && a:window_id == win_getid()
 					" 第2引数がある場合に上手く削除できない不具合があった時期があったため
 					let l:is_ok = matchdelete(l:delete_match_id)
 				endif
@@ -116,6 +118,17 @@ function! spelunker#matches#clear_current_buffer_matches()
 	endif
 endfunction
 
+function spelunker#matches#is_exist_match_id(match_id)
+	let l:matches = getmatches()
+
+	for l:match in l:matches
+		if l:match['id'] == a:match_id
+			return v:true
+		endif
+	endfor
+
+	return v:false
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
