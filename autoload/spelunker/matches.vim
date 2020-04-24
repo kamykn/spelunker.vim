@@ -70,8 +70,10 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 				let l:is_ok = matchdelete(l:delete_match_id, a:window_id)
 
 				if l:is_ok == -1 && a:window_id == win_getid()
-					" vimでmatchdelete()の第2引数指定でうまく消せない場合があったのでこちらでも削除
-					" 同じbufferを分割ウインドウ間で使っている場合に必要になることがあった
+					" Issue #21
+					" ZT/Ztコマンドで利用
+					" vimでmatchdelete()の第2引数指定でうまく消せないのでこちらでも削除
+					" TODO: ZT/ztコマンドの場合のみ全てのbufferに対して実行されるようにしたい
 					let l:is_ok = matchdelete(l:delete_match_id)
 				endif
 			catch
