@@ -15,6 +15,7 @@ function! spelunker#test#test_match#test()
 
 	call s:test_clear_matches()
 	call s:test_clear_buffer_matches()
+	call s:test_is_exist_match_id()
 endfunction
 
 function! s:test_get_match_pattern()
@@ -94,6 +95,24 @@ function! s:test_clear_buffer_matches()
 	call assert_notequal({}, b:match_id_dict[l:win_id])
 	call spelunker#matches#clear_current_buffer_matches()
 	call assert_equal({l:win_id: {}}, b:match_id_dict)
+endfunction
+
+function! s:test_is_exist_match_id()
+	call spelunker#test#open_unit_test_buffer('match', 'clear_matches.txt')
+
+	let l:win_id = win_getid()
+	let b:match_id_dict = {}
+	let [l:word_list_for_delete_match, b:match_id_dict[l:win_id]]
+			\ = spelunker#matches#add_matches(['appl', 'orangg', 'banna'], {})
+
+	let l:exist_match_id = b:match_id_dict[l:win_id]['appl']
+	call assert_equal(v:true, spelunker#matches#is_exist_match_id(l:exist_match_id))
+	call assert_equal(v:false, spelunker#matches#is_exist_match_id(99999999))
+
+	call clearmatches()
+	call assert_equal(v:false, spelunker#matches#is_exist_match_id(l:exist_match_id))
+
+	call spelunker#matches#clear_matches()
 endfunction
 
 let &cpo = s:save_cpo
