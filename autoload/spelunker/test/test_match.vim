@@ -105,11 +105,14 @@ function! s:test_is_exist_match_id()
 	let [l:word_list_for_delete_match, b:match_id_dict[l:win_id]]
 			\ = spelunker#matches#add_matches(['appl', 'orangg', 'banna'], {})
 
-	call assert_notequal(v:true, spelunker#matches#is_exist_match_id(4))
-	call assert_notequal(v:false, spelunker#matches#is_exist_match_id(99999999))
+	let l:exist_match_id = b:match_id_dict[l:win_id]['appl']
+	call assert_equal(v:true, spelunker#matches#is_exist_match_id(l:exist_match_id))
+	call assert_equal(v:false, spelunker#matches#is_exist_match_id(99999999))
 
-	call spelunker#matches#clear_current_buffer_matches()
-	call assert_notequal(v:false, spelunker#matches#is_exist_match_id(4))
+	call clearmatches()
+	call assert_equal(v:false, spelunker#matches#is_exist_match_id(l:exist_match_id))
+
+	call spelunker#matches#clear_matches()
 endfunction
 
 let &cpo = s:save_cpo

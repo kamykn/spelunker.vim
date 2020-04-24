@@ -118,7 +118,7 @@ function! spelunker#matches#clear_current_buffer_matches()
 	endif
 endfunction
 
-function spelunker#matches#is_exist_match_id(match_id)
+function! spelunker#matches#is_exist_match_id(match_id)
 	let l:matches = getmatches()
 
 	for l:match in l:matches
