@@ -86,7 +86,7 @@ function! spelunker#matches#delete_matches(word_list_for_delete, match_id_dict, 
 			finally
 				if l:is_ok == 0
 					let l:del_index = index(values(l:match_id_dict), l:delete_match_id)
-					if l:del_index != 1
+					if l:del_index != -1
 						call remove(l:match_id_dict, keys(l:match_id_dict)[l:del_index])
 					endif
 				endif
