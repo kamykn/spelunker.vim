@@ -69,7 +69,7 @@ let g:spelunker_highlight_type = 1
 " Disable URI checking. (default: 0)
 let g:spelunker_disable_uri_checking = 1
 
-Disable checking words in backtick/backquote. (default: 0)
+" Disable checking words in backtick/backquote. (default: 0)
 let g:spelunker_disable_backquoted_checking = 1
 
 " Disable default autogroup. (default: 0)
