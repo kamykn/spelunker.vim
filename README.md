@@ -2,7 +2,7 @@
 
 # Spelunker.vim
 
-Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting _PascalCase_, _camelCase_ and _snake_case_. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) has a whitelist.
+Spelunker.vim is a plugin that improves [Vim's spell checking function](https://vim-jp.org/vimdoc-en/options.html#'spell'). It provides a smarter way to correct spelling mistakes by supporting _PascalCase_, _camelCase_ and _snake_case_. Each programming language (JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script) has an allowlist.
 
 ## 1 Installation
 
@@ -260,15 +260,15 @@ Start `:CtrlPSpell` then list up bad spell.
 Select word to jump first find this bad spell.
 Check the context and suitability and act (fix or add, etc...).
 
-## 4 Whitelist
+## 4 Allowlist
 
-### 4.1 General programming whitelist
+### 4.1 General programming allowlist
 
 Commonly used words are set to be excluded. Compound words and complex words may be highlighted incorrectly, but another highlight group (SpelunkerComplexOrCompoundWord) is being adapted.
 
 Please see the code for details: [white_list.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list.vim)
 
-### 4.2 Programming language specific whitelist
+### 4.2 Programming language specific allowlist
 
 JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script is currently supported. More support will be added in the future.
 
@@ -281,9 +281,9 @@ JavaScript/TypeScript, PHP, Ruby, CSS, HTML and Vim Script is currently supporte
 | Ruby                  | [white_list_ruby.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_ruby.vim)             |
 | Vim Script            | [white_list_vim.vim](https://github.com/kamykn/spelunker.vim/blob/master/autoload/spelunker/white_list/white_list_vim.vim)               |
 
-### 4.3 User's whitelist.
+### 4.3 User's allowlist.
 
-You can add words to your user specific whitelist:
+You can add words to your user specific allowlist:
 
 ```vim
 let g:spelunker_white_list_for_user = ['kamykn', 'vimrc']
