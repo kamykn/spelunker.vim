@@ -11,6 +11,7 @@ function! spelunker#test#test_get_buffer#test()
 	call s:test_all()
 	call s:test_displayed()
 	call s:test_disable_url_checking()
+	call s:test_disable_email_checking()
 	call s:test_disable_backquoted_checking()
 	call s:test_folded()
 endfunction
@@ -26,6 +27,7 @@ function! s:test_displayed()
 endfunction
 
 function! s:test_disable_url_checking()
+	let g:spelunker_disable_uri_checking = 1
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_url.txt')
 	call assert_equal(
 				\ ['abc  def', '', 'ghi', '', 'jkl'],
@@ -41,7 +43,26 @@ function! s:test_disable_url_checking()
 	let g:spelunker_disable_uri_checking = 1
 endfunction
 
+function! s:test_disable_email_checking()
+	let g:spelunker_disable_email_checking = 1
+	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_email.txt')
+	call assert_equal(
+				\ ['abc  def', '', 'ghi', '', 'jkl'],
+				\ spelunker#get_buffer#all()
+				\ )
+
+	let g:spelunker_disable_email_checking = 0
+	call assert_equal(
+				\ ['spelunkervim@github.com', '', 'abc spelunkervim@github.com def', '', 'ghi', 'spelunkervim@github.com', 'jkl'],
+				\ spelunker#get_buffer#all()
+				\ )
+
+	let g:spelunker_disable_email_checking = 1
+endfunction
+
+
 function! s:test_disable_backquoted_checking()
+	let g:spelunker_disable_backquoted_checking = 1
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_backquote.txt')
 	call assert_equal(
 				\ ['abc', '', ' def', '', 'ghi ', ' jkl', '', 'mno', '', 'pqr', '', '', '', '', '', '', ''],
