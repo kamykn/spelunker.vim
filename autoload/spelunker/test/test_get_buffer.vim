@@ -47,13 +47,13 @@ function! s:test_disable_email_checking()
 	let g:spelunker_disable_email_checking = 1
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_email.txt')
 	call assert_equal(
-				\ ['abc  def', '', 'ghi', '', 'jkl'],
+				\ ['abc  def', '', 'ghi', '', 'jkl', '@Annotation'],
 				\ spelunker#get_buffer#all()
 				\ )
 
 	let g:spelunker_disable_email_checking = 0
 	call assert_equal(
-				\ ['spelunkervim@github.com', '', 'abc spelunkervim@github.com def', '', 'ghi', 'spelunkervim@github.com', 'jkl'],
+				\ ['spelunkervim@github.com', '', 'abc spelunkervim@github.com def', '', 'ghi', 'spelunkervim@github.com', 'jkl', '@Annotation'],
 				\ spelunker#get_buffer#all()
 				\ )
 
