@@ -7,6 +7,7 @@ function! spelunker#test#test_get_buffer#test()
 	" init
 	let g:spelunker_disable_backquoted_checking = 1
 	let g:spelunker_disable_uri_checking = 1
+	let g:spelunker_disable_email_checking = 1
 
 	call s:test_all()
 	call s:test_displayed()
