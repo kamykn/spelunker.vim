@@ -8,11 +8,13 @@ function! spelunker#test#test_get_buffer#test()
 	let g:spelunker_disable_backquoted_checking = 1
 	let g:spelunker_disable_uri_checking = 1
 	let g:spelunker_disable_email_checking = 1
+	let g:spelunker_disable_account_name_checking = 1
 
 	call s:test_all()
 	call s:test_displayed()
 	call s:test_disable_url_checking()
 	call s:test_disable_email_checking()
+	call s:test_disable_account_name_checking()
 	call s:test_disable_backquoted_checking()
 	call s:test_folded()
 endfunction
@@ -45,6 +47,9 @@ function! s:test_disable_url_checking()
 endfunction
 
 function! s:test_disable_email_checking()
+	" 似ている書式なのでオプションをオフにしてテスト
+	let g:spelunker_disable_account_name_checking = 0
+
 	let g:spelunker_disable_email_checking = 1
 	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_email.txt')
 	call assert_equal(
@@ -58,9 +63,30 @@ function! s:test_disable_email_checking()
 				\ spelunker#get_buffer#all()
 				\ )
 
+	let g:spelunker_disable_account_name_checking = 1
 	let g:spelunker_disable_email_checking = 1
 endfunction
 
+function! s:test_disable_account_name_checking()
+	" 似ている書式なのでオプションをオフにしてテスト
+	let g:spelunker_disable_email_checking = 0
+
+	let g:spelunker_disable_account_name_checking = 1
+	call spelunker#test#open_unit_test_buffer('get_buffer', 'disable_account_name.txt')
+	call assert_equal(
+				\ ['spelunkervim@github.com', '', 'abc spelunkervim@github.com def', '', 'ghi', 'spelunkervim@github.com', 'jkl', '', 'mno  pqr', 'stu  vwx'],
+				\ spelunker#get_buffer#all()
+				\ )
+
+	let g:spelunker_disable_account_name_checking = 0
+	call assert_equal(
+				\ ['spelunkervim@github.com', '', 'abc spelunkervim@github.com def', '', 'ghi', 'spelunkervim@github.com', 'jkl', '@Annotation', 'mno @mrfoobar pqr', 'stu mrfoobar@ vwx'],
+				\ spelunker#get_buffer#all()
+				\ )
+
+	let g:spelunker_disable_email_checking = 1
+	let g:spelunker_disable_account_name_checking = 1
+endfunction
 
 function! s:test_disable_backquoted_checking()
 	let g:spelunker_disable_backquoted_checking = 1

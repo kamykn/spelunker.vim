@@ -54,6 +54,10 @@ if !exists('g:spelunker_disable_email_checking')
   let g:spelunker_disable_email_checking = 0
 endif
 
+if !exists('g:spelunker_disable_account_name_checking')
+  let g:spelunker_disable_account_name_checking = 0
+endif
+
 let g:spelunker_check_type_buf_lead_write = 1
 let g:spelunker_check_type_cursor_hold = 2
 

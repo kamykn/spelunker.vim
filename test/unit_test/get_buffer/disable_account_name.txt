@@ -1,0 +1,11 @@
+
+spelunkervim@github.com
+
+abc spelunkervim@github.com def
+
+ghi
+spelunkervim@github.com
+jkl
+@Annotation
+mno @mrfoobar pqr
+stu mrfoobar@ vwx
