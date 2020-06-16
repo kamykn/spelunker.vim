@@ -113,6 +113,9 @@ function! spelunker#white_list#init_white_list()
 		let l:wl += ['referer', 'localhost', 'serializer', 'mutex', 'autoload', 'varchar', 'popup', 'header']
 		let l:wl += ['neo', 'fazzy']
 
+		" spelunker.vim option name
+		let l:wl += ['backquoted']
+
 		" Don't you think it is terrible?
 		let l:wl += ['don', 'doesn', 'didn', 'ain', 'isn', 'wasn', 'aren', 'weren']
 
