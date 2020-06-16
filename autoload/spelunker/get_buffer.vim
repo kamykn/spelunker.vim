@@ -11,6 +11,7 @@ function! spelunker#get_buffer#all()
 
 	let l:window_text = spelunker#get_buffer#filter_uri(l:window_text)
 	let l:window_text = spelunker#get_buffer#filter_email(l:window_text)
+	let l:window_text = spelunker#get_buffer#filter_account_name(l:window_text)
 	let l:window_text = spelunker#get_buffer#filter_backquoted_words(l:window_text, l:newline_character)
 
 	return split(l:window_text, l:newline_character)
@@ -69,6 +70,16 @@ function! spelunker#get_buffer#filter_email(text)
 	" FYI: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
 	" memo: single quote ' -> ''
 	return substitute(a:text, '[a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+@[a-zA-Z0-9]\([a-zA-Z0-9-]\{0,61}[a-zA-Z0-9]\)\?\(\.[a-zA-Z0-9]\([a-zA-Z0-9-]\{0,61}[a-zA-Z0-9]\)\?\)*', '', 'g')
+endfunction
+
+function! spelunker#get_buffer#filter_account_name(text)
+	if g:spelunker_disable_account_name_checking == 0
+		return a:text
+	endif
+
+	" memo: single quote ' -> ''
+	let l:text = substitute(a:text, '\%([a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+\)\@<!@[a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+', '', 'g')
+	return substitute(l:text, '[a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+@\%([a-zA-Z0-9]\([a-zA-Z0-9-]\{0,61}[a-zA-Z0-9]\)\?\(\.[a-zA-Z0-9]\([a-zA-Z0-9-]\{0,61}[a-zA-Z0-9]\)\?\)*\)\@!', '', 'g')
 endfunction
 
 function! spelunker#get_buffer#filter_backquoted_words(text, newline_character)
