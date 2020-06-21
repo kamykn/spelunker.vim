@@ -99,7 +99,7 @@ function! spelunker#words#format_spell_suggest_list(spell_suggest_list, target_w
 	return [l:spell_suggest_list_for_input_list, l:spell_suggest_list_for_replace]
 endfunction
 
-function! spelunker#words#cut_text_word_before (text, word)
+function! spelunker#words#cut_text_word_before(text, word)
 	let l:found_pos = stridx(a:text, a:word)
 
 	if l:found_pos < 0

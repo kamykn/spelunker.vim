@@ -43,13 +43,18 @@ function! spelunker#spellbad#get_word_list_in_line(line, word_list)
 	let l:line = spelunker#utils#convert_control_character_to_space(a:line)
 
 	while 1
+		" 関数名、変数名ごとに抜き出し(1関数名、変数名ごとに処理)
 		let l:match_target_word = spelunker#cases#get_first_word_in_line(l:line)
 		if l:match_target_word == ""
 			break
 		endif
 
 		call spelunker#cases#case_counter(l:match_target_word)
+
+		" 次のループのための処理
 		let l:line = spelunker#words#cut_text_word_before(l:line, l:match_target_word)
+
+		" 単語の抜き出し
 		let l:find_word_list = spelunker#utils#code_to_words(l:match_target_word)
 
 		for word in l:find_word_list
