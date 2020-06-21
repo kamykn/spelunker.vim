@@ -45,10 +45,12 @@ function spelunker#matches#get_match_pattern(word)
 	" priorityはhlsearchと同じ0で指定して、検索時は検索が優先されるようにする
 	"
 	" #10 小文字で続く場合はormatという間違いでformatのように正しい単語をハイライトしてほしくない
+	" #51 同じように、Formatとormatでハイライトしてほしくないが、先頭大文字の場合、
+	"     FormatとOrmatはケースセンシティブでマッチしないので単語の前の否定先読みは設定しない
 
 	let l:uc_position = match(a:word, '\v[A-Z]\C', 0)
 	if l:uc_position == 0
-		let l:pattern = '\v[A-Z]@<!' . a:word . '[a-z]@!\C'
+		let l:pattern = '\v' . a:word . '[a-z]@!\C'
 	else
 		" start with lower case #10
 		let l:pattern = '\v[A-Za-z]@<!' . a:word . '[a-z]@!\C'
