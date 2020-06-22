@@ -27,20 +27,26 @@ function! s:test_get_match_pattern()
 	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'Abanana')
 
 	let l:word = 'Banana'
-	call assert_equal('\v[A-Z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
+	call assert_equal('\v' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
 	call assert_match(spelunker#matches#get_match_pattern(l:word), 'OreangeBananaApple')
 	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'OreangeBananaapple' )
 
 	" HTTP or HTTPS??
 	let l:word = 'Spanner'
-	call assert_equal('\v[A-Z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
-	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'HTTPSpanner')
+	call assert_equal('\v' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
+	call assert_match(spelunker#matches#get_match_pattern(l:word), 'HTTPSpanner')
 
 	" # ISSUE/PR
 	" #10 https://github.com/kamykn/spelunker.vim/pull/10
 	let l:word = 'ormat' " <= typo 'format'
 	call assert_equal('\v[A-Za-z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
 	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'doormat')
+
+	" # ISSUE/PR
+	" #51 https://github.com/kamykn/spelunker.vim/issues/51
+	let l:word = 'Gabrage' " <= typo 'format'
+	call assert_equal('\v' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
+	call assert_match(spelunker#matches#get_match_pattern(l:word), 'ABCDGabrage')
 endfunction
 
 function! s:test_add_matches()
