@@ -171,15 +171,15 @@ function! s:test_highlight()
 	call assert_equal(0, l:result[4]['priority'])
 
 	call assert_equal('SpelunkerSpellBad', l:result[5]['group'])
-	call assert_equal('\v[A-Z]@<!Banana[a-z]@!\C', l:result[5]['pattern'])
+	call assert_equal('\vBanana[a-z]@!\C', l:result[5]['pattern'])
 	call assert_equal(0, l:result[5]['priority'])
 
 	call assert_equal('SpelunkerSpellBad', l:result[6]['group'])
-	call assert_equal('\v[A-Z]@<!Apple[a-z]@!\C', l:result[6]['pattern'])
+	call assert_equal('\vApple[a-z]@!\C', l:result[6]['pattern'])
 	call assert_equal(0, l:result[6]['priority'])
 
 	call assert_equal('SpelunkerSpellBad', l:result[7]['group'])
-	call assert_equal('\v[A-Z]@<!Lemon[a-z]@!\C', l:result[7]['pattern'])
+	call assert_equal('\vLemon[a-z]@!\C', l:result[7]['pattern'])
 	call assert_equal(0, l:result[7]['priority'])
 endfunction
 
