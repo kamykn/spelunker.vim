@@ -41,6 +41,12 @@ function! s:test_get_match_pattern()
 	let l:word = 'ormat' " <= typo 'format'
 	call assert_equal('\v[A-Za-z]@<!' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
 	call assert_notmatch(spelunker#matches#get_match_pattern(l:word), 'doormat')
+
+	" # ISSUE/PR
+	" #51 https://github.com/kamykn/spelunker.vim/issues/51
+	let l:word = 'Gabrage' " <= typo 'format'
+	call assert_equal('\v' . l:word . '[a-z]@!\C', spelunker#matches#get_match_pattern(l:word))
+	call assert_match(spelunker#matches#get_match_pattern(l:word), 'ABCDGabrage')
 endfunction
 
 function! s:test_add_matches()
