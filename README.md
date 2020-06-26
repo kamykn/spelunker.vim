@@ -73,7 +73,7 @@ let g:spelunker_disable_uri_checking = 1
 let g:spelunker_disable_email_checking = 1
 
 " Disable account name checking, e.g. @foobar, foobar@. (default: 0)
-" NOTE: The check is also disabled for JAVA annotations.
+" NOTE: Spell checking is also disabled for JAVA annotations.
 let g:spelunker_disable_account_name_checking = 1
 
 " Disable acronym checking. (default: 0)
