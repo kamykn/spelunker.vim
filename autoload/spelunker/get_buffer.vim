@@ -12,6 +12,7 @@ function! spelunker#get_buffer#all()
 	let l:window_text = spelunker#get_buffer#filter_uri(l:window_text)
 	let l:window_text = spelunker#get_buffer#filter_email(l:window_text)
 	let l:window_text = spelunker#get_buffer#filter_account_name(l:window_text)
+	let l:window_text = spelunker#get_buffer#filter_acronym(l:window_text)
 	let l:window_text = spelunker#get_buffer#filter_backquoted_words(l:window_text, l:newline_character)
 
 	return split(l:window_text, l:newline_character)
@@ -80,6 +81,14 @@ function! spelunker#get_buffer#filter_account_name(text)
 	" memo: single quote ' -> ''
 	let l:text = substitute(a:text, '\%([a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+\)\@<!@[a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+', '', 'g')
 	return substitute(l:text, '[a-zA-Z0-9.!#$%&''*+\/=?^_`{|}~-]\+@\%([a-zA-Z0-9]\([a-zA-Z0-9-]\{0,61}[a-zA-Z0-9]\)\?\(\.[a-zA-Z0-9]\([a-zA-Z0-9-]\{0,61}[a-zA-Z0-9]\)\?\)*\)\@!', '', 'g')
+endfunction
+
+function! spelunker#get_buffer#filter_acronym(text)
+	if g:spelunker_disable_acronym_checking == 0
+		return a:text
+	endif
+
+	return substitute(a:text, '\v[A-Z]+[a-z]@!\C', '', 'g')
 endfunction
 
 function! spelunker#get_buffer#filter_backquoted_words(text, newline_character)
