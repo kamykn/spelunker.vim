@@ -144,11 +144,25 @@ if !hasmapto('<Plug>(spelunker-correct-all-feeling-lucky)')
 	silent! nmap <unique> ZF <Plug>(spelunker-correct-all-feeling-lucky)
 endif
 
+" vmap/vnoremapはxmap(visual-modeだけ)が作られる前の古い方法で、後方互換のため
+" 利用します。
+" vmapだと visual-mode の他、selec-mode にもマップされます
+" このマップは除去可能なら除去します
+if exists(':sunmap') == 2
+  function! s:sunmap(map) abort
+    call execute(':sunmap ' . a:map)
+  endfunction
+else
+  function! s:sunmap(map) abort
+    " no work
+  endfunction
+endif
+
 " [spell good] ===========================================================================
-" vnoremapは古い方法の後方互換です
 vnoremap <silent> <Plug>(add-spelunker-good) zg :call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-spelunker-good)')
 	silent! vmap <unique> Zg <Plug>(add-spelunker-good)
+	call s:sunmap('Zg')
 endif
 
 nnoremap <silent> <Plug>(add-spelunker-good-nmap)
@@ -161,6 +175,7 @@ endif
 vnoremap <silent> <Plug>(undo-spelunker-good) zug :call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-spelunker-good)')
 	silent! vmap <unique> Zug <Plug>(undo-spelunker-good)
+	call s:sunmap('Zug')
 endif
 
 nnoremap <silent> <Plug>(undo-spelunker-good-nmap)
@@ -173,6 +188,7 @@ endif
 vnoremap <silent> <Plug>(add-temporary-spelunker-good) zG :call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-temporary-spelunker-good)')
 	silent! vmap <unique> ZG <Plug>(add-temporary-spelunker-good)
+	call s:sunmap('ZG')
 endif
 
 nnoremap <silent> <Plug>(add-temporary-spelunker-good-nmap)
@@ -185,6 +201,7 @@ endif
 vnoremap <silent> <Plug>(undo-temporary-spelunker-good) zuG :call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spelunker-good)')
 	silent! vmap <unique> ZUG <Plug>(undo-temporary-spelunker-good)
+	call s:sunmap('ZUG')
 endif
 
 nnoremap <silent> <Plug>(undo-temporary-spelunker-good-nmap)
@@ -197,6 +214,7 @@ endif
 vnoremap <silent> <Plug>(add-spelunker-bad) zw :call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-spelunker-bad)')
 	silent! vmap <unique> Zw <Plug>(add-spelunker-bad)
+	call s:sunmap('Zw')
 endif
 
 nnoremap <silent> <Plug>(add-spell-bad-nmap)
@@ -209,6 +227,7 @@ endif
 vnoremap <silent> <Plug>(undo-spelunker-bad) zuw :call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-spelunker-bad)')
 	silent! vmap <unique> Zuw <Plug>(undo-spelunker-bad)
+	call s:sunmap('Zuw')
 endif
 
 nnoremap <silent> <Plug>(undo-spelunker-bad-nmap)
@@ -221,6 +240,7 @@ endif
 vnoremap <silent> <Plug>(add-temporary-spelunker-bad) zW :call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-temporary-spelunker-bad)')
 	silent! vmap <unique> ZW <Plug>(add-temporary-spelunker-bad)
+	call s:sunmap('ZW')
 endif
 
 nnoremap <silent> <Plug>(add-temporary-spelunker-bad-nmap)
@@ -233,6 +253,7 @@ endif
 vnoremap <silent> <Plug>(undo-temporary-spelunker-bad) zuW :call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spelunker-bad)')
 	silent! vmap <unique> ZUW <Plug>(undo-temporary-spelunker-bad)
+	call s:sunmap('ZUW')
 endif
 
 nnoremap <silent> <Plug>(undo-temporary-spelunker-bad-nmap)
