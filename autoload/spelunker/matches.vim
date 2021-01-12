@@ -15,21 +15,21 @@ function! spelunker#matches#add_matches(spell_bad_list, match_id_dict)
 	let l:word_list_for_delete_match   = l:current_matched_list " spellbadとして今回検知されなければ削除するリスト
 	let l:match_id_dict                = a:match_id_dict
 
-	for word in a:spell_bad_list
-		if index(l:current_matched_list, word) == -1
+	for l:word in a:spell_bad_list
+		if index(l:current_matched_list, l:word) == -1
 			" 新しく見つかった場合highlightを設定する
 			let l:highlight_group = g:spelunker_spell_bad_group
-			if spelunker#white_list#is_complex_or_compound_word(word)
+			if spelunker#white_list#is_complex_or_compound_word(l:word)
 				let l:highlight_group = g:spelunker_complex_or_compound_word_group
 			endif
 
-			let l:pattern = spelunker#matches#get_match_pattern(word)
+			let l:pattern = spelunker#matches#get_match_pattern(l:word)
 
 			let l:match_id = matchadd(l:highlight_group, l:pattern, 0)
-			execute 'let l:match_id_dict.' . word . ' = ' . l:match_id
+			let l:match_id_dict[l:word] = l:match_id
 		else
 			" すでにある場合には削除予定リストから単語消す
-			let l:del_index = index(l:word_list_for_delete_match, word)
+			let l:del_index = index(l:word_list_for_delete_match, l:word)
 			call remove(l:word_list_for_delete_match, l:del_index)
 		endif
 	endfor
