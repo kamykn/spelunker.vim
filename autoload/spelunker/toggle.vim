@@ -25,7 +25,11 @@ function! spelunker#toggle#set_syntax()
 	catch
 	finally
 		if strlen(l:spelunker_spell_bad_hi_list) == 0 || l:spelunker_spell_bad_hi_list =~# '\v<cleared>$'
-			execute ('highlight ' . g:spelunker_spell_bad_group . ' ' . s:spelunker_spell_bad_style)
+			if s:spelunker_spell_bad_style =~# '^links to\>'
+				execute('highlight link ' . g:spelunker_spell_bad_group . ' ' . substitute(s:spelunker_spell_bad_style, '^links to\s*', '', ''))
+			else
+				execute('highlight '      . g:spelunker_spell_bad_group . ' ' .            s:spelunker_spell_bad_style)
+			endif
 		else
 			let s:spelunker_spell_bad_style = substitute(trim(l:spelunker_spell_bad_hi_list), '^\V' . g:spelunker_spell_bad_group . '\v\s+xxx\s+', '', '')
 		endif
@@ -47,7 +51,11 @@ function! spelunker#toggle#set_syntax()
 	catch
 	finally
 		if strlen(l:spelunker_complex_or_compound_word_hi_list) == 0 || l:spelunker_complex_or_compound_word_hi_list =~# '\v<cleared>$'
-			execute ('highlight ' . g:spelunker_complex_or_compound_word_group . ' ' . s:spelunker_complex_or_compound_word_style)
+			if s:spelunker_complex_or_compound_word_style =~# '^links to\>'
+				execute('highlight link' . g:spelunker_complex_or_compound_word_group . ' ' . substitute(s:spelunker_complex_or_compound_word_style), '^links to\s*', '', ''))
+			else
+				execute('highlight '     . g:spelunker_complex_or_compound_word_group . ' ' .            s:spelunker_complex_or_compound_word_style)
+			endif
 		else
 			let s:spelunker_complex_or_compound_word_style = substitute(trim(l:spelunker_complex_or_compound_word_hi_list), '^\V' . g:spelunker_complex_or_compound_word_group . '\v\s+xxx\+', '', '')
 		endif
