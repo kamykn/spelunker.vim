@@ -15,13 +15,19 @@ function! spelunker#toggle#set_syntax()
 		let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
 	endif
 
+	if !exists('s:spelunker_spell_bad_style')
+		let s:spelunker_spell_bad_style = 'cterm=underline ctermfg=247 gui=underline guifg=#9E9E9E'
+	endif
+
 	let l:spelunker_spell_bad_hi_list = ""
 	try
-	let l:spelunker_spell_bad_hi_list = execute('highlight ' . g:spelunker_spell_bad_group)
+		let l:spelunker_spell_bad_hi_list = execute('highlight ' . g:spelunker_spell_bad_group)
 	catch
 	finally
 		if strlen(l:spelunker_spell_bad_hi_list) == 0 || l:spelunker_spell_bad_hi_list =~# '\v<cleared>$'
-			execute ('highlight ' . g:spelunker_spell_bad_group . ' cterm=underline ctermfg=247 gui=underline guifg=#9E9E9E')
+			execute ('highlight ' . g:spelunker_spell_bad_group . ' ' . s:spelunker_spell_bad_style)
+		else
+			let s:spelunker_spell_bad_style = substitute(trim(l:spelunker_spell_bad_hi_list), '^\V' . g:spelunker_spell_bad_group . '\v\s+xxx\s+', '', '')
 		endif
 	endtry
 
@@ -31,13 +37,19 @@ function! spelunker#toggle#set_syntax()
 		let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
 	endif
 
+	if !exists('s:spelunker_complex_or_compound_word_style')
+		let s:spelunker_complex_or_compound_word_style = 'cterm=underline ctermfg=NONE gui=underline guifg=NONE'
+	endif
+
 	let l:spelunker_complex_or_compound_word_hi_list = ""
 	try
 		let l:spelunker_complex_or_compound_word_hi_list = execute('highlight ' . g:spelunker_complex_or_compound_word_group)
 	catch
 	finally
 		if strlen(l:spelunker_complex_or_compound_word_hi_list) == 0 || l:spelunker_complex_or_compound_word_hi_list =~# '\v<cleared>$'
-			execute ('highlight ' . g:spelunker_complex_or_compound_word_group . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
+			execute ('highlight ' . g:spelunker_complex_or_compound_word_group . ' ' . s:spelunker_complex_or_compound_word_style)
+		else
+			let s:spelunker_complex_or_compound_word_style = substitute(trim(l:spelunker_complex_or_compound_word_hi_list), '^\V' . g:spelunker_complex_or_compound_word_group . '\v\s+xxx\+', '', '')
 		endif
 	endtry
 endfunction
