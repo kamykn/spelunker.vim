@@ -220,6 +220,21 @@ function s:is_runnable()
 		return 0
 	endif
 
+	if exists('g:spelunker_buffer_size_threshold') && g:spelunker_buffer_size_threshold > 0
+		if exists('g:enable_spelunker_vim') && g:enable_spelunker_vim && !exists('b:enable_spelunker_vim')
+			let l:buf_size = line2byte('$') + len(getline('$'))
+			if l:buf_size > g:spelunker_buffer_size_threshold
+				let l:buf_name = bufname('%')
+				echom 'Spelunker.vim skipped this too long buffer. Do `Zt` instead:'
+						\ . ( len(l:buf_name) == 0 ? '' : ( ' buf = ''' . l:buf_name . ''',' ) )
+						\ . ' size = ' . l:buf_size . ' / ' .  g:spelunker_buffer_size_threshold
+
+				let b:enable_spelunker_vim = 0
+				return 0
+			endif
+		endif
+	endif
+
 	return 1
 endfunction
 
