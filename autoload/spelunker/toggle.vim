@@ -52,9 +52,9 @@ function! spelunker#toggle#set_syntax()
 	finally
 		if strlen(l:spelunker_complex_or_compound_word_hi_list) == 0 || l:spelunker_complex_or_compound_word_hi_list =~# '\v<cleared>$'
 			if s:spelunker_complex_or_compound_word_style =~# '^links to\>'
-				execute('highlight link' . g:spelunker_complex_or_compound_word_group . ' ' . substitute(s:spelunker_complex_or_compound_word_style), '^links to\s*', '', ''))
+				execute('highlight link ' . g:spelunker_complex_or_compound_word_group . ' ' . substitute(s:spelunker_complex_or_compound_word_style, '^links to\s*', '', ''))
 			else
-				execute('highlight '     . g:spelunker_complex_or_compound_word_group . ' ' .            s:spelunker_complex_or_compound_word_style)
+				execute('highlight '      . g:spelunker_complex_or_compound_word_group . ' ' .            s:spelunker_complex_or_compound_word_style)
 			endif
 		else
 			let s:spelunker_complex_or_compound_word_style = substitute(trim(l:spelunker_complex_or_compound_word_hi_list), '^\V' . g:spelunker_complex_or_compound_word_group . '\v\s+xxx\+', '', '')
