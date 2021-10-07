@@ -8,6 +8,60 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! spelunker#toggle#set_syntax()
+	" [spelunker_spell_bad_group] ===========================================================
+
+	if !exists('g:spelunker_spell_bad_group')
+		let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
+	endif
+
+	if !exists('s:spelunker_spell_bad_style')
+		let s:spelunker_spell_bad_style = 'cterm=underline ctermfg=247 gui=underline guifg=#9E9E9E'
+	endif
+
+	let l:spelunker_spell_bad_hi_list = ""
+	try
+		let l:spelunker_spell_bad_hi_list = execute('highlight ' . g:spelunker_spell_bad_group)
+	catch
+	finally
+		if strlen(l:spelunker_spell_bad_hi_list) == 0 || l:spelunker_spell_bad_hi_list =~# '\v<cleared>$'
+			if s:spelunker_spell_bad_style =~# '^links to\>'
+				execute('highlight link ' . g:spelunker_spell_bad_group . ' ' . substitute(s:spelunker_spell_bad_style, '^links to\s*', '', ''))
+			else
+				execute('highlight '      . g:spelunker_spell_bad_group . ' ' .            s:spelunker_spell_bad_style)
+			endif
+		else
+			let s:spelunker_spell_bad_style = substitute(trim(l:spelunker_spell_bad_hi_list), '^\V' . g:spelunker_spell_bad_group . '\v\s+xxx\s+', '', '')
+		endif
+	endtry
+
+	" [spelunker_complex_or_compound_word_group] =======================================================
+
+	if !exists('g:spelunker_complex_or_compound_word_group')
+		let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
+	endif
+
+	if !exists('s:spelunker_complex_or_compound_word_style')
+		let s:spelunker_complex_or_compound_word_style = 'cterm=underline ctermfg=NONE gui=underline guifg=NONE'
+	endif
+
+	let l:spelunker_complex_or_compound_word_hi_list = ""
+	try
+		let l:spelunker_complex_or_compound_word_hi_list = execute('highlight ' . g:spelunker_complex_or_compound_word_group)
+	catch
+	finally
+		if strlen(l:spelunker_complex_or_compound_word_hi_list) == 0 || l:spelunker_complex_or_compound_word_hi_list =~# '\v<cleared>$'
+			if s:spelunker_complex_or_compound_word_style =~# '^links to\>'
+				execute('highlight link ' . g:spelunker_complex_or_compound_word_group . ' ' . substitute(s:spelunker_complex_or_compound_word_style, '^links to\s*', '', ''))
+			else
+				execute('highlight '      . g:spelunker_complex_or_compound_word_group . ' ' .            s:spelunker_complex_or_compound_word_style)
+			endif
+		else
+			let s:spelunker_complex_or_compound_word_style = substitute(trim(l:spelunker_complex_or_compound_word_hi_list), '^\V' . g:spelunker_complex_or_compound_word_group . '\v\s+xxx\+', '', '')
+		endif
+	endtry
+endfunction
+
 function! spelunker#toggle#toggle()
 	let g:enable_spelunker_vim = g:enable_spelunker_vim == 1 ? 0 : 1
 
@@ -48,6 +102,8 @@ endfunction
 
 function! spelunker#toggle#init_buffer(mode, is_enabled)
 	if a:is_enabled == 1
+		call spelunker#toggle#set_syntax()
+
 		if a:mode == 1 " for global
 			call spelunker#check()
 		elseif a:mode == 2 " for buffer

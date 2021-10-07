@@ -79,37 +79,7 @@ if !exists('g:spelunker_highlight_type')
 	let g:spelunker_highlight_type = g:spelunker_highlight_all
 endif
 
-" [spelunker_spell_bad_group] ===========================================================
-
-if !exists('g:spelunker_spell_bad_group')
-	let g:spelunker_spell_bad_group = 'SpelunkerSpellBad'
-endif
-
-let s:spelunker_spell_bad_hi_list = ""
-try
-	let s:spelunker_spell_bad_hi_list = execute('highlight ' . g:spelunker_spell_bad_group)
-catch
-finally
-	if strlen(s:spelunker_spell_bad_hi_list) == 0
-		execute ('highlight ' . g:spelunker_spell_bad_group . ' cterm=underline ctermfg=247 gui=underline guifg=#9E9E9E')
-	endif
-endtry
-
-" [spelunker_complex_or_compound_word_group] =======================================================
-
-if !exists('g:spelunker_complex_or_compound_word_group')
-	let g:spelunker_complex_or_compound_word_group = 'SpelunkerComplexOrCompoundWord'
-endif
-
-let s:spelunker_complex_or_compound_word_hi_list = ""
-try
-	let s:spelunker_complex_or_compound_word_hi_list = execute('highlight ' . g:spelunker_complex_or_compound_word_group)
-catch
-finally
-	if strlen(s:spelunker_complex_or_compound_word_hi_list) == 0
-		execute ('highlight ' . g:spelunker_complex_or_compound_word_group . ' cterm=underline ctermfg=NONE gui=underline guifg=NONE')
-	endif
-endtry
+call spelunker#toggle#set_syntax()
 
 " [open fix list] ========================================================================
 nnoremap <silent> <Plug>(spelunker-correct-from-list) :call spelunker#correct_from_list()<CR>
