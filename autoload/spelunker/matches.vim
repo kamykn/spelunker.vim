@@ -107,6 +107,16 @@ function! spelunker#matches#clear_matches()
 				\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id], l:window_id)
 		endfor
 	endif
+
+	" XXX: Clear sticky styles completely, even though it isn't managed in `b:match_id_dict`
+	" Side Effect: Removes all the match patterns of the Spelunker style group.
+	if exists('g:spelunker_spell_bad_group') && !empty(g:spelunker_spell_bad_group)
+		call setmatches(filter(getmatches(), 'v:val.group !=# g:spelunker_spell_bad_group'))
+	endif
+
+	if exists('g:spelunker_complex_or_compound_word_group') && !empty(g:spelunker_complex_or_compound_word_group)
+		call setmatches(filter(getmatches(), 'v:val.group !=# g:spelunker_complex_or_compound_word_group'))
+	endif
 endfunction
 
 function! spelunker#matches#clear_current_buffer_matches()
@@ -118,6 +128,16 @@ function! spelunker#matches#clear_current_buffer_matches()
 			let b:match_id_dict[l:window_id] =
 				\ spelunker#matches#delete_matches(keys(b:match_id_dict[l:window_id]), b:match_id_dict[l:window_id], l:window_id)
 		endif
+	endif
+
+	" XXX: Clear sticky styles completely, even though it isn't managed in `b:match_id_dict`
+	" Side Effect: Removes all the match patterns of the Spelunker style group.
+	if exists('g:spelunker_spell_bad_group') && !empty(g:spelunker_spell_bad_group)
+		call setmatches(filter(getmatches(), 'v:val.group !=# g:spelunker_spell_bad_group'))
+	endif
+
+	if exists('g:spelunker_complex_or_compound_word_group') && !empty(g:spelunker_complex_or_compound_word_group)
+		call setmatches(filter(getmatches(), 'v:val.group !=# g:spelunker_complex_or_compound_word_group'))
 	endif
 endfunction
 
