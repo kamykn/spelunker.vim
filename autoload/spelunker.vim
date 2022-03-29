@@ -220,6 +220,38 @@ function s:is_runnable()
 		return 0
 	endif
 
+	if exists('g:enable_spelunker_vim') && g:enable_spelunker_vim && !exists('b:enable_spelunker_vim')
+		if exists('g:spelunker_buffer_size_threshold') && g:spelunker_buffer_size_threshold > 0
+			let l:buf_size = line2byte('$') + len(getline('$'))
+			if l:buf_size > g:spelunker_buffer_size_threshold
+				let l:buf_name = bufname('%')
+				echom 'Spelunker.vim skipped this too long buffer. Do `Zt` instead:'
+						\ . ( len(l:buf_name) == 0 ? '' : ( ' buf = ''' . l:buf_name . ''',' ) )
+						\ . ' size = ' . l:buf_size . ' / ' .  g:spelunker_buffer_size_threshold
+
+				let b:enable_spelunker_vim = 0
+				return 0
+			endif
+		endif
+
+		if exists('g:spelunker_buffer_max_line_width_threshold') && g:spelunker_buffer_max_line_width_threshold > 0
+			let l:line = 1
+			while l:line <= line('$')
+				let l:linewidth = len(getline(l:line))
+				if l:linewidth > g:spelunker_buffer_max_line_width_threshold
+					let l:buf_name = bufname('%')
+					echom 'Spelunker.vim skipped this too long line. Do `Zt` instead:'
+							\ . ( len(l:buf_name) == 0 ? '' : ( ' buf = ''' . l:buf_name . ''',' ) )
+							\ . ' width[' . l:line . '] = ' . l:linewidth . ' / ' .  g:spelunker_buffer_max_line_width_threshold
+
+					let b:enable_spelunker_vim = 0
+					return 0
+				endif
+				let l:line += 1
+			endwhile
+		endif
+	endif
+
 	return 1
 endfunction
 
