@@ -120,7 +120,11 @@ function! spelunker#words#replace_word(target_word, replace_word, is_correct_all
 	let l:pos = getpos(".")
 
 	if a:is_correct_all
-		execute "silent! %s/\\v([A-Z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		if a:target_word =~# '^[A-Z]'
+			execute "silent! %s/\\v"              . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		else
+			execute "silent! %s/\\v([A-Za-z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		endif
 	else
 		let l:right_move = strlen(a:target_word) - 1
 		execute "silent! normal! /" . a:target_word . "\<CR>Nv" . l:right_move . "lc" . a:replace_word
