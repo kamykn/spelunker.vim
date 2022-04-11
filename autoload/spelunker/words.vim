@@ -87,8 +87,13 @@ function! spelunker#words#format_spell_suggest_list(spell_suggest_list, target_w
 		endif
 
 		if a:target_word[0] =~# '\v[A-Z]\C'
-			" #10 2語以上の場合、後ろの文字が小文字になったりしないように修正した
-			let l:spell = toupper(l:spell[0]) . l:spell[1:-1]
+			if a:target_word ==# toupper(a:target_word)
+				" 対象の単語が すべて大文字の場合、候補も大文字化
+				let l:spell = toupper(l:spell)
+			else
+				" #10 2語以上の場合、後ろの文字が小文字になったりしないように修正した
+				let l:spell = toupper(l:spell[0]) . l:spell[1:-1]
+			endif
 		endif
 
 		call add(l:spell_suggest_list_for_replace, l:spell)
@@ -115,7 +120,11 @@ function! spelunker#words#replace_word(target_word, replace_word, is_correct_all
 	let l:pos = getpos(".")
 
 	if a:is_correct_all
-		execute "silent! %s/\\v([A-Z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		if a:target_word =~# '^[A-Z]'
+			execute "silent! %s/\\v"              . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		else
+			execute "silent! %s/\\v([A-Za-z]@<!)" . a:target_word . "([a-z]@!)\\C/". a:replace_word . "/g"
+		endif
 	else
 		let l:right_move = strlen(a:target_word) - 1
 		execute "silent! normal! /" . a:target_word . "\<CR>Nv" . l:right_move . "lc" . a:replace_word
