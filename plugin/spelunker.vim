@@ -146,7 +146,7 @@ endif
 
 " vmap/vnoremapはxmap(visual-modeだけ)が作られる前の古い方法で、後方互換のため
 " 利用します。
-" vmapだと visual-mode の他、selec-mode にもマップされます
+" vmapだと visual-mode の他、select-mode にもマップされます
 " このマップは除去可能なら除去します
 if exists(':sunmap') == 2
   function! s:sunmap(map) abort
@@ -166,7 +166,7 @@ if !hasmapto('<Plug>(add-spelunker-good)')
 endif
 
 nnoremap <silent> <Plug>(add-spelunker-good-nmap)
-		\	:call spelunker#execute_with_target_word('spellgood')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellgood')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-spelunker-good-nmap)')
 	silent! nmap <unique> Zg <Plug>(add-spelunker-good-nmap)
 endif
@@ -179,7 +179,7 @@ if !hasmapto('<Plug>(undo-spelunker-good)')
 endif
 
 nnoremap <silent> <Plug>(undo-spelunker-good-nmap)
-		\	:call spelunker#execute_with_target_word('spellundo')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellundo')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-spelunker-good-nmap)')
 	silent! nmap <unique> Zug <Plug>(undo-spelunker-good-nmap)
 endif
@@ -192,7 +192,7 @@ if !hasmapto('<Plug>(add-temporary-spelunker-good)')
 endif
 
 nnoremap <silent> <Plug>(add-temporary-spelunker-good-nmap)
-		\	:call spelunker#execute_with_target_word('spellgood!')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellgood!')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-temporary-spelunker-good-nmap)')
 	silent! nmap <unique> ZG <Plug>(add-temporary-spelunker-good-nmap)
 endif
@@ -205,7 +205,7 @@ if !hasmapto('<Plug>(undo-temporary-spelunker-good)')
 endif
 
 nnoremap <silent> <Plug>(undo-temporary-spelunker-good-nmap)
-		\	:call spelunker#execute_with_target_word('spellundo!')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellundo!')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spelunker-good-nmap)')
 	silent! nmap <unique> ZUG <Plug>(undo-temporary-spelunker-good-nmap)
 endif
@@ -218,7 +218,7 @@ if !hasmapto('<Plug>(add-spelunker-bad)')
 endif
 
 nnoremap <silent> <Plug>(add-spell-bad-nmap)
-		\	:call spelunker#execute_with_target_word('spellwrong')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellwrong')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-spell-bad-nmap)')
 	silent! nmap <unique> Zw <Plug>(add-spell-bad-nmap)
 endif
@@ -231,7 +231,7 @@ if !hasmapto('<Plug>(undo-spelunker-bad)')
 endif
 
 nnoremap <silent> <Plug>(undo-spelunker-bad-nmap)
-		\	:call spelunker#execute_with_target_word('spellundo')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellundo')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-spelunker-bad-nmap)')
 	silent! nmap <unique> Zuw <Plug>(undo-spelunker-bad-nmap)
 endif
@@ -244,7 +244,7 @@ if !hasmapto('<Plug>(add-temporary-spelunker-bad)')
 endif
 
 nnoremap <silent> <Plug>(add-temporary-spelunker-bad-nmap)
-		\	:call spelunker#execute_with_target_word('spellwrong!')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellwrong!')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(add-temporary-spelunker-bad-nmap)')
 	silent! nmap <unique> ZW <Plug>(add-temporary-spelunker-bad-nmap)
 endif
@@ -257,7 +257,7 @@ if !hasmapto('<Plug>(undo-temporary-spelunker-bad)')
 endif
 
 nnoremap <silent> <Plug>(undo-temporary-spelunker-bad-nmap)
-		\	:call spelunker#execute_with_target_word('spellundo!')<CR> :call spelunker#check()<CR>
+		\	:call spelunker#execute_with_target_word('spellundo!')<CR>:call spelunker#check()<CR>
 if !hasmapto('<Plug>(undo-temporary-spelunker-bad-nmap)')
 	silent! nmap <unique> ZUW <Plug>(undo-temporary-spelunker-bad-nmap)
 endif
