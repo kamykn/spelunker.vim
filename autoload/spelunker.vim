@@ -216,7 +216,7 @@ function s:is_runnable()
 		return 0
 	endif
 
-	if g:enable_spelunker_vim_on_readonly == 0 && ( &readonly || !&modifiable )
+	if g:enable_spelunker_vim_on_readonly == 0 && ( &readonly || !&modifiable || &filetype ==# 'qf' )
 		return 0
 	endif
 
