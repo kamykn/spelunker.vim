@@ -118,6 +118,7 @@ function! spelunker#white_list#init_white_list()
 
 		" Don't you think it is terrible?
 		let l:wl += ['don', 'doesn', 'didn', 'ain', 'isn', 'wasn', 'aren', 'weren']
+		let l:wl += ['can', 'couldn', 'won', 'wouldn', 'shan', 'shouldn', 'mayn', 'mightn', 'mustn', 'haven', 'hadn', 'needn', 'daren' ]
 
 		let g:spelunker_white_list = l:wl
 	endif
