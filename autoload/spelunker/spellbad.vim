@@ -64,6 +64,8 @@ function! spelunker#spellbad#get_word_list_in_line(line, word_list)
 		endfor
 	endwhile
 
+	call sort(l:word_list, { a, b -> len(b) - len(a) })
+
 	return l:word_list
 endfunction
 

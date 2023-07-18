@@ -33,6 +33,7 @@ function! s:find_word_index_list(line_str, search_word)
 	let l:cword_length         = strlen(a:search_word)
 	let l:find_word_index_list = []
 	let l:line_str             = a:line_str
+	let l:pos                  = 0
 
 	while 1
 		let l:tmp_cword_pos = stridx(l:line_str, a:search_word)
@@ -40,8 +41,9 @@ function! s:find_word_index_list(line_str, search_word)
 			break
 		endif
 
-		call add(l:find_word_index_list, l:tmp_cword_pos)
-		let l:line_str = strpart(l:line_str, l:tmp_cword_pos + l:cword_length)
+		call add(l:find_word_index_list, l:tmp_cword_pos + l:pos)
+		let l:line_str  = strpart(l:line_str, l:tmp_cword_pos + l:cword_length)
+		let l:pos      += l:tmp_cword_pos + l:cword_length
 	endwhile
 
 	return l:find_word_index_list
