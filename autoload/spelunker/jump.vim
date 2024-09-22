@@ -145,9 +145,7 @@ function s:get_end_of_line(is_search_next)
 endfunction
 
 function s:is_enable_wrapscan()
-	redir => wrapscan_setting_capture
-	silent execute "set wrapscan?"
-	redir END
+	let l:wrapscan_setting_capture = execute("set wrapscan?")
 
 	" ex) '      wrapscan' -> 'wrapscan'
 	let l:wrapscan_setting_capture = substitute(l:wrapscan_setting_capture, '\v(\n|\s)\C', '', 'g')

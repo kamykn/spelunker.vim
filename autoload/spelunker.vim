@@ -161,9 +161,7 @@ endfunction
 
 " 処理前のspell設定を取得
 function! spelunker#get_current_spell_setting()
-	redir => spell_setting_capture
-		silent execute "setlocal spell?"
-	redir END
+	let l:spell_setting_capture = execute("setlocal spell?")
 
 	" ex) '      spell' -> 'spell'
 	return substitute(l:spell_setting_capture, '\v(\n|\s)\C', '', 'g')
